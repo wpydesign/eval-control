@@ -1,3170 +1,4031 @@
 {
-  "n_records": 452,
+  "n_records": 575,
   "n_features": 1024,
   "records": [
-    {
-      "run_id": "p0_adversarial_r000",
-      "prompt_id": 0,
-      "strategy": "adversarial",
-      "rep": 0,
-      "row_index": 0
-    },
-    {
-      "run_id": "p0_adversarial_r001",
-      "prompt_id": 0,
-      "strategy": "adversarial",
-      "rep": 1,
-      "row_index": 1
-    },
-    {
-      "run_id": "p0_adversarial_r002",
-      "prompt_id": 0,
-      "strategy": "adversarial",
-      "rep": 2,
-      "row_index": 2
-    },
-    {
-      "run_id": "p0_constraint_conflicting_r000",
-      "prompt_id": 0,
-      "strategy": "constraint_conflicting",
-      "rep": 0,
-      "row_index": 3
-    },
-    {
-      "run_id": "p0_constraint_conflicting_r001",
-      "prompt_id": 0,
-      "strategy": "constraint_conflicting",
-      "rep": 1,
-      "row_index": 4
-    },
-    {
-      "run_id": "p0_constraint_conflicting_r002",
-      "prompt_id": 0,
-      "strategy": "constraint_conflicting",
-      "rep": 2,
-      "row_index": 5
-    },
-    {
-      "run_id": "p0_constraint_conflicting_r003",
-      "prompt_id": 0,
-      "strategy": "constraint_conflicting",
-      "rep": 3,
-      "row_index": 6
-    },
-    {
-      "run_id": "p0_constraint_conflicting_r004",
-      "prompt_id": 0,
-      "strategy": "constraint_conflicting",
-      "rep": 4,
-      "row_index": 7
-    },
-    {
-      "run_id": "p0_constraint_conflicting_r005",
-      "prompt_id": 0,
-      "strategy": "constraint_conflicting",
-      "rep": 5,
-      "row_index": 8
-    },
-    {
-      "run_id": "p0_constraint_conflicting_r006",
-      "prompt_id": 0,
-      "strategy": "constraint_conflicting",
-      "rep": 6,
-      "row_index": 9
-    },
-    {
-      "run_id": "p0_constraint_conflicting_r007",
-      "prompt_id": 0,
-      "strategy": "constraint_conflicting",
-      "rep": 7,
-      "row_index": 10
-    },
-    {
-      "run_id": "p0_constraint_conflicting_r008",
-      "prompt_id": 0,
-      "strategy": "constraint_conflicting",
-      "rep": 8,
-      "row_index": 11
-    },
-    {
-      "run_id": "p0_constraint_conflicting_r009",
-      "prompt_id": 0,
-      "strategy": "constraint_conflicting",
-      "rep": 9,
-      "row_index": 12
-    },
-    {
-      "run_id": "p0_constraint_conflicting_r010",
-      "prompt_id": 0,
-      "strategy": "constraint_conflicting",
-      "rep": 10,
-      "row_index": 13
-    },
-    {
-      "run_id": "p0_constraint_conflicting_r011",
-      "prompt_id": 0,
-      "strategy": "constraint_conflicting",
-      "rep": 11,
-      "row_index": 14
-    },
-    {
-      "run_id": "p0_constraint_conflicting_r012",
-      "prompt_id": 0,
-      "strategy": "constraint_conflicting",
-      "rep": 12,
-      "row_index": 15
-    },
-    {
-      "run_id": "p0_constraint_conflicting_r013",
-      "prompt_id": 0,
-      "strategy": "constraint_conflicting",
-      "rep": 13,
-      "row_index": 16
-    },
-    {
-      "run_id": "p0_constraint_conflicting_r014",
-      "prompt_id": 0,
-      "strategy": "constraint_conflicting",
-      "rep": 14,
-      "row_index": 17
-    },
-    {
-      "run_id": "p0_constraint_conflicting_r015",
-      "prompt_id": 0,
-      "strategy": "constraint_conflicting",
-      "rep": 15,
-      "row_index": 18
-    },
-    {
-      "run_id": "p0_constraint_conflicting_r016",
-      "prompt_id": 0,
-      "strategy": "constraint_conflicting",
-      "rep": 16,
-      "row_index": 19
-    },
-    {
-      "run_id": "p0_constraint_conflicting_r017",
-      "prompt_id": 0,
-      "strategy": "constraint_conflicting",
-      "rep": 17,
-      "row_index": 20
-    },
-    {
-      "run_id": "p0_constraint_conflicting_r018",
-      "prompt_id": 0,
-      "strategy": "constraint_conflicting",
-      "rep": 18,
-      "row_index": 21
-    },
-    {
-      "run_id": "p0_constraint_conflicting_r019",
-      "prompt_id": 0,
-      "strategy": "constraint_conflicting",
-      "rep": 19,
-      "row_index": 22
-    },
-    {
-      "run_id": "p0_constraint_heavy_r000",
-      "prompt_id": 0,
-      "strategy": "constraint_heavy",
-      "rep": 0,
-      "row_index": 23
-    },
-    {
-      "run_id": "p0_constraint_heavy_r001",
-      "prompt_id": 0,
-      "strategy": "constraint_heavy",
-      "rep": 1,
-      "row_index": 24
-    },
-    {
-      "run_id": "p0_constraint_heavy_r002",
-      "prompt_id": 0,
-      "strategy": "constraint_heavy",
-      "rep": 2,
-      "row_index": 25
-    },
-    {
-      "run_id": "p0_constraint_heavy_r003",
-      "prompt_id": 0,
-      "strategy": "constraint_heavy",
-      "rep": 3,
-      "row_index": 26
-    },
-    {
-      "run_id": "p0_constraint_heavy_r004",
-      "prompt_id": 0,
-      "strategy": "constraint_heavy",
-      "rep": 4,
-      "row_index": 27
-    },
-    {
-      "run_id": "p0_constraint_heavy_r005",
-      "prompt_id": 0,
-      "strategy": "constraint_heavy",
-      "rep": 5,
-      "row_index": 28
-    },
-    {
-      "run_id": "p0_constraint_heavy_r006",
-      "prompt_id": 0,
-      "strategy": "constraint_heavy",
-      "rep": 6,
-      "row_index": 29
-    },
-    {
-      "run_id": "p0_constraint_heavy_r007",
-      "prompt_id": 0,
-      "strategy": "constraint_heavy",
-      "rep": 7,
-      "row_index": 30
-    },
-    {
-      "run_id": "p0_constraint_heavy_r008",
-      "prompt_id": 0,
-      "strategy": "constraint_heavy",
-      "rep": 8,
-      "row_index": 31
-    },
-    {
-      "run_id": "p0_constraint_heavy_r009",
-      "prompt_id": 0,
-      "strategy": "constraint_heavy",
-      "rep": 9,
-      "row_index": 32
-    },
-    {
-      "run_id": "p0_constraint_heavy_r010",
-      "prompt_id": 0,
-      "strategy": "constraint_heavy",
-      "rep": 10,
-      "row_index": 33
-    },
-    {
-      "run_id": "p0_constraint_heavy_r011",
-      "prompt_id": 0,
-      "strategy": "constraint_heavy",
-      "rep": 11,
-      "row_index": 34
-    },
-    {
-      "run_id": "p0_constraint_heavy_r012",
-      "prompt_id": 0,
-      "strategy": "constraint_heavy",
-      "rep": 12,
-      "row_index": 35
-    },
-    {
-      "run_id": "p0_constraint_heavy_r013",
-      "prompt_id": 0,
-      "strategy": "constraint_heavy",
-      "rep": 13,
-      "row_index": 36
-    },
-    {
-      "run_id": "p0_constraint_heavy_r014",
-      "prompt_id": 0,
-      "strategy": "constraint_heavy",
-      "rep": 14,
-      "row_index": 37
-    },
-    {
-      "run_id": "p0_constraint_heavy_r015",
-      "prompt_id": 0,
-      "strategy": "constraint_heavy",
-      "rep": 15,
-      "row_index": 38
-    },
-    {
-      "run_id": "p0_constraint_heavy_r016",
-      "prompt_id": 0,
-      "strategy": "constraint_heavy",
-      "rep": 16,
-      "row_index": 39
-    },
-    {
-      "run_id": "p0_constraint_heavy_r017",
-      "prompt_id": 0,
-      "strategy": "constraint_heavy",
-      "rep": 17,
-      "row_index": 40
-    },
-    {
-      "run_id": "p0_constraint_heavy_r018",
-      "prompt_id": 0,
-      "strategy": "constraint_heavy",
-      "rep": 18,
-      "row_index": 41
-    },
-    {
-      "run_id": "p0_constraint_heavy_r019",
-      "prompt_id": 0,
-      "strategy": "constraint_heavy",
-      "rep": 19,
-      "row_index": 42
-    },
-    {
-      "run_id": "p0_constraint_light_r000",
-      "prompt_id": 0,
-      "strategy": "constraint_light",
-      "rep": 0,
-      "row_index": 43
-    },
-    {
-      "run_id": "p0_constraint_light_r001",
-      "prompt_id": 0,
-      "strategy": "constraint_light",
-      "rep": 1,
-      "row_index": 44
-    },
-    {
-      "run_id": "p0_constraint_light_r002",
-      "prompt_id": 0,
-      "strategy": "constraint_light",
-      "rep": 2,
-      "row_index": 45
-    },
-    {
-      "run_id": "p0_constraint_light_r003",
-      "prompt_id": 0,
-      "strategy": "constraint_light",
-      "rep": 3,
-      "row_index": 46
-    },
-    {
-      "run_id": "p0_constraint_light_r004",
-      "prompt_id": 0,
-      "strategy": "constraint_light",
-      "rep": 4,
-      "row_index": 47
-    },
-    {
-      "run_id": "p0_constraint_light_r005",
-      "prompt_id": 0,
-      "strategy": "constraint_light",
-      "rep": 5,
-      "row_index": 48
-    },
-    {
-      "run_id": "p0_constraint_light_r006",
-      "prompt_id": 0,
-      "strategy": "constraint_light",
-      "rep": 6,
-      "row_index": 49
-    },
-    {
-      "run_id": "p0_constraint_light_r007",
-      "prompt_id": 0,
-      "strategy": "constraint_light",
-      "rep": 7,
-      "row_index": 50
-    },
-    {
-      "run_id": "p0_constraint_light_r008",
-      "prompt_id": 0,
-      "strategy": "constraint_light",
-      "rep": 8,
-      "row_index": 51
-    },
-    {
-      "run_id": "p0_constraint_light_r009",
-      "prompt_id": 0,
-      "strategy": "constraint_light",
-      "rep": 9,
-      "row_index": 52
-    },
-    {
-      "run_id": "p0_constraint_light_r010",
-      "prompt_id": 0,
-      "strategy": "constraint_light",
-      "rep": 10,
-      "row_index": 53
-    },
-    {
-      "run_id": "p0_constraint_light_r011",
-      "prompt_id": 0,
-      "strategy": "constraint_light",
-      "rep": 11,
-      "row_index": 54
-    },
-    {
-      "run_id": "p0_constraint_light_r012",
-      "prompt_id": 0,
-      "strategy": "constraint_light",
-      "rep": 12,
-      "row_index": 55
-    },
-    {
-      "run_id": "p0_constraint_light_r013",
-      "prompt_id": 0,
-      "strategy": "constraint_light",
-      "rep": 13,
-      "row_index": 56
-    },
-    {
-      "run_id": "p0_constraint_light_r014",
-      "prompt_id": 0,
-      "strategy": "constraint_light",
-      "rep": 14,
-      "row_index": 57
-    },
-    {
-      "run_id": "p0_constraint_light_r015",
-      "prompt_id": 0,
-      "strategy": "constraint_light",
-      "rep": 15,
-      "row_index": 58
-    },
-    {
-      "run_id": "p0_constraint_light_r016",
-      "prompt_id": 0,
-      "strategy": "constraint_light",
-      "rep": 16,
-      "row_index": 59
-    },
-    {
-      "run_id": "p0_constraint_light_r017",
-      "prompt_id": 0,
-      "strategy": "constraint_light",
-      "rep": 17,
-      "row_index": 60
-    },
-    {
-      "run_id": "p0_constraint_light_r018",
-      "prompt_id": 0,
-      "strategy": "constraint_light",
-      "rep": 18,
-      "row_index": 61
-    },
-    {
-      "run_id": "p0_constraint_light_r019",
-      "prompt_id": 0,
-      "strategy": "constraint_light",
-      "rep": 19,
-      "row_index": 62
-    },
-    {
-      "run_id": "p0_constraint_none_r000",
-      "prompt_id": 0,
-      "strategy": "constraint_none",
-      "rep": 0,
-      "row_index": 63
-    },
-    {
-      "run_id": "p0_constraint_none_r001",
-      "prompt_id": 0,
-      "strategy": "constraint_none",
-      "rep": 1,
-      "row_index": 64
-    },
-    {
-      "run_id": "p0_constraint_none_r002",
-      "prompt_id": 0,
-      "strategy": "constraint_none",
-      "rep": 2,
-      "row_index": 65
-    },
-    {
-      "run_id": "p0_constraint_none_r003",
-      "prompt_id": 0,
-      "strategy": "constraint_none",
-      "rep": 3,
-      "row_index": 66
-    },
-    {
-      "run_id": "p0_constraint_none_r004",
-      "prompt_id": 0,
-      "strategy": "constraint_none",
-      "rep": 4,
-      "row_index": 67
-    },
-    {
-      "run_id": "p0_constraint_none_r005",
-      "prompt_id": 0,
-      "strategy": "constraint_none",
-      "rep": 5,
-      "row_index": 68
-    },
-    {
-      "run_id": "p0_constraint_none_r006",
-      "prompt_id": 0,
-      "strategy": "constraint_none",
-      "rep": 6,
-      "row_index": 69
-    },
-    {
-      "run_id": "p0_constraint_none_r007",
-      "prompt_id": 0,
-      "strategy": "constraint_none",
-      "rep": 7,
-      "row_index": 70
-    },
-    {
-      "run_id": "p0_constraint_none_r008",
-      "prompt_id": 0,
-      "strategy": "constraint_none",
-      "rep": 8,
-      "row_index": 71
-    },
-    {
-      "run_id": "p0_constraint_none_r009",
-      "prompt_id": 0,
-      "strategy": "constraint_none",
-      "rep": 9,
-      "row_index": 72
-    },
-    {
-      "run_id": "p0_constraint_none_r010",
-      "prompt_id": 0,
-      "strategy": "constraint_none",
-      "rep": 10,
-      "row_index": 73
-    },
-    {
-      "run_id": "p0_constraint_none_r011",
-      "prompt_id": 0,
-      "strategy": "constraint_none",
-      "rep": 11,
-      "row_index": 74
-    },
-    {
-      "run_id": "p0_constraint_none_r012",
-      "prompt_id": 0,
-      "strategy": "constraint_none",
-      "rep": 12,
-      "row_index": 75
-    },
-    {
-      "run_id": "p0_constraint_none_r013",
-      "prompt_id": 0,
-      "strategy": "constraint_none",
-      "rep": 13,
-      "row_index": 76
-    },
-    {
-      "run_id": "p0_constraint_none_r014",
-      "prompt_id": 0,
-      "strategy": "constraint_none",
-      "rep": 14,
-      "row_index": 77
-    },
-    {
-      "run_id": "p0_constraint_none_r015",
-      "prompt_id": 0,
-      "strategy": "constraint_none",
-      "rep": 15,
-      "row_index": 78
-    },
-    {
-      "run_id": "p0_constraint_none_r016",
-      "prompt_id": 0,
-      "strategy": "constraint_none",
-      "rep": 16,
-      "row_index": 79
-    },
-    {
-      "run_id": "p0_constraint_none_r017",
-      "prompt_id": 0,
-      "strategy": "constraint_none",
-      "rep": 17,
-      "row_index": 80
-    },
-    {
-      "run_id": "p0_constraint_none_r018",
-      "prompt_id": 0,
-      "strategy": "constraint_none",
-      "rep": 18,
-      "row_index": 81
-    },
-    {
-      "run_id": "p0_constraint_none_r019",
-      "prompt_id": 0,
-      "strategy": "constraint_none",
-      "rep": 19,
-      "row_index": 82
-    },
-    {
-      "run_id": "p0_format_bullet_r000",
-      "prompt_id": 0,
-      "strategy": "format_bullet",
-      "rep": 0,
-      "row_index": 83
-    },
-    {
-      "run_id": "p0_format_bullet_r001",
-      "prompt_id": 0,
-      "strategy": "format_bullet",
-      "rep": 1,
-      "row_index": 84
-    },
-    {
-      "run_id": "p0_format_bullet_r002",
-      "prompt_id": 0,
-      "strategy": "format_bullet",
-      "rep": 2,
-      "row_index": 85
-    },
-    {
-      "run_id": "p0_format_compressed_r000",
-      "prompt_id": 0,
-      "strategy": "format_compressed",
-      "rep": 0,
-      "row_index": 86
-    },
-    {
-      "run_id": "p0_format_compressed_r001",
-      "prompt_id": 0,
-      "strategy": "format_compressed",
-      "rep": 1,
-      "row_index": 87
-    },
-    {
-      "run_id": "p0_format_compressed_r002",
-      "prompt_id": 0,
-      "strategy": "format_compressed",
-      "rep": 2,
-      "row_index": 88
-    },
-    {
-      "run_id": "p0_format_json_r000",
-      "prompt_id": 0,
-      "strategy": "format_json",
-      "rep": 0,
-      "row_index": 89
-    },
-    {
-      "run_id": "p0_format_json_r001",
-      "prompt_id": 0,
-      "strategy": "format_json",
-      "rep": 1,
-      "row_index": 90
-    },
-    {
-      "run_id": "p0_format_json_r002",
-      "prompt_id": 0,
-      "strategy": "format_json",
-      "rep": 2,
-      "row_index": 91
-    },
-    {
-      "run_id": "p0_format_paragraph_r000",
-      "prompt_id": 0,
-      "strategy": "format_paragraph",
-      "rep": 0,
-      "row_index": 92
-    },
-    {
-      "run_id": "p0_format_paragraph_r001",
-      "prompt_id": 0,
-      "strategy": "format_paragraph",
-      "rep": 1,
-      "row_index": 93
-    },
-    {
-      "run_id": "p0_format_paragraph_r002",
-      "prompt_id": 0,
-      "strategy": "format_paragraph",
-      "rep": 2,
-      "row_index": 94
-    },
-    {
-      "run_id": "p0_format_step_by_step_r000",
-      "prompt_id": 0,
-      "strategy": "format_step_by_step",
-      "rep": 0,
-      "row_index": 95
-    },
-    {
-      "run_id": "p0_format_step_by_step_r001",
-      "prompt_id": 0,
-      "strategy": "format_step_by_step",
-      "rep": 1,
-      "row_index": 96
-    },
-    {
-      "run_id": "p0_format_step_by_step_r002",
-      "prompt_id": 0,
-      "strategy": "format_step_by_step",
-      "rep": 2,
-      "row_index": 97
-    },
-    {
-      "run_id": "p0_format_verbose_r000",
-      "prompt_id": 0,
-      "strategy": "format_verbose",
-      "rep": 0,
-      "row_index": 98
-    },
-    {
-      "run_id": "p0_format_verbose_r001",
-      "prompt_id": 0,
-      "strategy": "format_verbose",
-      "rep": 1,
-      "row_index": 99
-    },
-    {
-      "run_id": "p0_format_verbose_r002",
-      "prompt_id": 0,
-      "strategy": "format_verbose",
-      "rep": 2,
-      "row_index": 100
-    },
-    {
-      "run_id": "p0_instruction_conflict_r000",
-      "prompt_id": 0,
-      "strategy": "instruction_conflict",
-      "rep": 0,
-      "row_index": 101
-    },
-    {
-      "run_id": "p0_instruction_conflict_r001",
-      "prompt_id": 0,
-      "strategy": "instruction_conflict",
-      "rep": 1,
-      "row_index": 102
-    },
-    {
-      "run_id": "p0_instruction_conflict_r002",
-      "prompt_id": 0,
-      "strategy": "instruction_conflict",
-      "rep": 2,
-      "row_index": 103
-    },
-    {
-      "run_id": "p0_instruction_system_only_r000",
-      "prompt_id": 0,
-      "strategy": "instruction_system_only",
-      "rep": 0,
-      "row_index": 104
-    },
-    {
-      "run_id": "p0_instruction_system_only_r001",
-      "prompt_id": 0,
-      "strategy": "instruction_system_only",
-      "rep": 1,
-      "row_index": 105
-    },
-    {
-      "run_id": "p0_instruction_system_only_r002",
-      "prompt_id": 0,
-      "strategy": "instruction_system_only",
-      "rep": 2,
-      "row_index": 106
-    },
-    {
-      "run_id": "p0_instruction_system_only_r003",
-      "prompt_id": 0,
-      "strategy": "instruction_system_only",
-      "rep": 3,
-      "row_index": 107
-    },
-    {
-      "run_id": "p0_instruction_system_only_r004",
-      "prompt_id": 0,
-      "strategy": "instruction_system_only",
-      "rep": 4,
-      "row_index": 108
-    },
-    {
-      "run_id": "p0_instruction_system_only_r005",
-      "prompt_id": 0,
-      "strategy": "instruction_system_only",
-      "rep": 5,
-      "row_index": 109
-    },
-    {
-      "run_id": "p0_instruction_system_only_r006",
-      "prompt_id": 0,
-      "strategy": "instruction_system_only",
-      "rep": 6,
-      "row_index": 110
-    },
-    {
-      "run_id": "p0_instruction_system_only_r007",
-      "prompt_id": 0,
-      "strategy": "instruction_system_only",
-      "rep": 7,
-      "row_index": 111
-    },
-    {
-      "run_id": "p0_instruction_system_only_r008",
-      "prompt_id": 0,
-      "strategy": "instruction_system_only",
-      "rep": 8,
-      "row_index": 112
-    },
-    {
-      "run_id": "p0_instruction_system_only_r009",
-      "prompt_id": 0,
-      "strategy": "instruction_system_only",
-      "rep": 9,
-      "row_index": 113
-    },
-    {
-      "run_id": "p0_instruction_system_only_r010",
-      "prompt_id": 0,
-      "strategy": "instruction_system_only",
-      "rep": 10,
-      "row_index": 114
-    },
-    {
-      "run_id": "p0_instruction_system_only_r011",
-      "prompt_id": 0,
-      "strategy": "instruction_system_only",
-      "rep": 11,
-      "row_index": 115
-    },
-    {
-      "run_id": "p0_instruction_system_only_r012",
-      "prompt_id": 0,
-      "strategy": "instruction_system_only",
-      "rep": 12,
-      "row_index": 116
-    },
-    {
-      "run_id": "p0_instruction_system_only_r013",
-      "prompt_id": 0,
-      "strategy": "instruction_system_only",
-      "rep": 13,
-      "row_index": 117
-    },
-    {
-      "run_id": "p0_instruction_system_only_r014",
-      "prompt_id": 0,
-      "strategy": "instruction_system_only",
-      "rep": 14,
-      "row_index": 118
-    },
-    {
-      "run_id": "p0_instruction_system_only_r015",
-      "prompt_id": 0,
-      "strategy": "instruction_system_only",
-      "rep": 15,
-      "row_index": 119
-    },
-    {
-      "run_id": "p0_instruction_system_only_r016",
-      "prompt_id": 0,
-      "strategy": "instruction_system_only",
-      "rep": 16,
-      "row_index": 120
-    },
-    {
-      "run_id": "p0_instruction_system_only_r017",
-      "prompt_id": 0,
-      "strategy": "instruction_system_only",
-      "rep": 17,
-      "row_index": 121
-    },
-    {
-      "run_id": "p0_instruction_system_only_r018",
-      "prompt_id": 0,
-      "strategy": "instruction_system_only",
-      "rep": 18,
-      "row_index": 122
-    },
-    {
-      "run_id": "p0_instruction_system_only_r019",
-      "prompt_id": 0,
-      "strategy": "instruction_system_only",
-      "rep": 19,
-      "row_index": 123
-    },
-    {
-      "run_id": "p0_instruction_user_only_r000",
-      "prompt_id": 0,
-      "strategy": "instruction_user_only",
-      "rep": 0,
-      "row_index": 124
-    },
-    {
-      "run_id": "p0_instruction_user_only_r001",
-      "prompt_id": 0,
-      "strategy": "instruction_user_only",
-      "rep": 1,
-      "row_index": 125
-    },
-    {
-      "run_id": "p0_instruction_user_only_r002",
-      "prompt_id": 0,
-      "strategy": "instruction_user_only",
-      "rep": 2,
-      "row_index": 126
-    },
-    {
-      "run_id": "p0_instruction_user_only_r003",
-      "prompt_id": 0,
-      "strategy": "instruction_user_only",
-      "rep": 3,
-      "row_index": 127
-    },
-    {
-      "run_id": "p0_instruction_user_only_r004",
-      "prompt_id": 0,
-      "strategy": "instruction_user_only",
-      "rep": 4,
-      "row_index": 128
-    },
-    {
-      "run_id": "p0_instruction_user_only_r005",
-      "prompt_id": 0,
-      "strategy": "instruction_user_only",
-      "rep": 5,
-      "row_index": 129
-    },
-    {
-      "run_id": "p0_instruction_user_only_r006",
-      "prompt_id": 0,
-      "strategy": "instruction_user_only",
-      "rep": 6,
-      "row_index": 130
-    },
-    {
-      "run_id": "p0_instruction_user_only_r007",
-      "prompt_id": 0,
-      "strategy": "instruction_user_only",
-      "rep": 7,
-      "row_index": 131
-    },
     {
       "run_id": "p0_paraphrase_r000",
       "prompt_id": 0,
       "strategy": "paraphrase",
       "rep": 0,
-      "row_index": 132
+      "row_index": 0
     },
     {
       "run_id": "p0_paraphrase_r001",
       "prompt_id": 0,
       "strategy": "paraphrase",
       "rep": 1,
-      "row_index": 133
+      "row_index": 1
     },
     {
       "run_id": "p0_paraphrase_r002",
       "prompt_id": 0,
       "strategy": "paraphrase",
       "rep": 2,
-      "row_index": 134
+      "row_index": 2
     },
     {
       "run_id": "p0_paraphrase_r003",
       "prompt_id": 0,
       "strategy": "paraphrase",
       "rep": 3,
-      "row_index": 135
+      "row_index": 3
     },
     {
       "run_id": "p0_paraphrase_r004",
       "prompt_id": 0,
       "strategy": "paraphrase",
       "rep": 4,
-      "row_index": 136
+      "row_index": 4
     },
     {
-      "run_id": "p0_paraphrase_r005",
+      "run_id": "p0_constraint_none_r000",
       "prompt_id": 0,
-      "strategy": "paraphrase",
-      "rep": 5,
-      "row_index": 137
-    },
-    {
-      "run_id": "p0_paraphrase_r006",
-      "prompt_id": 0,
-      "strategy": "paraphrase",
-      "rep": 6,
-      "row_index": 138
-    },
-    {
-      "run_id": "p0_paraphrase_r007",
-      "prompt_id": 0,
-      "strategy": "paraphrase",
-      "rep": 7,
-      "row_index": 139
-    },
-    {
-      "run_id": "p0_paraphrase_r008",
-      "prompt_id": 0,
-      "strategy": "paraphrase",
-      "rep": 8,
-      "row_index": 140
-    },
-    {
-      "run_id": "p0_paraphrase_r009",
-      "prompt_id": 0,
-      "strategy": "paraphrase",
-      "rep": 9,
-      "row_index": 141
-    },
-    {
-      "run_id": "p0_paraphrase_r010",
-      "prompt_id": 0,
-      "strategy": "paraphrase",
-      "rep": 10,
-      "row_index": 142
-    },
-    {
-      "run_id": "p0_paraphrase_r011",
-      "prompt_id": 0,
-      "strategy": "paraphrase",
-      "rep": 11,
-      "row_index": 143
-    },
-    {
-      "run_id": "p0_paraphrase_r012",
-      "prompt_id": 0,
-      "strategy": "paraphrase",
-      "rep": 12,
-      "row_index": 144
-    },
-    {
-      "run_id": "p0_paraphrase_r013",
-      "prompt_id": 0,
-      "strategy": "paraphrase",
-      "rep": 13,
-      "row_index": 145
-    },
-    {
-      "run_id": "p0_paraphrase_r014",
-      "prompt_id": 0,
-      "strategy": "paraphrase",
-      "rep": 14,
-      "row_index": 146
-    },
-    {
-      "run_id": "p0_paraphrase_r015",
-      "prompt_id": 0,
-      "strategy": "paraphrase",
-      "rep": 15,
-      "row_index": 147
-    },
-    {
-      "run_id": "p0_paraphrase_r016",
-      "prompt_id": 0,
-      "strategy": "paraphrase",
-      "rep": 16,
-      "row_index": 148
-    },
-    {
-      "run_id": "p0_paraphrase_r017",
-      "prompt_id": 0,
-      "strategy": "paraphrase",
-      "rep": 17,
-      "row_index": 149
-    },
-    {
-      "run_id": "p0_paraphrase_r018",
-      "prompt_id": 0,
-      "strategy": "paraphrase",
-      "rep": 18,
-      "row_index": 150
-    },
-    {
-      "run_id": "p0_paraphrase_r019",
-      "prompt_id": 0,
-      "strategy": "paraphrase",
-      "rep": 19,
-      "row_index": 151
-    },
-    {
-      "run_id": "p0_role_adversarial_eval_r000",
-      "prompt_id": 0,
-      "strategy": "role_adversarial_eval",
+      "strategy": "constraint_none",
       "rep": 0,
-      "row_index": 152
+      "row_index": 5
     },
     {
-      "run_id": "p0_role_adversarial_eval_r001",
+      "run_id": "p0_constraint_none_r001",
       "prompt_id": 0,
-      "strategy": "role_adversarial_eval",
+      "strategy": "constraint_none",
       "rep": 1,
-      "row_index": 153
+      "row_index": 6
     },
     {
-      "run_id": "p0_role_adversarial_eval_r002",
+      "run_id": "p0_constraint_none_r002",
       "prompt_id": 0,
-      "strategy": "role_adversarial_eval",
+      "strategy": "constraint_none",
       "rep": 2,
-      "row_index": 154
+      "row_index": 7
     },
     {
-      "run_id": "p0_role_expert_r000",
+      "run_id": "p0_constraint_none_r003",
       "prompt_id": 0,
-      "strategy": "role_expert",
+      "strategy": "constraint_none",
+      "rep": 3,
+      "row_index": 8
+    },
+    {
+      "run_id": "p0_constraint_none_r004",
+      "prompt_id": 0,
+      "strategy": "constraint_none",
+      "rep": 4,
+      "row_index": 9
+    },
+    {
+      "run_id": "p0_constraint_light_r000",
+      "prompt_id": 0,
+      "strategy": "constraint_light",
       "rep": 0,
-      "row_index": 155
+      "row_index": 10
     },
     {
-      "run_id": "p0_role_expert_r001",
+      "run_id": "p0_constraint_light_r001",
       "prompt_id": 0,
-      "strategy": "role_expert",
+      "strategy": "constraint_light",
       "rep": 1,
-      "row_index": 156
+      "row_index": 11
     },
     {
-      "run_id": "p0_role_expert_r002",
+      "run_id": "p0_constraint_light_r002",
       "prompt_id": 0,
-      "strategy": "role_expert",
+      "strategy": "constraint_light",
       "rep": 2,
-      "row_index": 157
+      "row_index": 12
+    },
+    {
+      "run_id": "p0_constraint_light_r003",
+      "prompt_id": 0,
+      "strategy": "constraint_light",
+      "rep": 3,
+      "row_index": 13
+    },
+    {
+      "run_id": "p0_constraint_light_r004",
+      "prompt_id": 0,
+      "strategy": "constraint_light",
+      "rep": 4,
+      "row_index": 14
+    },
+    {
+      "run_id": "p0_constraint_heavy_r000",
+      "prompt_id": 0,
+      "strategy": "constraint_heavy",
+      "rep": 0,
+      "row_index": 15
+    },
+    {
+      "run_id": "p0_constraint_heavy_r001",
+      "prompt_id": 0,
+      "strategy": "constraint_heavy",
+      "rep": 1,
+      "row_index": 16
+    },
+    {
+      "run_id": "p0_constraint_heavy_r002",
+      "prompt_id": 0,
+      "strategy": "constraint_heavy",
+      "rep": 2,
+      "row_index": 17
+    },
+    {
+      "run_id": "p0_constraint_heavy_r003",
+      "prompt_id": 0,
+      "strategy": "constraint_heavy",
+      "rep": 3,
+      "row_index": 18
+    },
+    {
+      "run_id": "p0_constraint_heavy_r004",
+      "prompt_id": 0,
+      "strategy": "constraint_heavy",
+      "rep": 4,
+      "row_index": 19
+    },
+    {
+      "run_id": "p0_constraint_conflicting_r000",
+      "prompt_id": 0,
+      "strategy": "constraint_conflicting",
+      "rep": 0,
+      "row_index": 20
+    },
+    {
+      "run_id": "p0_constraint_conflicting_r001",
+      "prompt_id": 0,
+      "strategy": "constraint_conflicting",
+      "rep": 1,
+      "row_index": 21
+    },
+    {
+      "run_id": "p0_constraint_conflicting_r002",
+      "prompt_id": 0,
+      "strategy": "constraint_conflicting",
+      "rep": 2,
+      "row_index": 22
+    },
+    {
+      "run_id": "p0_constraint_conflicting_r003",
+      "prompt_id": 0,
+      "strategy": "constraint_conflicting",
+      "rep": 3,
+      "row_index": 23
+    },
+    {
+      "run_id": "p0_constraint_conflicting_r004",
+      "prompt_id": 0,
+      "strategy": "constraint_conflicting",
+      "rep": 4,
+      "row_index": 24
+    },
+    {
+      "run_id": "p0_instruction_system_only_r000",
+      "prompt_id": 0,
+      "strategy": "instruction_system_only",
+      "rep": 0,
+      "row_index": 25
+    },
+    {
+      "run_id": "p0_instruction_system_only_r001",
+      "prompt_id": 0,
+      "strategy": "instruction_system_only",
+      "rep": 1,
+      "row_index": 26
+    },
+    {
+      "run_id": "p0_instruction_system_only_r002",
+      "prompt_id": 0,
+      "strategy": "instruction_system_only",
+      "rep": 2,
+      "row_index": 27
+    },
+    {
+      "run_id": "p0_instruction_system_only_r003",
+      "prompt_id": 0,
+      "strategy": "instruction_system_only",
+      "rep": 3,
+      "row_index": 28
+    },
+    {
+      "run_id": "p0_instruction_system_only_r004",
+      "prompt_id": 0,
+      "strategy": "instruction_system_only",
+      "rep": 4,
+      "row_index": 29
+    },
+    {
+      "run_id": "p0_instruction_user_only_r000",
+      "prompt_id": 0,
+      "strategy": "instruction_user_only",
+      "rep": 0,
+      "row_index": 30
+    },
+    {
+      "run_id": "p0_instruction_user_only_r001",
+      "prompt_id": 0,
+      "strategy": "instruction_user_only",
+      "rep": 1,
+      "row_index": 31
+    },
+    {
+      "run_id": "p0_instruction_user_only_r002",
+      "prompt_id": 0,
+      "strategy": "instruction_user_only",
+      "rep": 2,
+      "row_index": 32
+    },
+    {
+      "run_id": "p0_instruction_user_only_r003",
+      "prompt_id": 0,
+      "strategy": "instruction_user_only",
+      "rep": 3,
+      "row_index": 33
+    },
+    {
+      "run_id": "p0_instruction_user_only_r004",
+      "prompt_id": 0,
+      "strategy": "instruction_user_only",
+      "rep": 4,
+      "row_index": 34
+    },
+    {
+      "run_id": "p0_instruction_conflict_r000",
+      "prompt_id": 0,
+      "strategy": "instruction_conflict",
+      "rep": 0,
+      "row_index": 35
+    },
+    {
+      "run_id": "p0_instruction_conflict_r001",
+      "prompt_id": 0,
+      "strategy": "instruction_conflict",
+      "rep": 1,
+      "row_index": 36
+    },
+    {
+      "run_id": "p0_instruction_conflict_r002",
+      "prompt_id": 0,
+      "strategy": "instruction_conflict",
+      "rep": 2,
+      "row_index": 37
+    },
+    {
+      "run_id": "p0_instruction_conflict_r003",
+      "prompt_id": 0,
+      "strategy": "instruction_conflict",
+      "rep": 3,
+      "row_index": 38
+    },
+    {
+      "run_id": "p0_instruction_conflict_r004",
+      "prompt_id": 0,
+      "strategy": "instruction_conflict",
+      "rep": 4,
+      "row_index": 39
     },
     {
       "run_id": "p0_role_neutral_r000",
       "prompt_id": 0,
       "strategy": "role_neutral",
       "rep": 0,
-      "row_index": 158
+      "row_index": 40
     },
     {
       "run_id": "p0_role_neutral_r001",
       "prompt_id": 0,
       "strategy": "role_neutral",
       "rep": 1,
-      "row_index": 159
+      "row_index": 41
     },
     {
       "run_id": "p0_role_neutral_r002",
       "prompt_id": 0,
       "strategy": "role_neutral",
       "rep": 2,
-      "row_index": 160
+      "row_index": 42
     },
     {
-      "run_id": "p0_role_obedient_r000",
+      "run_id": "p0_role_neutral_r003",
       "prompt_id": 0,
-      "strategy": "role_obedient",
+      "strategy": "role_neutral",
+      "rep": 3,
+      "row_index": 43
+    },
+    {
+      "run_id": "p0_role_neutral_r004",
+      "prompt_id": 0,
+      "strategy": "role_neutral",
+      "rep": 4,
+      "row_index": 44
+    },
+    {
+      "run_id": "p0_role_expert_r000",
+      "prompt_id": 0,
+      "strategy": "role_expert",
       "rep": 0,
-      "row_index": 161
+      "row_index": 45
     },
     {
-      "run_id": "p0_role_obedient_r001",
+      "run_id": "p0_role_expert_r001",
       "prompt_id": 0,
-      "strategy": "role_obedient",
+      "strategy": "role_expert",
       "rep": 1,
-      "row_index": 162
+      "row_index": 46
     },
     {
-      "run_id": "p0_role_obedient_r002",
+      "run_id": "p0_role_expert_r002",
       "prompt_id": 0,
-      "strategy": "role_obedient",
+      "strategy": "role_expert",
       "rep": 2,
-      "row_index": 163
+      "row_index": 47
+    },
+    {
+      "run_id": "p0_role_expert_r003",
+      "prompt_id": 0,
+      "strategy": "role_expert",
+      "rep": 3,
+      "row_index": 48
+    },
+    {
+      "run_id": "p0_role_expert_r004",
+      "prompt_id": 0,
+      "strategy": "role_expert",
+      "rep": 4,
+      "row_index": 49
     },
     {
       "run_id": "p0_role_skeptic_r000",
       "prompt_id": 0,
       "strategy": "role_skeptic",
       "rep": 0,
-      "row_index": 164
+      "row_index": 50
     },
     {
       "run_id": "p0_role_skeptic_r001",
       "prompt_id": 0,
       "strategy": "role_skeptic",
       "rep": 1,
-      "row_index": 165
+      "row_index": 51
     },
     {
       "run_id": "p0_role_skeptic_r002",
       "prompt_id": 0,
       "strategy": "role_skeptic",
       "rep": 2,
-      "row_index": 166
+      "row_index": 52
+    },
+    {
+      "run_id": "p0_role_skeptic_r003",
+      "prompt_id": 0,
+      "strategy": "role_skeptic",
+      "rep": 3,
+      "row_index": 53
+    },
+    {
+      "run_id": "p0_role_skeptic_r004",
+      "prompt_id": 0,
+      "strategy": "role_skeptic",
+      "rep": 4,
+      "row_index": 54
+    },
+    {
+      "run_id": "p0_role_adversarial_eval_r000",
+      "prompt_id": 0,
+      "strategy": "role_adversarial_eval",
+      "rep": 0,
+      "row_index": 55
+    },
+    {
+      "run_id": "p0_role_adversarial_eval_r001",
+      "prompt_id": 0,
+      "strategy": "role_adversarial_eval",
+      "rep": 1,
+      "row_index": 56
+    },
+    {
+      "run_id": "p0_role_adversarial_eval_r002",
+      "prompt_id": 0,
+      "strategy": "role_adversarial_eval",
+      "rep": 2,
+      "row_index": 57
+    },
+    {
+      "run_id": "p0_role_adversarial_eval_r003",
+      "prompt_id": 0,
+      "strategy": "role_adversarial_eval",
+      "rep": 3,
+      "row_index": 58
+    },
+    {
+      "run_id": "p0_role_adversarial_eval_r004",
+      "prompt_id": 0,
+      "strategy": "role_adversarial_eval",
+      "rep": 4,
+      "row_index": 59
+    },
+    {
+      "run_id": "p0_role_obedient_r000",
+      "prompt_id": 0,
+      "strategy": "role_obedient",
+      "rep": 0,
+      "row_index": 60
+    },
+    {
+      "run_id": "p0_role_obedient_r001",
+      "prompt_id": 0,
+      "strategy": "role_obedient",
+      "rep": 1,
+      "row_index": 61
+    },
+    {
+      "run_id": "p0_role_obedient_r002",
+      "prompt_id": 0,
+      "strategy": "role_obedient",
+      "rep": 2,
+      "row_index": 62
+    },
+    {
+      "run_id": "p0_role_obedient_r003",
+      "prompt_id": 0,
+      "strategy": "role_obedient",
+      "rep": 3,
+      "row_index": 63
+    },
+    {
+      "run_id": "p0_role_obedient_r004",
+      "prompt_id": 0,
+      "strategy": "role_obedient",
+      "rep": 4,
+      "row_index": 64
+    },
+    {
+      "run_id": "p0_format_paragraph_r000",
+      "prompt_id": 0,
+      "strategy": "format_paragraph",
+      "rep": 0,
+      "row_index": 65
+    },
+    {
+      "run_id": "p0_format_paragraph_r001",
+      "prompt_id": 0,
+      "strategy": "format_paragraph",
+      "rep": 1,
+      "row_index": 66
+    },
+    {
+      "run_id": "p0_format_paragraph_r002",
+      "prompt_id": 0,
+      "strategy": "format_paragraph",
+      "rep": 2,
+      "row_index": 67
+    },
+    {
+      "run_id": "p0_format_paragraph_r003",
+      "prompt_id": 0,
+      "strategy": "format_paragraph",
+      "rep": 3,
+      "row_index": 68
+    },
+    {
+      "run_id": "p0_format_paragraph_r004",
+      "prompt_id": 0,
+      "strategy": "format_paragraph",
+      "rep": 4,
+      "row_index": 69
+    },
+    {
+      "run_id": "p0_format_bullet_r000",
+      "prompt_id": 0,
+      "strategy": "format_bullet",
+      "rep": 0,
+      "row_index": 70
+    },
+    {
+      "run_id": "p0_format_bullet_r001",
+      "prompt_id": 0,
+      "strategy": "format_bullet",
+      "rep": 1,
+      "row_index": 71
+    },
+    {
+      "run_id": "p0_format_bullet_r002",
+      "prompt_id": 0,
+      "strategy": "format_bullet",
+      "rep": 2,
+      "row_index": 72
+    },
+    {
+      "run_id": "p0_format_bullet_r003",
+      "prompt_id": 0,
+      "strategy": "format_bullet",
+      "rep": 3,
+      "row_index": 73
+    },
+    {
+      "run_id": "p0_format_bullet_r004",
+      "prompt_id": 0,
+      "strategy": "format_bullet",
+      "rep": 4,
+      "row_index": 74
+    },
+    {
+      "run_id": "p0_format_json_r000",
+      "prompt_id": 0,
+      "strategy": "format_json",
+      "rep": 0,
+      "row_index": 75
+    },
+    {
+      "run_id": "p0_format_json_r001",
+      "prompt_id": 0,
+      "strategy": "format_json",
+      "rep": 1,
+      "row_index": 76
+    },
+    {
+      "run_id": "p0_format_json_r002",
+      "prompt_id": 0,
+      "strategy": "format_json",
+      "rep": 2,
+      "row_index": 77
+    },
+    {
+      "run_id": "p0_format_json_r003",
+      "prompt_id": 0,
+      "strategy": "format_json",
+      "rep": 3,
+      "row_index": 78
+    },
+    {
+      "run_id": "p0_format_json_r004",
+      "prompt_id": 0,
+      "strategy": "format_json",
+      "rep": 4,
+      "row_index": 79
+    },
+    {
+      "run_id": "p0_format_step_by_step_r000",
+      "prompt_id": 0,
+      "strategy": "format_step_by_step",
+      "rep": 0,
+      "row_index": 80
+    },
+    {
+      "run_id": "p0_format_step_by_step_r001",
+      "prompt_id": 0,
+      "strategy": "format_step_by_step",
+      "rep": 1,
+      "row_index": 81
+    },
+    {
+      "run_id": "p0_format_step_by_step_r002",
+      "prompt_id": 0,
+      "strategy": "format_step_by_step",
+      "rep": 2,
+      "row_index": 82
+    },
+    {
+      "run_id": "p0_format_step_by_step_r003",
+      "prompt_id": 0,
+      "strategy": "format_step_by_step",
+      "rep": 3,
+      "row_index": 83
+    },
+    {
+      "run_id": "p0_format_step_by_step_r004",
+      "prompt_id": 0,
+      "strategy": "format_step_by_step",
+      "rep": 4,
+      "row_index": 84
+    },
+    {
+      "run_id": "p0_format_compressed_r000",
+      "prompt_id": 0,
+      "strategy": "format_compressed",
+      "rep": 0,
+      "row_index": 85
+    },
+    {
+      "run_id": "p0_format_compressed_r001",
+      "prompt_id": 0,
+      "strategy": "format_compressed",
+      "rep": 1,
+      "row_index": 86
+    },
+    {
+      "run_id": "p0_format_compressed_r002",
+      "prompt_id": 0,
+      "strategy": "format_compressed",
+      "rep": 2,
+      "row_index": 87
+    },
+    {
+      "run_id": "p0_format_compressed_r003",
+      "prompt_id": 0,
+      "strategy": "format_compressed",
+      "rep": 3,
+      "row_index": 88
+    },
+    {
+      "run_id": "p0_format_compressed_r004",
+      "prompt_id": 0,
+      "strategy": "format_compressed",
+      "rep": 4,
+      "row_index": 89
+    },
+    {
+      "run_id": "p0_format_verbose_r000",
+      "prompt_id": 0,
+      "strategy": "format_verbose",
+      "rep": 0,
+      "row_index": 90
+    },
+    {
+      "run_id": "p0_format_verbose_r001",
+      "prompt_id": 0,
+      "strategy": "format_verbose",
+      "rep": 1,
+      "row_index": 91
+    },
+    {
+      "run_id": "p0_format_verbose_r002",
+      "prompt_id": 0,
+      "strategy": "format_verbose",
+      "rep": 2,
+      "row_index": 92
+    },
+    {
+      "run_id": "p0_format_verbose_r003",
+      "prompt_id": 0,
+      "strategy": "format_verbose",
+      "rep": 3,
+      "row_index": 93
+    },
+    {
+      "run_id": "p0_format_verbose_r004",
+      "prompt_id": 0,
+      "strategy": "format_verbose",
+      "rep": 4,
+      "row_index": 94
     },
     {
       "run_id": "p0_token_1sentence_r000",
       "prompt_id": 0,
       "strategy": "token_1sentence",
       "rep": 0,
-      "row_index": 167
+      "row_index": 95
     },
     {
       "run_id": "p0_token_1sentence_r001",
       "prompt_id": 0,
       "strategy": "token_1sentence",
       "rep": 1,
-      "row_index": 168
+      "row_index": 96
     },
     {
       "run_id": "p0_token_1sentence_r002",
       "prompt_id": 0,
       "strategy": "token_1sentence",
       "rep": 2,
-      "row_index": 169
+      "row_index": 97
+    },
+    {
+      "run_id": "p0_token_1sentence_r003",
+      "prompt_id": 0,
+      "strategy": "token_1sentence",
+      "rep": 3,
+      "row_index": 98
+    },
+    {
+      "run_id": "p0_token_1sentence_r004",
+      "prompt_id": 0,
+      "strategy": "token_1sentence",
+      "rep": 4,
+      "row_index": 99
     },
     {
       "run_id": "p0_token_5lines_r000",
       "prompt_id": 0,
       "strategy": "token_5lines",
       "rep": 0,
-      "row_index": 170
+      "row_index": 100
     },
     {
       "run_id": "p0_token_5lines_r001",
       "prompt_id": 0,
       "strategy": "token_5lines",
       "rep": 1,
-      "row_index": 171
+      "row_index": 101
     },
     {
       "run_id": "p0_token_5lines_r002",
       "prompt_id": 0,
       "strategy": "token_5lines",
       "rep": 2,
-      "row_index": 172
+      "row_index": 102
+    },
+    {
+      "run_id": "p0_token_5lines_r003",
+      "prompt_id": 0,
+      "strategy": "token_5lines",
+      "rep": 3,
+      "row_index": 103
+    },
+    {
+      "run_id": "p0_token_5lines_r004",
+      "prompt_id": 0,
+      "strategy": "token_5lines",
+      "rep": 4,
+      "row_index": 104
     },
     {
       "run_id": "p0_token_full_r000",
       "prompt_id": 0,
       "strategy": "token_full",
       "rep": 0,
-      "row_index": 173
+      "row_index": 105
     },
     {
       "run_id": "p0_token_full_r001",
       "prompt_id": 0,
       "strategy": "token_full",
       "rep": 1,
-      "row_index": 174
+      "row_index": 106
     },
     {
       "run_id": "p0_token_full_r002",
       "prompt_id": 0,
       "strategy": "token_full",
       "rep": 2,
-      "row_index": 175
+      "row_index": 107
     },
     {
-      "run_id": "p1_adversarial_r000",
-      "prompt_id": 1,
+      "run_id": "p0_token_full_r003",
+      "prompt_id": 0,
+      "strategy": "token_full",
+      "rep": 3,
+      "row_index": 108
+    },
+    {
+      "run_id": "p0_token_full_r004",
+      "prompt_id": 0,
+      "strategy": "token_full",
+      "rep": 4,
+      "row_index": 109
+    },
+    {
+      "run_id": "p0_adversarial_r000",
+      "prompt_id": 0,
       "strategy": "adversarial",
       "rep": 0,
-      "row_index": 176
+      "row_index": 110
     },
     {
-      "run_id": "p1_adversarial_r001",
-      "prompt_id": 1,
+      "run_id": "p0_adversarial_r001",
+      "prompt_id": 0,
       "strategy": "adversarial",
       "rep": 1,
-      "row_index": 177
+      "row_index": 111
     },
     {
-      "run_id": "p1_adversarial_r002",
-      "prompt_id": 1,
+      "run_id": "p0_adversarial_r002",
+      "prompt_id": 0,
       "strategy": "adversarial",
       "rep": 2,
-      "row_index": 178
+      "row_index": 112
     },
     {
-      "run_id": "p1_constraint_conflicting_r000",
-      "prompt_id": 1,
-      "strategy": "constraint_conflicting",
-      "rep": 0,
-      "row_index": 179
+      "run_id": "p0_adversarial_r003",
+      "prompt_id": 0,
+      "strategy": "adversarial",
+      "rep": 3,
+      "row_index": 113
     },
     {
-      "run_id": "p1_constraint_conflicting_r001",
-      "prompt_id": 1,
-      "strategy": "constraint_conflicting",
-      "rep": 1,
-      "row_index": 180
-    },
-    {
-      "run_id": "p1_constraint_conflicting_r002",
-      "prompt_id": 1,
-      "strategy": "constraint_conflicting",
-      "rep": 2,
-      "row_index": 181
-    },
-    {
-      "run_id": "p1_constraint_heavy_r000",
-      "prompt_id": 1,
-      "strategy": "constraint_heavy",
-      "rep": 0,
-      "row_index": 182
-    },
-    {
-      "run_id": "p1_constraint_heavy_r001",
-      "prompt_id": 1,
-      "strategy": "constraint_heavy",
-      "rep": 1,
-      "row_index": 183
-    },
-    {
-      "run_id": "p1_constraint_heavy_r002",
-      "prompt_id": 1,
-      "strategy": "constraint_heavy",
-      "rep": 2,
-      "row_index": 184
-    },
-    {
-      "run_id": "p1_constraint_light_r000",
-      "prompt_id": 1,
-      "strategy": "constraint_light",
-      "rep": 0,
-      "row_index": 185
-    },
-    {
-      "run_id": "p1_constraint_light_r001",
-      "prompt_id": 1,
-      "strategy": "constraint_light",
-      "rep": 1,
-      "row_index": 186
-    },
-    {
-      "run_id": "p1_constraint_light_r002",
-      "prompt_id": 1,
-      "strategy": "constraint_light",
-      "rep": 2,
-      "row_index": 187
-    },
-    {
-      "run_id": "p1_constraint_none_r000",
-      "prompt_id": 1,
-      "strategy": "constraint_none",
-      "rep": 0,
-      "row_index": 188
-    },
-    {
-      "run_id": "p1_constraint_none_r001",
-      "prompt_id": 1,
-      "strategy": "constraint_none",
-      "rep": 1,
-      "row_index": 189
-    },
-    {
-      "run_id": "p1_constraint_none_r002",
-      "prompt_id": 1,
-      "strategy": "constraint_none",
-      "rep": 2,
-      "row_index": 190
-    },
-    {
-      "run_id": "p1_format_bullet_r000",
-      "prompt_id": 1,
-      "strategy": "format_bullet",
-      "rep": 0,
-      "row_index": 191
-    },
-    {
-      "run_id": "p1_format_bullet_r001",
-      "prompt_id": 1,
-      "strategy": "format_bullet",
-      "rep": 1,
-      "row_index": 192
-    },
-    {
-      "run_id": "p1_format_bullet_r002",
-      "prompt_id": 1,
-      "strategy": "format_bullet",
-      "rep": 2,
-      "row_index": 193
-    },
-    {
-      "run_id": "p1_format_compressed_r000",
-      "prompt_id": 1,
-      "strategy": "format_compressed",
-      "rep": 0,
-      "row_index": 194
-    },
-    {
-      "run_id": "p1_format_compressed_r001",
-      "prompt_id": 1,
-      "strategy": "format_compressed",
-      "rep": 1,
-      "row_index": 195
-    },
-    {
-      "run_id": "p1_format_compressed_r002",
-      "prompt_id": 1,
-      "strategy": "format_compressed",
-      "rep": 2,
-      "row_index": 196
-    },
-    {
-      "run_id": "p1_format_json_r000",
-      "prompt_id": 1,
-      "strategy": "format_json",
-      "rep": 0,
-      "row_index": 197
-    },
-    {
-      "run_id": "p1_format_json_r001",
-      "prompt_id": 1,
-      "strategy": "format_json",
-      "rep": 1,
-      "row_index": 198
-    },
-    {
-      "run_id": "p1_format_json_r002",
-      "prompt_id": 1,
-      "strategy": "format_json",
-      "rep": 2,
-      "row_index": 199
-    },
-    {
-      "run_id": "p1_format_paragraph_r000",
-      "prompt_id": 1,
-      "strategy": "format_paragraph",
-      "rep": 0,
-      "row_index": 200
-    },
-    {
-      "run_id": "p1_format_paragraph_r001",
-      "prompt_id": 1,
-      "strategy": "format_paragraph",
-      "rep": 1,
-      "row_index": 201
-    },
-    {
-      "run_id": "p1_format_paragraph_r002",
-      "prompt_id": 1,
-      "strategy": "format_paragraph",
-      "rep": 2,
-      "row_index": 202
-    },
-    {
-      "run_id": "p1_format_step_by_step_r000",
-      "prompt_id": 1,
-      "strategy": "format_step_by_step",
-      "rep": 0,
-      "row_index": 203
-    },
-    {
-      "run_id": "p1_format_step_by_step_r001",
-      "prompt_id": 1,
-      "strategy": "format_step_by_step",
-      "rep": 1,
-      "row_index": 204
-    },
-    {
-      "run_id": "p1_format_step_by_step_r002",
-      "prompt_id": 1,
-      "strategy": "format_step_by_step",
-      "rep": 2,
-      "row_index": 205
-    },
-    {
-      "run_id": "p1_format_verbose_r000",
-      "prompt_id": 1,
-      "strategy": "format_verbose",
-      "rep": 0,
-      "row_index": 206
-    },
-    {
-      "run_id": "p1_format_verbose_r001",
-      "prompt_id": 1,
-      "strategy": "format_verbose",
-      "rep": 1,
-      "row_index": 207
-    },
-    {
-      "run_id": "p1_format_verbose_r002",
-      "prompt_id": 1,
-      "strategy": "format_verbose",
-      "rep": 2,
-      "row_index": 208
-    },
-    {
-      "run_id": "p1_instruction_conflict_r000",
-      "prompt_id": 1,
-      "strategy": "instruction_conflict",
-      "rep": 0,
-      "row_index": 209
-    },
-    {
-      "run_id": "p1_instruction_conflict_r001",
-      "prompt_id": 1,
-      "strategy": "instruction_conflict",
-      "rep": 1,
-      "row_index": 210
-    },
-    {
-      "run_id": "p1_instruction_conflict_r002",
-      "prompt_id": 1,
-      "strategy": "instruction_conflict",
-      "rep": 2,
-      "row_index": 211
-    },
-    {
-      "run_id": "p1_instruction_system_only_r000",
-      "prompt_id": 1,
-      "strategy": "instruction_system_only",
-      "rep": 0,
-      "row_index": 212
-    },
-    {
-      "run_id": "p1_instruction_system_only_r001",
-      "prompt_id": 1,
-      "strategy": "instruction_system_only",
-      "rep": 1,
-      "row_index": 213
-    },
-    {
-      "run_id": "p1_instruction_system_only_r002",
-      "prompt_id": 1,
-      "strategy": "instruction_system_only",
-      "rep": 2,
-      "row_index": 214
-    },
-    {
-      "run_id": "p1_instruction_user_only_r000",
-      "prompt_id": 1,
-      "strategy": "instruction_user_only",
-      "rep": 0,
-      "row_index": 215
-    },
-    {
-      "run_id": "p1_instruction_user_only_r001",
-      "prompt_id": 1,
-      "strategy": "instruction_user_only",
-      "rep": 1,
-      "row_index": 216
-    },
-    {
-      "run_id": "p1_instruction_user_only_r002",
-      "prompt_id": 1,
-      "strategy": "instruction_user_only",
-      "rep": 2,
-      "row_index": 217
+      "run_id": "p0_adversarial_r004",
+      "prompt_id": 0,
+      "strategy": "adversarial",
+      "rep": 4,
+      "row_index": 114
     },
     {
       "run_id": "p1_paraphrase_r000",
       "prompt_id": 1,
       "strategy": "paraphrase",
       "rep": 0,
-      "row_index": 218
+      "row_index": 115
     },
     {
       "run_id": "p1_paraphrase_r001",
       "prompt_id": 1,
       "strategy": "paraphrase",
       "rep": 1,
-      "row_index": 219
+      "row_index": 116
     },
     {
       "run_id": "p1_paraphrase_r002",
       "prompt_id": 1,
       "strategy": "paraphrase",
       "rep": 2,
-      "row_index": 220
+      "row_index": 117
     },
     {
-      "run_id": "p1_role_adversarial_eval_r000",
+      "run_id": "p1_paraphrase_r003",
       "prompt_id": 1,
-      "strategy": "role_adversarial_eval",
+      "strategy": "paraphrase",
+      "rep": 3,
+      "row_index": 118
+    },
+    {
+      "run_id": "p1_paraphrase_r004",
+      "prompt_id": 1,
+      "strategy": "paraphrase",
+      "rep": 4,
+      "row_index": 119
+    },
+    {
+      "run_id": "p1_constraint_none_r000",
+      "prompt_id": 1,
+      "strategy": "constraint_none",
       "rep": 0,
-      "row_index": 221
+      "row_index": 120
     },
     {
-      "run_id": "p1_role_adversarial_eval_r001",
+      "run_id": "p1_constraint_none_r001",
       "prompt_id": 1,
-      "strategy": "role_adversarial_eval",
+      "strategy": "constraint_none",
       "rep": 1,
-      "row_index": 222
+      "row_index": 121
     },
     {
-      "run_id": "p1_role_adversarial_eval_r002",
+      "run_id": "p1_constraint_none_r002",
       "prompt_id": 1,
-      "strategy": "role_adversarial_eval",
+      "strategy": "constraint_none",
       "rep": 2,
-      "row_index": 223
+      "row_index": 122
     },
     {
-      "run_id": "p1_role_expert_r000",
+      "run_id": "p1_constraint_none_r003",
       "prompt_id": 1,
-      "strategy": "role_expert",
+      "strategy": "constraint_none",
+      "rep": 3,
+      "row_index": 123
+    },
+    {
+      "run_id": "p1_constraint_none_r004",
+      "prompt_id": 1,
+      "strategy": "constraint_none",
+      "rep": 4,
+      "row_index": 124
+    },
+    {
+      "run_id": "p1_constraint_light_r000",
+      "prompt_id": 1,
+      "strategy": "constraint_light",
       "rep": 0,
-      "row_index": 224
+      "row_index": 125
     },
     {
-      "run_id": "p1_role_expert_r001",
+      "run_id": "p1_constraint_light_r001",
       "prompt_id": 1,
-      "strategy": "role_expert",
+      "strategy": "constraint_light",
       "rep": 1,
-      "row_index": 225
+      "row_index": 126
     },
     {
-      "run_id": "p1_role_expert_r002",
+      "run_id": "p1_constraint_light_r002",
       "prompt_id": 1,
-      "strategy": "role_expert",
+      "strategy": "constraint_light",
       "rep": 2,
-      "row_index": 226
+      "row_index": 127
+    },
+    {
+      "run_id": "p1_constraint_light_r003",
+      "prompt_id": 1,
+      "strategy": "constraint_light",
+      "rep": 3,
+      "row_index": 128
+    },
+    {
+      "run_id": "p1_constraint_light_r004",
+      "prompt_id": 1,
+      "strategy": "constraint_light",
+      "rep": 4,
+      "row_index": 129
+    },
+    {
+      "run_id": "p1_constraint_heavy_r000",
+      "prompt_id": 1,
+      "strategy": "constraint_heavy",
+      "rep": 0,
+      "row_index": 130
+    },
+    {
+      "run_id": "p1_constraint_heavy_r001",
+      "prompt_id": 1,
+      "strategy": "constraint_heavy",
+      "rep": 1,
+      "row_index": 131
+    },
+    {
+      "run_id": "p1_constraint_heavy_r002",
+      "prompt_id": 1,
+      "strategy": "constraint_heavy",
+      "rep": 2,
+      "row_index": 132
+    },
+    {
+      "run_id": "p1_constraint_heavy_r003",
+      "prompt_id": 1,
+      "strategy": "constraint_heavy",
+      "rep": 3,
+      "row_index": 133
+    },
+    {
+      "run_id": "p1_constraint_heavy_r004",
+      "prompt_id": 1,
+      "strategy": "constraint_heavy",
+      "rep": 4,
+      "row_index": 134
+    },
+    {
+      "run_id": "p1_constraint_conflicting_r000",
+      "prompt_id": 1,
+      "strategy": "constraint_conflicting",
+      "rep": 0,
+      "row_index": 135
+    },
+    {
+      "run_id": "p1_constraint_conflicting_r001",
+      "prompt_id": 1,
+      "strategy": "constraint_conflicting",
+      "rep": 1,
+      "row_index": 136
+    },
+    {
+      "run_id": "p1_constraint_conflicting_r002",
+      "prompt_id": 1,
+      "strategy": "constraint_conflicting",
+      "rep": 2,
+      "row_index": 137
+    },
+    {
+      "run_id": "p1_constraint_conflicting_r003",
+      "prompt_id": 1,
+      "strategy": "constraint_conflicting",
+      "rep": 3,
+      "row_index": 138
+    },
+    {
+      "run_id": "p1_constraint_conflicting_r004",
+      "prompt_id": 1,
+      "strategy": "constraint_conflicting",
+      "rep": 4,
+      "row_index": 139
+    },
+    {
+      "run_id": "p1_instruction_system_only_r000",
+      "prompt_id": 1,
+      "strategy": "instruction_system_only",
+      "rep": 0,
+      "row_index": 140
+    },
+    {
+      "run_id": "p1_instruction_system_only_r001",
+      "prompt_id": 1,
+      "strategy": "instruction_system_only",
+      "rep": 1,
+      "row_index": 141
+    },
+    {
+      "run_id": "p1_instruction_system_only_r002",
+      "prompt_id": 1,
+      "strategy": "instruction_system_only",
+      "rep": 2,
+      "row_index": 142
+    },
+    {
+      "run_id": "p1_instruction_system_only_r003",
+      "prompt_id": 1,
+      "strategy": "instruction_system_only",
+      "rep": 3,
+      "row_index": 143
+    },
+    {
+      "run_id": "p1_instruction_system_only_r004",
+      "prompt_id": 1,
+      "strategy": "instruction_system_only",
+      "rep": 4,
+      "row_index": 144
+    },
+    {
+      "run_id": "p1_instruction_user_only_r000",
+      "prompt_id": 1,
+      "strategy": "instruction_user_only",
+      "rep": 0,
+      "row_index": 145
+    },
+    {
+      "run_id": "p1_instruction_user_only_r001",
+      "prompt_id": 1,
+      "strategy": "instruction_user_only",
+      "rep": 1,
+      "row_index": 146
+    },
+    {
+      "run_id": "p1_instruction_user_only_r002",
+      "prompt_id": 1,
+      "strategy": "instruction_user_only",
+      "rep": 2,
+      "row_index": 147
+    },
+    {
+      "run_id": "p1_instruction_user_only_r003",
+      "prompt_id": 1,
+      "strategy": "instruction_user_only",
+      "rep": 3,
+      "row_index": 148
+    },
+    {
+      "run_id": "p1_instruction_user_only_r004",
+      "prompt_id": 1,
+      "strategy": "instruction_user_only",
+      "rep": 4,
+      "row_index": 149
+    },
+    {
+      "run_id": "p1_instruction_conflict_r000",
+      "prompt_id": 1,
+      "strategy": "instruction_conflict",
+      "rep": 0,
+      "row_index": 150
+    },
+    {
+      "run_id": "p1_instruction_conflict_r001",
+      "prompt_id": 1,
+      "strategy": "instruction_conflict",
+      "rep": 1,
+      "row_index": 151
+    },
+    {
+      "run_id": "p1_instruction_conflict_r002",
+      "prompt_id": 1,
+      "strategy": "instruction_conflict",
+      "rep": 2,
+      "row_index": 152
+    },
+    {
+      "run_id": "p1_instruction_conflict_r003",
+      "prompt_id": 1,
+      "strategy": "instruction_conflict",
+      "rep": 3,
+      "row_index": 153
+    },
+    {
+      "run_id": "p1_instruction_conflict_r004",
+      "prompt_id": 1,
+      "strategy": "instruction_conflict",
+      "rep": 4,
+      "row_index": 154
     },
     {
       "run_id": "p1_role_neutral_r000",
       "prompt_id": 1,
       "strategy": "role_neutral",
       "rep": 0,
-      "row_index": 227
+      "row_index": 155
     },
     {
       "run_id": "p1_role_neutral_r001",
       "prompt_id": 1,
       "strategy": "role_neutral",
       "rep": 1,
-      "row_index": 228
+      "row_index": 156
     },
     {
       "run_id": "p1_role_neutral_r002",
       "prompt_id": 1,
       "strategy": "role_neutral",
       "rep": 2,
-      "row_index": 229
+      "row_index": 157
     },
     {
-      "run_id": "p1_role_obedient_r000",
+      "run_id": "p1_role_neutral_r003",
       "prompt_id": 1,
-      "strategy": "role_obedient",
+      "strategy": "role_neutral",
+      "rep": 3,
+      "row_index": 158
+    },
+    {
+      "run_id": "p1_role_neutral_r004",
+      "prompt_id": 1,
+      "strategy": "role_neutral",
+      "rep": 4,
+      "row_index": 159
+    },
+    {
+      "run_id": "p1_role_expert_r000",
+      "prompt_id": 1,
+      "strategy": "role_expert",
       "rep": 0,
-      "row_index": 230
+      "row_index": 160
     },
     {
-      "run_id": "p1_role_obedient_r001",
+      "run_id": "p1_role_expert_r001",
       "prompt_id": 1,
-      "strategy": "role_obedient",
+      "strategy": "role_expert",
       "rep": 1,
-      "row_index": 231
+      "row_index": 161
     },
     {
-      "run_id": "p1_role_obedient_r002",
+      "run_id": "p1_role_expert_r002",
       "prompt_id": 1,
-      "strategy": "role_obedient",
+      "strategy": "role_expert",
       "rep": 2,
-      "row_index": 232
+      "row_index": 162
+    },
+    {
+      "run_id": "p1_role_expert_r003",
+      "prompt_id": 1,
+      "strategy": "role_expert",
+      "rep": 3,
+      "row_index": 163
+    },
+    {
+      "run_id": "p1_role_expert_r004",
+      "prompt_id": 1,
+      "strategy": "role_expert",
+      "rep": 4,
+      "row_index": 164
     },
     {
       "run_id": "p1_role_skeptic_r000",
       "prompt_id": 1,
       "strategy": "role_skeptic",
       "rep": 0,
-      "row_index": 233
+      "row_index": 165
     },
     {
       "run_id": "p1_role_skeptic_r001",
       "prompt_id": 1,
       "strategy": "role_skeptic",
       "rep": 1,
-      "row_index": 234
+      "row_index": 166
     },
     {
       "run_id": "p1_role_skeptic_r002",
       "prompt_id": 1,
       "strategy": "role_skeptic",
       "rep": 2,
-      "row_index": 235
+      "row_index": 167
+    },
+    {
+      "run_id": "p1_role_skeptic_r003",
+      "prompt_id": 1,
+      "strategy": "role_skeptic",
+      "rep": 3,
+      "row_index": 168
+    },
+    {
+      "run_id": "p1_role_skeptic_r004",
+      "prompt_id": 1,
+      "strategy": "role_skeptic",
+      "rep": 4,
+      "row_index": 169
+    },
+    {
+      "run_id": "p1_role_adversarial_eval_r000",
+      "prompt_id": 1,
+      "strategy": "role_adversarial_eval",
+      "rep": 0,
+      "row_index": 170
+    },
+    {
+      "run_id": "p1_role_adversarial_eval_r001",
+      "prompt_id": 1,
+      "strategy": "role_adversarial_eval",
+      "rep": 1,
+      "row_index": 171
+    },
+    {
+      "run_id": "p1_role_adversarial_eval_r002",
+      "prompt_id": 1,
+      "strategy": "role_adversarial_eval",
+      "rep": 2,
+      "row_index": 172
+    },
+    {
+      "run_id": "p1_role_adversarial_eval_r003",
+      "prompt_id": 1,
+      "strategy": "role_adversarial_eval",
+      "rep": 3,
+      "row_index": 173
+    },
+    {
+      "run_id": "p1_role_adversarial_eval_r004",
+      "prompt_id": 1,
+      "strategy": "role_adversarial_eval",
+      "rep": 4,
+      "row_index": 174
+    },
+    {
+      "run_id": "p1_role_obedient_r000",
+      "prompt_id": 1,
+      "strategy": "role_obedient",
+      "rep": 0,
+      "row_index": 175
+    },
+    {
+      "run_id": "p1_role_obedient_r001",
+      "prompt_id": 1,
+      "strategy": "role_obedient",
+      "rep": 1,
+      "row_index": 176
+    },
+    {
+      "run_id": "p1_role_obedient_r002",
+      "prompt_id": 1,
+      "strategy": "role_obedient",
+      "rep": 2,
+      "row_index": 177
+    },
+    {
+      "run_id": "p1_role_obedient_r003",
+      "prompt_id": 1,
+      "strategy": "role_obedient",
+      "rep": 3,
+      "row_index": 178
+    },
+    {
+      "run_id": "p1_role_obedient_r004",
+      "prompt_id": 1,
+      "strategy": "role_obedient",
+      "rep": 4,
+      "row_index": 179
+    },
+    {
+      "run_id": "p1_format_paragraph_r000",
+      "prompt_id": 1,
+      "strategy": "format_paragraph",
+      "rep": 0,
+      "row_index": 180
+    },
+    {
+      "run_id": "p1_format_paragraph_r001",
+      "prompt_id": 1,
+      "strategy": "format_paragraph",
+      "rep": 1,
+      "row_index": 181
+    },
+    {
+      "run_id": "p1_format_paragraph_r002",
+      "prompt_id": 1,
+      "strategy": "format_paragraph",
+      "rep": 2,
+      "row_index": 182
+    },
+    {
+      "run_id": "p1_format_paragraph_r003",
+      "prompt_id": 1,
+      "strategy": "format_paragraph",
+      "rep": 3,
+      "row_index": 183
+    },
+    {
+      "run_id": "p1_format_paragraph_r004",
+      "prompt_id": 1,
+      "strategy": "format_paragraph",
+      "rep": 4,
+      "row_index": 184
+    },
+    {
+      "run_id": "p1_format_bullet_r000",
+      "prompt_id": 1,
+      "strategy": "format_bullet",
+      "rep": 0,
+      "row_index": 185
+    },
+    {
+      "run_id": "p1_format_bullet_r001",
+      "prompt_id": 1,
+      "strategy": "format_bullet",
+      "rep": 1,
+      "row_index": 186
+    },
+    {
+      "run_id": "p1_format_bullet_r002",
+      "prompt_id": 1,
+      "strategy": "format_bullet",
+      "rep": 2,
+      "row_index": 187
+    },
+    {
+      "run_id": "p1_format_bullet_r003",
+      "prompt_id": 1,
+      "strategy": "format_bullet",
+      "rep": 3,
+      "row_index": 188
+    },
+    {
+      "run_id": "p1_format_bullet_r004",
+      "prompt_id": 1,
+      "strategy": "format_bullet",
+      "rep": 4,
+      "row_index": 189
+    },
+    {
+      "run_id": "p1_format_json_r000",
+      "prompt_id": 1,
+      "strategy": "format_json",
+      "rep": 0,
+      "row_index": 190
+    },
+    {
+      "run_id": "p1_format_json_r001",
+      "prompt_id": 1,
+      "strategy": "format_json",
+      "rep": 1,
+      "row_index": 191
+    },
+    {
+      "run_id": "p1_format_json_r002",
+      "prompt_id": 1,
+      "strategy": "format_json",
+      "rep": 2,
+      "row_index": 192
+    },
+    {
+      "run_id": "p1_format_json_r003",
+      "prompt_id": 1,
+      "strategy": "format_json",
+      "rep": 3,
+      "row_index": 193
+    },
+    {
+      "run_id": "p1_format_json_r004",
+      "prompt_id": 1,
+      "strategy": "format_json",
+      "rep": 4,
+      "row_index": 194
+    },
+    {
+      "run_id": "p1_format_step_by_step_r000",
+      "prompt_id": 1,
+      "strategy": "format_step_by_step",
+      "rep": 0,
+      "row_index": 195
+    },
+    {
+      "run_id": "p1_format_step_by_step_r001",
+      "prompt_id": 1,
+      "strategy": "format_step_by_step",
+      "rep": 1,
+      "row_index": 196
+    },
+    {
+      "run_id": "p1_format_step_by_step_r002",
+      "prompt_id": 1,
+      "strategy": "format_step_by_step",
+      "rep": 2,
+      "row_index": 197
+    },
+    {
+      "run_id": "p1_format_step_by_step_r003",
+      "prompt_id": 1,
+      "strategy": "format_step_by_step",
+      "rep": 3,
+      "row_index": 198
+    },
+    {
+      "run_id": "p1_format_step_by_step_r004",
+      "prompt_id": 1,
+      "strategy": "format_step_by_step",
+      "rep": 4,
+      "row_index": 199
+    },
+    {
+      "run_id": "p1_format_compressed_r000",
+      "prompt_id": 1,
+      "strategy": "format_compressed",
+      "rep": 0,
+      "row_index": 200
+    },
+    {
+      "run_id": "p1_format_compressed_r001",
+      "prompt_id": 1,
+      "strategy": "format_compressed",
+      "rep": 1,
+      "row_index": 201
+    },
+    {
+      "run_id": "p1_format_compressed_r002",
+      "prompt_id": 1,
+      "strategy": "format_compressed",
+      "rep": 2,
+      "row_index": 202
+    },
+    {
+      "run_id": "p1_format_compressed_r003",
+      "prompt_id": 1,
+      "strategy": "format_compressed",
+      "rep": 3,
+      "row_index": 203
+    },
+    {
+      "run_id": "p1_format_compressed_r004",
+      "prompt_id": 1,
+      "strategy": "format_compressed",
+      "rep": 4,
+      "row_index": 204
+    },
+    {
+      "run_id": "p1_format_verbose_r000",
+      "prompt_id": 1,
+      "strategy": "format_verbose",
+      "rep": 0,
+      "row_index": 205
+    },
+    {
+      "run_id": "p1_format_verbose_r001",
+      "prompt_id": 1,
+      "strategy": "format_verbose",
+      "rep": 1,
+      "row_index": 206
+    },
+    {
+      "run_id": "p1_format_verbose_r002",
+      "prompt_id": 1,
+      "strategy": "format_verbose",
+      "rep": 2,
+      "row_index": 207
+    },
+    {
+      "run_id": "p1_format_verbose_r003",
+      "prompt_id": 1,
+      "strategy": "format_verbose",
+      "rep": 3,
+      "row_index": 208
+    },
+    {
+      "run_id": "p1_format_verbose_r004",
+      "prompt_id": 1,
+      "strategy": "format_verbose",
+      "rep": 4,
+      "row_index": 209
     },
     {
       "run_id": "p1_token_1sentence_r000",
       "prompt_id": 1,
       "strategy": "token_1sentence",
       "rep": 0,
-      "row_index": 236
+      "row_index": 210
     },
     {
       "run_id": "p1_token_1sentence_r001",
       "prompt_id": 1,
       "strategy": "token_1sentence",
       "rep": 1,
-      "row_index": 237
+      "row_index": 211
     },
     {
       "run_id": "p1_token_1sentence_r002",
       "prompt_id": 1,
       "strategy": "token_1sentence",
       "rep": 2,
-      "row_index": 238
+      "row_index": 212
+    },
+    {
+      "run_id": "p1_token_1sentence_r003",
+      "prompt_id": 1,
+      "strategy": "token_1sentence",
+      "rep": 3,
+      "row_index": 213
+    },
+    {
+      "run_id": "p1_token_1sentence_r004",
+      "prompt_id": 1,
+      "strategy": "token_1sentence",
+      "rep": 4,
+      "row_index": 214
     },
     {
       "run_id": "p1_token_5lines_r000",
       "prompt_id": 1,
       "strategy": "token_5lines",
       "rep": 0,
-      "row_index": 239
+      "row_index": 215
     },
     {
       "run_id": "p1_token_5lines_r001",
       "prompt_id": 1,
       "strategy": "token_5lines",
       "rep": 1,
-      "row_index": 240
+      "row_index": 216
     },
     {
       "run_id": "p1_token_5lines_r002",
       "prompt_id": 1,
       "strategy": "token_5lines",
       "rep": 2,
-      "row_index": 241
+      "row_index": 217
+    },
+    {
+      "run_id": "p1_token_5lines_r003",
+      "prompt_id": 1,
+      "strategy": "token_5lines",
+      "rep": 3,
+      "row_index": 218
+    },
+    {
+      "run_id": "p1_token_5lines_r004",
+      "prompt_id": 1,
+      "strategy": "token_5lines",
+      "rep": 4,
+      "row_index": 219
     },
     {
       "run_id": "p1_token_full_r000",
       "prompt_id": 1,
       "strategy": "token_full",
       "rep": 0,
-      "row_index": 242
+      "row_index": 220
     },
     {
       "run_id": "p1_token_full_r001",
       "prompt_id": 1,
       "strategy": "token_full",
       "rep": 1,
-      "row_index": 243
+      "row_index": 221
     },
     {
       "run_id": "p1_token_full_r002",
       "prompt_id": 1,
       "strategy": "token_full",
       "rep": 2,
-      "row_index": 244
+      "row_index": 222
     },
     {
-      "run_id": "p2_adversarial_r000",
-      "prompt_id": 2,
+      "run_id": "p1_token_full_r003",
+      "prompt_id": 1,
+      "strategy": "token_full",
+      "rep": 3,
+      "row_index": 223
+    },
+    {
+      "run_id": "p1_token_full_r004",
+      "prompt_id": 1,
+      "strategy": "token_full",
+      "rep": 4,
+      "row_index": 224
+    },
+    {
+      "run_id": "p1_adversarial_r000",
+      "prompt_id": 1,
       "strategy": "adversarial",
       "rep": 0,
-      "row_index": 245
+      "row_index": 225
     },
     {
-      "run_id": "p2_adversarial_r001",
-      "prompt_id": 2,
+      "run_id": "p1_adversarial_r001",
+      "prompt_id": 1,
       "strategy": "adversarial",
       "rep": 1,
-      "row_index": 246
+      "row_index": 226
     },
     {
-      "run_id": "p2_adversarial_r002",
-      "prompt_id": 2,
+      "run_id": "p1_adversarial_r002",
+      "prompt_id": 1,
       "strategy": "adversarial",
       "rep": 2,
-      "row_index": 247
+      "row_index": 227
     },
     {
-      "run_id": "p2_constraint_conflicting_r000",
-      "prompt_id": 2,
-      "strategy": "constraint_conflicting",
-      "rep": 0,
-      "row_index": 248
+      "run_id": "p1_adversarial_r003",
+      "prompt_id": 1,
+      "strategy": "adversarial",
+      "rep": 3,
+      "row_index": 228
     },
     {
-      "run_id": "p2_constraint_conflicting_r001",
-      "prompt_id": 2,
-      "strategy": "constraint_conflicting",
-      "rep": 1,
-      "row_index": 249
-    },
-    {
-      "run_id": "p2_constraint_conflicting_r002",
-      "prompt_id": 2,
-      "strategy": "constraint_conflicting",
-      "rep": 2,
-      "row_index": 250
-    },
-    {
-      "run_id": "p2_constraint_heavy_r000",
-      "prompt_id": 2,
-      "strategy": "constraint_heavy",
-      "rep": 0,
-      "row_index": 251
-    },
-    {
-      "run_id": "p2_constraint_heavy_r001",
-      "prompt_id": 2,
-      "strategy": "constraint_heavy",
-      "rep": 1,
-      "row_index": 252
-    },
-    {
-      "run_id": "p2_constraint_heavy_r002",
-      "prompt_id": 2,
-      "strategy": "constraint_heavy",
-      "rep": 2,
-      "row_index": 253
-    },
-    {
-      "run_id": "p2_constraint_light_r000",
-      "prompt_id": 2,
-      "strategy": "constraint_light",
-      "rep": 0,
-      "row_index": 254
-    },
-    {
-      "run_id": "p2_constraint_light_r001",
-      "prompt_id": 2,
-      "strategy": "constraint_light",
-      "rep": 1,
-      "row_index": 255
-    },
-    {
-      "run_id": "p2_constraint_light_r002",
-      "prompt_id": 2,
-      "strategy": "constraint_light",
-      "rep": 2,
-      "row_index": 256
-    },
-    {
-      "run_id": "p2_constraint_none_r000",
-      "prompt_id": 2,
-      "strategy": "constraint_none",
-      "rep": 0,
-      "row_index": 257
-    },
-    {
-      "run_id": "p2_constraint_none_r001",
-      "prompt_id": 2,
-      "strategy": "constraint_none",
-      "rep": 1,
-      "row_index": 258
-    },
-    {
-      "run_id": "p2_constraint_none_r002",
-      "prompt_id": 2,
-      "strategy": "constraint_none",
-      "rep": 2,
-      "row_index": 259
-    },
-    {
-      "run_id": "p2_format_bullet_r000",
-      "prompt_id": 2,
-      "strategy": "format_bullet",
-      "rep": 0,
-      "row_index": 260
-    },
-    {
-      "run_id": "p2_format_bullet_r001",
-      "prompt_id": 2,
-      "strategy": "format_bullet",
-      "rep": 1,
-      "row_index": 261
-    },
-    {
-      "run_id": "p2_format_bullet_r002",
-      "prompt_id": 2,
-      "strategy": "format_bullet",
-      "rep": 2,
-      "row_index": 262
-    },
-    {
-      "run_id": "p2_format_compressed_r000",
-      "prompt_id": 2,
-      "strategy": "format_compressed",
-      "rep": 0,
-      "row_index": 263
-    },
-    {
-      "run_id": "p2_format_compressed_r001",
-      "prompt_id": 2,
-      "strategy": "format_compressed",
-      "rep": 1,
-      "row_index": 264
-    },
-    {
-      "run_id": "p2_format_compressed_r002",
-      "prompt_id": 2,
-      "strategy": "format_compressed",
-      "rep": 2,
-      "row_index": 265
-    },
-    {
-      "run_id": "p2_format_json_r000",
-      "prompt_id": 2,
-      "strategy": "format_json",
-      "rep": 0,
-      "row_index": 266
-    },
-    {
-      "run_id": "p2_format_json_r001",
-      "prompt_id": 2,
-      "strategy": "format_json",
-      "rep": 1,
-      "row_index": 267
-    },
-    {
-      "run_id": "p2_format_json_r002",
-      "prompt_id": 2,
-      "strategy": "format_json",
-      "rep": 2,
-      "row_index": 268
-    },
-    {
-      "run_id": "p2_format_paragraph_r000",
-      "prompt_id": 2,
-      "strategy": "format_paragraph",
-      "rep": 0,
-      "row_index": 269
-    },
-    {
-      "run_id": "p2_format_paragraph_r001",
-      "prompt_id": 2,
-      "strategy": "format_paragraph",
-      "rep": 1,
-      "row_index": 270
-    },
-    {
-      "run_id": "p2_format_paragraph_r002",
-      "prompt_id": 2,
-      "strategy": "format_paragraph",
-      "rep": 2,
-      "row_index": 271
-    },
-    {
-      "run_id": "p2_format_step_by_step_r000",
-      "prompt_id": 2,
-      "strategy": "format_step_by_step",
-      "rep": 0,
-      "row_index": 272
-    },
-    {
-      "run_id": "p2_format_step_by_step_r001",
-      "prompt_id": 2,
-      "strategy": "format_step_by_step",
-      "rep": 1,
-      "row_index": 273
-    },
-    {
-      "run_id": "p2_format_step_by_step_r002",
-      "prompt_id": 2,
-      "strategy": "format_step_by_step",
-      "rep": 2,
-      "row_index": 274
-    },
-    {
-      "run_id": "p2_format_verbose_r000",
-      "prompt_id": 2,
-      "strategy": "format_verbose",
-      "rep": 0,
-      "row_index": 275
-    },
-    {
-      "run_id": "p2_format_verbose_r001",
-      "prompt_id": 2,
-      "strategy": "format_verbose",
-      "rep": 1,
-      "row_index": 276
-    },
-    {
-      "run_id": "p2_format_verbose_r002",
-      "prompt_id": 2,
-      "strategy": "format_verbose",
-      "rep": 2,
-      "row_index": 277
-    },
-    {
-      "run_id": "p2_instruction_conflict_r000",
-      "prompt_id": 2,
-      "strategy": "instruction_conflict",
-      "rep": 0,
-      "row_index": 278
-    },
-    {
-      "run_id": "p2_instruction_conflict_r001",
-      "prompt_id": 2,
-      "strategy": "instruction_conflict",
-      "rep": 1,
-      "row_index": 279
-    },
-    {
-      "run_id": "p2_instruction_conflict_r002",
-      "prompt_id": 2,
-      "strategy": "instruction_conflict",
-      "rep": 2,
-      "row_index": 280
-    },
-    {
-      "run_id": "p2_instruction_system_only_r000",
-      "prompt_id": 2,
-      "strategy": "instruction_system_only",
-      "rep": 0,
-      "row_index": 281
-    },
-    {
-      "run_id": "p2_instruction_system_only_r001",
-      "prompt_id": 2,
-      "strategy": "instruction_system_only",
-      "rep": 1,
-      "row_index": 282
-    },
-    {
-      "run_id": "p2_instruction_system_only_r002",
-      "prompt_id": 2,
-      "strategy": "instruction_system_only",
-      "rep": 2,
-      "row_index": 283
-    },
-    {
-      "run_id": "p2_instruction_user_only_r000",
-      "prompt_id": 2,
-      "strategy": "instruction_user_only",
-      "rep": 0,
-      "row_index": 284
-    },
-    {
-      "run_id": "p2_instruction_user_only_r001",
-      "prompt_id": 2,
-      "strategy": "instruction_user_only",
-      "rep": 1,
-      "row_index": 285
-    },
-    {
-      "run_id": "p2_instruction_user_only_r002",
-      "prompt_id": 2,
-      "strategy": "instruction_user_only",
-      "rep": 2,
-      "row_index": 286
+      "run_id": "p1_adversarial_r004",
+      "prompt_id": 1,
+      "strategy": "adversarial",
+      "rep": 4,
+      "row_index": 229
     },
     {
       "run_id": "p2_paraphrase_r000",
       "prompt_id": 2,
       "strategy": "paraphrase",
       "rep": 0,
-      "row_index": 287
+      "row_index": 230
     },
     {
       "run_id": "p2_paraphrase_r001",
       "prompt_id": 2,
       "strategy": "paraphrase",
       "rep": 1,
-      "row_index": 288
+      "row_index": 231
     },
     {
       "run_id": "p2_paraphrase_r002",
       "prompt_id": 2,
       "strategy": "paraphrase",
       "rep": 2,
-      "row_index": 289
+      "row_index": 232
     },
     {
-      "run_id": "p2_role_adversarial_eval_r000",
+      "run_id": "p2_paraphrase_r003",
       "prompt_id": 2,
-      "strategy": "role_adversarial_eval",
+      "strategy": "paraphrase",
+      "rep": 3,
+      "row_index": 233
+    },
+    {
+      "run_id": "p2_paraphrase_r004",
+      "prompt_id": 2,
+      "strategy": "paraphrase",
+      "rep": 4,
+      "row_index": 234
+    },
+    {
+      "run_id": "p2_constraint_none_r000",
+      "prompt_id": 2,
+      "strategy": "constraint_none",
       "rep": 0,
-      "row_index": 290
+      "row_index": 235
     },
     {
-      "run_id": "p2_role_adversarial_eval_r001",
+      "run_id": "p2_constraint_none_r001",
       "prompt_id": 2,
-      "strategy": "role_adversarial_eval",
+      "strategy": "constraint_none",
       "rep": 1,
-      "row_index": 291
+      "row_index": 236
     },
     {
-      "run_id": "p2_role_adversarial_eval_r002",
+      "run_id": "p2_constraint_none_r002",
       "prompt_id": 2,
-      "strategy": "role_adversarial_eval",
+      "strategy": "constraint_none",
       "rep": 2,
-      "row_index": 292
+      "row_index": 237
     },
     {
-      "run_id": "p2_role_expert_r000",
+      "run_id": "p2_constraint_none_r003",
       "prompt_id": 2,
-      "strategy": "role_expert",
+      "strategy": "constraint_none",
+      "rep": 3,
+      "row_index": 238
+    },
+    {
+      "run_id": "p2_constraint_none_r004",
+      "prompt_id": 2,
+      "strategy": "constraint_none",
+      "rep": 4,
+      "row_index": 239
+    },
+    {
+      "run_id": "p2_constraint_light_r000",
+      "prompt_id": 2,
+      "strategy": "constraint_light",
       "rep": 0,
-      "row_index": 293
+      "row_index": 240
     },
     {
-      "run_id": "p2_role_expert_r001",
+      "run_id": "p2_constraint_light_r001",
       "prompt_id": 2,
-      "strategy": "role_expert",
+      "strategy": "constraint_light",
       "rep": 1,
-      "row_index": 294
+      "row_index": 241
     },
     {
-      "run_id": "p2_role_expert_r002",
+      "run_id": "p2_constraint_light_r002",
       "prompt_id": 2,
-      "strategy": "role_expert",
+      "strategy": "constraint_light",
       "rep": 2,
-      "row_index": 295
+      "row_index": 242
+    },
+    {
+      "run_id": "p2_constraint_light_r003",
+      "prompt_id": 2,
+      "strategy": "constraint_light",
+      "rep": 3,
+      "row_index": 243
+    },
+    {
+      "run_id": "p2_constraint_light_r004",
+      "prompt_id": 2,
+      "strategy": "constraint_light",
+      "rep": 4,
+      "row_index": 244
+    },
+    {
+      "run_id": "p2_constraint_heavy_r000",
+      "prompt_id": 2,
+      "strategy": "constraint_heavy",
+      "rep": 0,
+      "row_index": 245
+    },
+    {
+      "run_id": "p2_constraint_heavy_r001",
+      "prompt_id": 2,
+      "strategy": "constraint_heavy",
+      "rep": 1,
+      "row_index": 246
+    },
+    {
+      "run_id": "p2_constraint_heavy_r002",
+      "prompt_id": 2,
+      "strategy": "constraint_heavy",
+      "rep": 2,
+      "row_index": 247
+    },
+    {
+      "run_id": "p2_constraint_heavy_r003",
+      "prompt_id": 2,
+      "strategy": "constraint_heavy",
+      "rep": 3,
+      "row_index": 248
+    },
+    {
+      "run_id": "p2_constraint_heavy_r004",
+      "prompt_id": 2,
+      "strategy": "constraint_heavy",
+      "rep": 4,
+      "row_index": 249
+    },
+    {
+      "run_id": "p2_constraint_conflicting_r000",
+      "prompt_id": 2,
+      "strategy": "constraint_conflicting",
+      "rep": 0,
+      "row_index": 250
+    },
+    {
+      "run_id": "p2_constraint_conflicting_r001",
+      "prompt_id": 2,
+      "strategy": "constraint_conflicting",
+      "rep": 1,
+      "row_index": 251
+    },
+    {
+      "run_id": "p2_constraint_conflicting_r002",
+      "prompt_id": 2,
+      "strategy": "constraint_conflicting",
+      "rep": 2,
+      "row_index": 252
+    },
+    {
+      "run_id": "p2_constraint_conflicting_r003",
+      "prompt_id": 2,
+      "strategy": "constraint_conflicting",
+      "rep": 3,
+      "row_index": 253
+    },
+    {
+      "run_id": "p2_constraint_conflicting_r004",
+      "prompt_id": 2,
+      "strategy": "constraint_conflicting",
+      "rep": 4,
+      "row_index": 254
+    },
+    {
+      "run_id": "p2_instruction_system_only_r000",
+      "prompt_id": 2,
+      "strategy": "instruction_system_only",
+      "rep": 0,
+      "row_index": 255
+    },
+    {
+      "run_id": "p2_instruction_system_only_r001",
+      "prompt_id": 2,
+      "strategy": "instruction_system_only",
+      "rep": 1,
+      "row_index": 256
+    },
+    {
+      "run_id": "p2_instruction_system_only_r002",
+      "prompt_id": 2,
+      "strategy": "instruction_system_only",
+      "rep": 2,
+      "row_index": 257
+    },
+    {
+      "run_id": "p2_instruction_system_only_r003",
+      "prompt_id": 2,
+      "strategy": "instruction_system_only",
+      "rep": 3,
+      "row_index": 258
+    },
+    {
+      "run_id": "p2_instruction_system_only_r004",
+      "prompt_id": 2,
+      "strategy": "instruction_system_only",
+      "rep": 4,
+      "row_index": 259
+    },
+    {
+      "run_id": "p2_instruction_user_only_r000",
+      "prompt_id": 2,
+      "strategy": "instruction_user_only",
+      "rep": 0,
+      "row_index": 260
+    },
+    {
+      "run_id": "p2_instruction_user_only_r001",
+      "prompt_id": 2,
+      "strategy": "instruction_user_only",
+      "rep": 1,
+      "row_index": 261
+    },
+    {
+      "run_id": "p2_instruction_user_only_r002",
+      "prompt_id": 2,
+      "strategy": "instruction_user_only",
+      "rep": 2,
+      "row_index": 262
+    },
+    {
+      "run_id": "p2_instruction_user_only_r003",
+      "prompt_id": 2,
+      "strategy": "instruction_user_only",
+      "rep": 3,
+      "row_index": 263
+    },
+    {
+      "run_id": "p2_instruction_user_only_r004",
+      "prompt_id": 2,
+      "strategy": "instruction_user_only",
+      "rep": 4,
+      "row_index": 264
+    },
+    {
+      "run_id": "p2_instruction_conflict_r000",
+      "prompt_id": 2,
+      "strategy": "instruction_conflict",
+      "rep": 0,
+      "row_index": 265
+    },
+    {
+      "run_id": "p2_instruction_conflict_r001",
+      "prompt_id": 2,
+      "strategy": "instruction_conflict",
+      "rep": 1,
+      "row_index": 266
+    },
+    {
+      "run_id": "p2_instruction_conflict_r002",
+      "prompt_id": 2,
+      "strategy": "instruction_conflict",
+      "rep": 2,
+      "row_index": 267
+    },
+    {
+      "run_id": "p2_instruction_conflict_r003",
+      "prompt_id": 2,
+      "strategy": "instruction_conflict",
+      "rep": 3,
+      "row_index": 268
+    },
+    {
+      "run_id": "p2_instruction_conflict_r004",
+      "prompt_id": 2,
+      "strategy": "instruction_conflict",
+      "rep": 4,
+      "row_index": 269
     },
     {
       "run_id": "p2_role_neutral_r000",
       "prompt_id": 2,
       "strategy": "role_neutral",
       "rep": 0,
-      "row_index": 296
+      "row_index": 270
     },
     {
       "run_id": "p2_role_neutral_r001",
       "prompt_id": 2,
       "strategy": "role_neutral",
       "rep": 1,
-      "row_index": 297
+      "row_index": 271
     },
     {
       "run_id": "p2_role_neutral_r002",
       "prompt_id": 2,
       "strategy": "role_neutral",
       "rep": 2,
-      "row_index": 298
+      "row_index": 272
     },
     {
-      "run_id": "p2_role_obedient_r000",
+      "run_id": "p2_role_neutral_r003",
       "prompt_id": 2,
-      "strategy": "role_obedient",
+      "strategy": "role_neutral",
+      "rep": 3,
+      "row_index": 273
+    },
+    {
+      "run_id": "p2_role_neutral_r004",
+      "prompt_id": 2,
+      "strategy": "role_neutral",
+      "rep": 4,
+      "row_index": 274
+    },
+    {
+      "run_id": "p2_role_expert_r000",
+      "prompt_id": 2,
+      "strategy": "role_expert",
       "rep": 0,
-      "row_index": 299
+      "row_index": 275
     },
     {
-      "run_id": "p2_role_obedient_r001",
+      "run_id": "p2_role_expert_r001",
       "prompt_id": 2,
-      "strategy": "role_obedient",
+      "strategy": "role_expert",
       "rep": 1,
-      "row_index": 300
+      "row_index": 276
     },
     {
-      "run_id": "p2_role_obedient_r002",
+      "run_id": "p2_role_expert_r002",
       "prompt_id": 2,
-      "strategy": "role_obedient",
+      "strategy": "role_expert",
       "rep": 2,
-      "row_index": 301
+      "row_index": 277
+    },
+    {
+      "run_id": "p2_role_expert_r003",
+      "prompt_id": 2,
+      "strategy": "role_expert",
+      "rep": 3,
+      "row_index": 278
+    },
+    {
+      "run_id": "p2_role_expert_r004",
+      "prompt_id": 2,
+      "strategy": "role_expert",
+      "rep": 4,
+      "row_index": 279
     },
     {
       "run_id": "p2_role_skeptic_r000",
       "prompt_id": 2,
       "strategy": "role_skeptic",
       "rep": 0,
-      "row_index": 302
+      "row_index": 280
     },
     {
       "run_id": "p2_role_skeptic_r001",
       "prompt_id": 2,
       "strategy": "role_skeptic",
       "rep": 1,
-      "row_index": 303
+      "row_index": 281
     },
     {
       "run_id": "p2_role_skeptic_r002",
       "prompt_id": 2,
       "strategy": "role_skeptic",
       "rep": 2,
+      "row_index": 282
+    },
+    {
+      "run_id": "p2_role_skeptic_r003",
+      "prompt_id": 2,
+      "strategy": "role_skeptic",
+      "rep": 3,
+      "row_index": 283
+    },
+    {
+      "run_id": "p2_role_skeptic_r004",
+      "prompt_id": 2,
+      "strategy": "role_skeptic",
+      "rep": 4,
+      "row_index": 284
+    },
+    {
+      "run_id": "p2_role_adversarial_eval_r000",
+      "prompt_id": 2,
+      "strategy": "role_adversarial_eval",
+      "rep": 0,
+      "row_index": 285
+    },
+    {
+      "run_id": "p2_role_adversarial_eval_r001",
+      "prompt_id": 2,
+      "strategy": "role_adversarial_eval",
+      "rep": 1,
+      "row_index": 286
+    },
+    {
+      "run_id": "p2_role_adversarial_eval_r002",
+      "prompt_id": 2,
+      "strategy": "role_adversarial_eval",
+      "rep": 2,
+      "row_index": 287
+    },
+    {
+      "run_id": "p2_role_adversarial_eval_r003",
+      "prompt_id": 2,
+      "strategy": "role_adversarial_eval",
+      "rep": 3,
+      "row_index": 288
+    },
+    {
+      "run_id": "p2_role_adversarial_eval_r004",
+      "prompt_id": 2,
+      "strategy": "role_adversarial_eval",
+      "rep": 4,
+      "row_index": 289
+    },
+    {
+      "run_id": "p2_role_obedient_r000",
+      "prompt_id": 2,
+      "strategy": "role_obedient",
+      "rep": 0,
+      "row_index": 290
+    },
+    {
+      "run_id": "p2_role_obedient_r001",
+      "prompt_id": 2,
+      "strategy": "role_obedient",
+      "rep": 1,
+      "row_index": 291
+    },
+    {
+      "run_id": "p2_role_obedient_r002",
+      "prompt_id": 2,
+      "strategy": "role_obedient",
+      "rep": 2,
+      "row_index": 292
+    },
+    {
+      "run_id": "p2_role_obedient_r003",
+      "prompt_id": 2,
+      "strategy": "role_obedient",
+      "rep": 3,
+      "row_index": 293
+    },
+    {
+      "run_id": "p2_role_obedient_r004",
+      "prompt_id": 2,
+      "strategy": "role_obedient",
+      "rep": 4,
+      "row_index": 294
+    },
+    {
+      "run_id": "p2_format_paragraph_r000",
+      "prompt_id": 2,
+      "strategy": "format_paragraph",
+      "rep": 0,
+      "row_index": 295
+    },
+    {
+      "run_id": "p2_format_paragraph_r001",
+      "prompt_id": 2,
+      "strategy": "format_paragraph",
+      "rep": 1,
+      "row_index": 296
+    },
+    {
+      "run_id": "p2_format_paragraph_r002",
+      "prompt_id": 2,
+      "strategy": "format_paragraph",
+      "rep": 2,
+      "row_index": 297
+    },
+    {
+      "run_id": "p2_format_paragraph_r003",
+      "prompt_id": 2,
+      "strategy": "format_paragraph",
+      "rep": 3,
+      "row_index": 298
+    },
+    {
+      "run_id": "p2_format_paragraph_r004",
+      "prompt_id": 2,
+      "strategy": "format_paragraph",
+      "rep": 4,
+      "row_index": 299
+    },
+    {
+      "run_id": "p2_format_bullet_r000",
+      "prompt_id": 2,
+      "strategy": "format_bullet",
+      "rep": 0,
+      "row_index": 300
+    },
+    {
+      "run_id": "p2_format_bullet_r001",
+      "prompt_id": 2,
+      "strategy": "format_bullet",
+      "rep": 1,
+      "row_index": 301
+    },
+    {
+      "run_id": "p2_format_bullet_r002",
+      "prompt_id": 2,
+      "strategy": "format_bullet",
+      "rep": 2,
+      "row_index": 302
+    },
+    {
+      "run_id": "p2_format_bullet_r003",
+      "prompt_id": 2,
+      "strategy": "format_bullet",
+      "rep": 3,
+      "row_index": 303
+    },
+    {
+      "run_id": "p2_format_bullet_r004",
+      "prompt_id": 2,
+      "strategy": "format_bullet",
+      "rep": 4,
       "row_index": 304
+    },
+    {
+      "run_id": "p2_format_json_r000",
+      "prompt_id": 2,
+      "strategy": "format_json",
+      "rep": 0,
+      "row_index": 305
+    },
+    {
+      "run_id": "p2_format_json_r001",
+      "prompt_id": 2,
+      "strategy": "format_json",
+      "rep": 1,
+      "row_index": 306
+    },
+    {
+      "run_id": "p2_format_json_r002",
+      "prompt_id": 2,
+      "strategy": "format_json",
+      "rep": 2,
+      "row_index": 307
+    },
+    {
+      "run_id": "p2_format_json_r003",
+      "prompt_id": 2,
+      "strategy": "format_json",
+      "rep": 3,
+      "row_index": 308
+    },
+    {
+      "run_id": "p2_format_json_r004",
+      "prompt_id": 2,
+      "strategy": "format_json",
+      "rep": 4,
+      "row_index": 309
+    },
+    {
+      "run_id": "p2_format_step_by_step_r000",
+      "prompt_id": 2,
+      "strategy": "format_step_by_step",
+      "rep": 0,
+      "row_index": 310
+    },
+    {
+      "run_id": "p2_format_step_by_step_r001",
+      "prompt_id": 2,
+      "strategy": "format_step_by_step",
+      "rep": 1,
+      "row_index": 311
+    },
+    {
+      "run_id": "p2_format_step_by_step_r002",
+      "prompt_id": 2,
+      "strategy": "format_step_by_step",
+      "rep": 2,
+      "row_index": 312
+    },
+    {
+      "run_id": "p2_format_step_by_step_r003",
+      "prompt_id": 2,
+      "strategy": "format_step_by_step",
+      "rep": 3,
+      "row_index": 313
+    },
+    {
+      "run_id": "p2_format_step_by_step_r004",
+      "prompt_id": 2,
+      "strategy": "format_step_by_step",
+      "rep": 4,
+      "row_index": 314
+    },
+    {
+      "run_id": "p2_format_compressed_r000",
+      "prompt_id": 2,
+      "strategy": "format_compressed",
+      "rep": 0,
+      "row_index": 315
+    },
+    {
+      "run_id": "p2_format_compressed_r001",
+      "prompt_id": 2,
+      "strategy": "format_compressed",
+      "rep": 1,
+      "row_index": 316
+    },
+    {
+      "run_id": "p2_format_compressed_r002",
+      "prompt_id": 2,
+      "strategy": "format_compressed",
+      "rep": 2,
+      "row_index": 317
+    },
+    {
+      "run_id": "p2_format_compressed_r003",
+      "prompt_id": 2,
+      "strategy": "format_compressed",
+      "rep": 3,
+      "row_index": 318
+    },
+    {
+      "run_id": "p2_format_compressed_r004",
+      "prompt_id": 2,
+      "strategy": "format_compressed",
+      "rep": 4,
+      "row_index": 319
+    },
+    {
+      "run_id": "p2_format_verbose_r000",
+      "prompt_id": 2,
+      "strategy": "format_verbose",
+      "rep": 0,
+      "row_index": 320
+    },
+    {
+      "run_id": "p2_format_verbose_r001",
+      "prompt_id": 2,
+      "strategy": "format_verbose",
+      "rep": 1,
+      "row_index": 321
+    },
+    {
+      "run_id": "p2_format_verbose_r002",
+      "prompt_id": 2,
+      "strategy": "format_verbose",
+      "rep": 2,
+      "row_index": 322
+    },
+    {
+      "run_id": "p2_format_verbose_r003",
+      "prompt_id": 2,
+      "strategy": "format_verbose",
+      "rep": 3,
+      "row_index": 323
+    },
+    {
+      "run_id": "p2_format_verbose_r004",
+      "prompt_id": 2,
+      "strategy": "format_verbose",
+      "rep": 4,
+      "row_index": 324
     },
     {
       "run_id": "p2_token_1sentence_r000",
       "prompt_id": 2,
       "strategy": "token_1sentence",
       "rep": 0,
-      "row_index": 305
+      "row_index": 325
     },
     {
       "run_id": "p2_token_1sentence_r001",
       "prompt_id": 2,
       "strategy": "token_1sentence",
       "rep": 1,
-      "row_index": 306
+      "row_index": 326
     },
     {
       "run_id": "p2_token_1sentence_r002",
       "prompt_id": 2,
       "strategy": "token_1sentence",
       "rep": 2,
-      "row_index": 307
+      "row_index": 327
+    },
+    {
+      "run_id": "p2_token_1sentence_r003",
+      "prompt_id": 2,
+      "strategy": "token_1sentence",
+      "rep": 3,
+      "row_index": 328
+    },
+    {
+      "run_id": "p2_token_1sentence_r004",
+      "prompt_id": 2,
+      "strategy": "token_1sentence",
+      "rep": 4,
+      "row_index": 329
     },
     {
       "run_id": "p2_token_5lines_r000",
       "prompt_id": 2,
       "strategy": "token_5lines",
       "rep": 0,
-      "row_index": 308
+      "row_index": 330
     },
     {
       "run_id": "p2_token_5lines_r001",
       "prompt_id": 2,
       "strategy": "token_5lines",
       "rep": 1,
-      "row_index": 309
+      "row_index": 331
     },
     {
       "run_id": "p2_token_5lines_r002",
       "prompt_id": 2,
       "strategy": "token_5lines",
       "rep": 2,
-      "row_index": 310
+      "row_index": 332
+    },
+    {
+      "run_id": "p2_token_5lines_r003",
+      "prompt_id": 2,
+      "strategy": "token_5lines",
+      "rep": 3,
+      "row_index": 333
+    },
+    {
+      "run_id": "p2_token_5lines_r004",
+      "prompt_id": 2,
+      "strategy": "token_5lines",
+      "rep": 4,
+      "row_index": 334
     },
     {
       "run_id": "p2_token_full_r000",
       "prompt_id": 2,
       "strategy": "token_full",
       "rep": 0,
-      "row_index": 311
+      "row_index": 335
     },
     {
       "run_id": "p2_token_full_r001",
       "prompt_id": 2,
       "strategy": "token_full",
       "rep": 1,
-      "row_index": 312
+      "row_index": 336
     },
     {
       "run_id": "p2_token_full_r002",
       "prompt_id": 2,
       "strategy": "token_full",
       "rep": 2,
-      "row_index": 313
-    },
-    {
-      "run_id": "p3_adversarial_r000",
-      "prompt_id": 3,
-      "strategy": "adversarial",
-      "rep": 0,
-      "row_index": 314
-    },
-    {
-      "run_id": "p3_adversarial_r001",
-      "prompt_id": 3,
-      "strategy": "adversarial",
-      "rep": 1,
-      "row_index": 315
-    },
-    {
-      "run_id": "p3_adversarial_r002",
-      "prompt_id": 3,
-      "strategy": "adversarial",
-      "rep": 2,
-      "row_index": 316
-    },
-    {
-      "run_id": "p3_constraint_conflicting_r000",
-      "prompt_id": 3,
-      "strategy": "constraint_conflicting",
-      "rep": 0,
-      "row_index": 317
-    },
-    {
-      "run_id": "p3_constraint_conflicting_r001",
-      "prompt_id": 3,
-      "strategy": "constraint_conflicting",
-      "rep": 1,
-      "row_index": 318
-    },
-    {
-      "run_id": "p3_constraint_conflicting_r002",
-      "prompt_id": 3,
-      "strategy": "constraint_conflicting",
-      "rep": 2,
-      "row_index": 319
-    },
-    {
-      "run_id": "p3_constraint_heavy_r000",
-      "prompt_id": 3,
-      "strategy": "constraint_heavy",
-      "rep": 0,
-      "row_index": 320
-    },
-    {
-      "run_id": "p3_constraint_heavy_r001",
-      "prompt_id": 3,
-      "strategy": "constraint_heavy",
-      "rep": 1,
-      "row_index": 321
-    },
-    {
-      "run_id": "p3_constraint_heavy_r002",
-      "prompt_id": 3,
-      "strategy": "constraint_heavy",
-      "rep": 2,
-      "row_index": 322
-    },
-    {
-      "run_id": "p3_constraint_light_r000",
-      "prompt_id": 3,
-      "strategy": "constraint_light",
-      "rep": 0,
-      "row_index": 323
-    },
-    {
-      "run_id": "p3_constraint_light_r001",
-      "prompt_id": 3,
-      "strategy": "constraint_light",
-      "rep": 1,
-      "row_index": 324
-    },
-    {
-      "run_id": "p3_constraint_light_r002",
-      "prompt_id": 3,
-      "strategy": "constraint_light",
-      "rep": 2,
-      "row_index": 325
-    },
-    {
-      "run_id": "p3_constraint_none_r000",
-      "prompt_id": 3,
-      "strategy": "constraint_none",
-      "rep": 0,
-      "row_index": 326
-    },
-    {
-      "run_id": "p3_constraint_none_r001",
-      "prompt_id": 3,
-      "strategy": "constraint_none",
-      "rep": 1,
-      "row_index": 327
-    },
-    {
-      "run_id": "p3_constraint_none_r002",
-      "prompt_id": 3,
-      "strategy": "constraint_none",
-      "rep": 2,
-      "row_index": 328
-    },
-    {
-      "run_id": "p3_format_bullet_r000",
-      "prompt_id": 3,
-      "strategy": "format_bullet",
-      "rep": 0,
-      "row_index": 329
-    },
-    {
-      "run_id": "p3_format_bullet_r001",
-      "prompt_id": 3,
-      "strategy": "format_bullet",
-      "rep": 1,
-      "row_index": 330
-    },
-    {
-      "run_id": "p3_format_bullet_r002",
-      "prompt_id": 3,
-      "strategy": "format_bullet",
-      "rep": 2,
-      "row_index": 331
-    },
-    {
-      "run_id": "p3_format_compressed_r000",
-      "prompt_id": 3,
-      "strategy": "format_compressed",
-      "rep": 0,
-      "row_index": 332
-    },
-    {
-      "run_id": "p3_format_compressed_r001",
-      "prompt_id": 3,
-      "strategy": "format_compressed",
-      "rep": 1,
-      "row_index": 333
-    },
-    {
-      "run_id": "p3_format_compressed_r002",
-      "prompt_id": 3,
-      "strategy": "format_compressed",
-      "rep": 2,
-      "row_index": 334
-    },
-    {
-      "run_id": "p3_format_json_r000",
-      "prompt_id": 3,
-      "strategy": "format_json",
-      "rep": 0,
-      "row_index": 335
-    },
-    {
-      "run_id": "p3_format_json_r001",
-      "prompt_id": 3,
-      "strategy": "format_json",
-      "rep": 1,
-      "row_index": 336
-    },
-    {
-      "run_id": "p3_format_json_r002",
-      "prompt_id": 3,
-      "strategy": "format_json",
-      "rep": 2,
       "row_index": 337
     },
     {
-      "run_id": "p3_format_paragraph_r000",
-      "prompt_id": 3,
-      "strategy": "format_paragraph",
-      "rep": 0,
+      "run_id": "p2_token_full_r003",
+      "prompt_id": 2,
+      "strategy": "token_full",
+      "rep": 3,
       "row_index": 338
     },
     {
-      "run_id": "p3_format_paragraph_r001",
-      "prompt_id": 3,
-      "strategy": "format_paragraph",
-      "rep": 1,
+      "run_id": "p2_token_full_r004",
+      "prompt_id": 2,
+      "strategy": "token_full",
+      "rep": 4,
       "row_index": 339
     },
     {
-      "run_id": "p3_format_paragraph_r002",
-      "prompt_id": 3,
-      "strategy": "format_paragraph",
-      "rep": 2,
+      "run_id": "p2_adversarial_r000",
+      "prompt_id": 2,
+      "strategy": "adversarial",
+      "rep": 0,
       "row_index": 340
     },
     {
-      "run_id": "p3_format_step_by_step_r000",
-      "prompt_id": 3,
-      "strategy": "format_step_by_step",
-      "rep": 0,
+      "run_id": "p2_adversarial_r001",
+      "prompt_id": 2,
+      "strategy": "adversarial",
+      "rep": 1,
       "row_index": 341
     },
     {
-      "run_id": "p3_format_step_by_step_r001",
-      "prompt_id": 3,
-      "strategy": "format_step_by_step",
-      "rep": 1,
+      "run_id": "p2_adversarial_r002",
+      "prompt_id": 2,
+      "strategy": "adversarial",
+      "rep": 2,
       "row_index": 342
     },
     {
-      "run_id": "p3_format_step_by_step_r002",
-      "prompt_id": 3,
-      "strategy": "format_step_by_step",
-      "rep": 2,
+      "run_id": "p2_adversarial_r003",
+      "prompt_id": 2,
+      "strategy": "adversarial",
+      "rep": 3,
       "row_index": 343
     },
     {
-      "run_id": "p3_format_verbose_r000",
-      "prompt_id": 3,
-      "strategy": "format_verbose",
-      "rep": 0,
+      "run_id": "p2_adversarial_r004",
+      "prompt_id": 2,
+      "strategy": "adversarial",
+      "rep": 4,
       "row_index": 344
-    },
-    {
-      "run_id": "p3_format_verbose_r001",
-      "prompt_id": 3,
-      "strategy": "format_verbose",
-      "rep": 1,
-      "row_index": 345
-    },
-    {
-      "run_id": "p3_format_verbose_r002",
-      "prompt_id": 3,
-      "strategy": "format_verbose",
-      "rep": 2,
-      "row_index": 346
-    },
-    {
-      "run_id": "p3_instruction_conflict_r000",
-      "prompt_id": 3,
-      "strategy": "instruction_conflict",
-      "rep": 0,
-      "row_index": 347
-    },
-    {
-      "run_id": "p3_instruction_conflict_r001",
-      "prompt_id": 3,
-      "strategy": "instruction_conflict",
-      "rep": 1,
-      "row_index": 348
-    },
-    {
-      "run_id": "p3_instruction_conflict_r002",
-      "prompt_id": 3,
-      "strategy": "instruction_conflict",
-      "rep": 2,
-      "row_index": 349
-    },
-    {
-      "run_id": "p3_instruction_system_only_r000",
-      "prompt_id": 3,
-      "strategy": "instruction_system_only",
-      "rep": 0,
-      "row_index": 350
-    },
-    {
-      "run_id": "p3_instruction_system_only_r001",
-      "prompt_id": 3,
-      "strategy": "instruction_system_only",
-      "rep": 1,
-      "row_index": 351
-    },
-    {
-      "run_id": "p3_instruction_system_only_r002",
-      "prompt_id": 3,
-      "strategy": "instruction_system_only",
-      "rep": 2,
-      "row_index": 352
-    },
-    {
-      "run_id": "p3_instruction_user_only_r000",
-      "prompt_id": 3,
-      "strategy": "instruction_user_only",
-      "rep": 0,
-      "row_index": 353
-    },
-    {
-      "run_id": "p3_instruction_user_only_r001",
-      "prompt_id": 3,
-      "strategy": "instruction_user_only",
-      "rep": 1,
-      "row_index": 354
-    },
-    {
-      "run_id": "p3_instruction_user_only_r002",
-      "prompt_id": 3,
-      "strategy": "instruction_user_only",
-      "rep": 2,
-      "row_index": 355
     },
     {
       "run_id": "p3_paraphrase_r000",
       "prompt_id": 3,
       "strategy": "paraphrase",
       "rep": 0,
-      "row_index": 356
+      "row_index": 345
     },
     {
       "run_id": "p3_paraphrase_r001",
       "prompt_id": 3,
       "strategy": "paraphrase",
       "rep": 1,
-      "row_index": 357
+      "row_index": 346
     },
     {
       "run_id": "p3_paraphrase_r002",
       "prompt_id": 3,
       "strategy": "paraphrase",
       "rep": 2,
+      "row_index": 347
+    },
+    {
+      "run_id": "p3_paraphrase_r003",
+      "prompt_id": 3,
+      "strategy": "paraphrase",
+      "rep": 3,
+      "row_index": 348
+    },
+    {
+      "run_id": "p3_paraphrase_r004",
+      "prompt_id": 3,
+      "strategy": "paraphrase",
+      "rep": 4,
+      "row_index": 349
+    },
+    {
+      "run_id": "p3_constraint_none_r000",
+      "prompt_id": 3,
+      "strategy": "constraint_none",
+      "rep": 0,
+      "row_index": 350
+    },
+    {
+      "run_id": "p3_constraint_none_r001",
+      "prompt_id": 3,
+      "strategy": "constraint_none",
+      "rep": 1,
+      "row_index": 351
+    },
+    {
+      "run_id": "p3_constraint_none_r002",
+      "prompt_id": 3,
+      "strategy": "constraint_none",
+      "rep": 2,
+      "row_index": 352
+    },
+    {
+      "run_id": "p3_constraint_none_r003",
+      "prompt_id": 3,
+      "strategy": "constraint_none",
+      "rep": 3,
+      "row_index": 353
+    },
+    {
+      "run_id": "p3_constraint_none_r004",
+      "prompt_id": 3,
+      "strategy": "constraint_none",
+      "rep": 4,
+      "row_index": 354
+    },
+    {
+      "run_id": "p3_constraint_light_r000",
+      "prompt_id": 3,
+      "strategy": "constraint_light",
+      "rep": 0,
+      "row_index": 355
+    },
+    {
+      "run_id": "p3_constraint_light_r001",
+      "prompt_id": 3,
+      "strategy": "constraint_light",
+      "rep": 1,
+      "row_index": 356
+    },
+    {
+      "run_id": "p3_constraint_light_r002",
+      "prompt_id": 3,
+      "strategy": "constraint_light",
+      "rep": 2,
+      "row_index": 357
+    },
+    {
+      "run_id": "p3_constraint_light_r003",
+      "prompt_id": 3,
+      "strategy": "constraint_light",
+      "rep": 3,
       "row_index": 358
     },
     {
-      "run_id": "p3_role_adversarial_eval_r000",
+      "run_id": "p3_constraint_light_r004",
       "prompt_id": 3,
-      "strategy": "role_adversarial_eval",
-      "rep": 0,
+      "strategy": "constraint_light",
+      "rep": 4,
       "row_index": 359
     },
     {
-      "run_id": "p3_role_adversarial_eval_r001",
+      "run_id": "p3_constraint_heavy_r000",
       "prompt_id": 3,
-      "strategy": "role_adversarial_eval",
-      "rep": 1,
+      "strategy": "constraint_heavy",
+      "rep": 0,
       "row_index": 360
     },
     {
-      "run_id": "p3_role_adversarial_eval_r002",
+      "run_id": "p3_constraint_heavy_r001",
       "prompt_id": 3,
-      "strategy": "role_adversarial_eval",
-      "rep": 2,
+      "strategy": "constraint_heavy",
+      "rep": 1,
       "row_index": 361
     },
     {
-      "run_id": "p3_role_expert_r000",
+      "run_id": "p3_constraint_heavy_r002",
       "prompt_id": 3,
-      "strategy": "role_expert",
-      "rep": 0,
+      "strategy": "constraint_heavy",
+      "rep": 2,
       "row_index": 362
     },
     {
-      "run_id": "p3_role_expert_r001",
+      "run_id": "p3_constraint_heavy_r003",
       "prompt_id": 3,
-      "strategy": "role_expert",
-      "rep": 1,
+      "strategy": "constraint_heavy",
+      "rep": 3,
       "row_index": 363
     },
     {
-      "run_id": "p3_role_expert_r002",
+      "run_id": "p3_constraint_heavy_r004",
       "prompt_id": 3,
-      "strategy": "role_expert",
-      "rep": 2,
+      "strategy": "constraint_heavy",
+      "rep": 4,
       "row_index": 364
+    },
+    {
+      "run_id": "p3_constraint_conflicting_r000",
+      "prompt_id": 3,
+      "strategy": "constraint_conflicting",
+      "rep": 0,
+      "row_index": 365
+    },
+    {
+      "run_id": "p3_constraint_conflicting_r001",
+      "prompt_id": 3,
+      "strategy": "constraint_conflicting",
+      "rep": 1,
+      "row_index": 366
+    },
+    {
+      "run_id": "p3_constraint_conflicting_r002",
+      "prompt_id": 3,
+      "strategy": "constraint_conflicting",
+      "rep": 2,
+      "row_index": 367
+    },
+    {
+      "run_id": "p3_constraint_conflicting_r003",
+      "prompt_id": 3,
+      "strategy": "constraint_conflicting",
+      "rep": 3,
+      "row_index": 368
+    },
+    {
+      "run_id": "p3_constraint_conflicting_r004",
+      "prompt_id": 3,
+      "strategy": "constraint_conflicting",
+      "rep": 4,
+      "row_index": 369
+    },
+    {
+      "run_id": "p3_instruction_system_only_r000",
+      "prompt_id": 3,
+      "strategy": "instruction_system_only",
+      "rep": 0,
+      "row_index": 370
+    },
+    {
+      "run_id": "p3_instruction_system_only_r001",
+      "prompt_id": 3,
+      "strategy": "instruction_system_only",
+      "rep": 1,
+      "row_index": 371
+    },
+    {
+      "run_id": "p3_instruction_system_only_r002",
+      "prompt_id": 3,
+      "strategy": "instruction_system_only",
+      "rep": 2,
+      "row_index": 372
+    },
+    {
+      "run_id": "p3_instruction_system_only_r003",
+      "prompt_id": 3,
+      "strategy": "instruction_system_only",
+      "rep": 3,
+      "row_index": 373
+    },
+    {
+      "run_id": "p3_instruction_system_only_r004",
+      "prompt_id": 3,
+      "strategy": "instruction_system_only",
+      "rep": 4,
+      "row_index": 374
+    },
+    {
+      "run_id": "p3_instruction_user_only_r000",
+      "prompt_id": 3,
+      "strategy": "instruction_user_only",
+      "rep": 0,
+      "row_index": 375
+    },
+    {
+      "run_id": "p3_instruction_user_only_r001",
+      "prompt_id": 3,
+      "strategy": "instruction_user_only",
+      "rep": 1,
+      "row_index": 376
+    },
+    {
+      "run_id": "p3_instruction_user_only_r002",
+      "prompt_id": 3,
+      "strategy": "instruction_user_only",
+      "rep": 2,
+      "row_index": 377
+    },
+    {
+      "run_id": "p3_instruction_user_only_r003",
+      "prompt_id": 3,
+      "strategy": "instruction_user_only",
+      "rep": 3,
+      "row_index": 378
+    },
+    {
+      "run_id": "p3_instruction_user_only_r004",
+      "prompt_id": 3,
+      "strategy": "instruction_user_only",
+      "rep": 4,
+      "row_index": 379
+    },
+    {
+      "run_id": "p3_instruction_conflict_r000",
+      "prompt_id": 3,
+      "strategy": "instruction_conflict",
+      "rep": 0,
+      "row_index": 380
+    },
+    {
+      "run_id": "p3_instruction_conflict_r001",
+      "prompt_id": 3,
+      "strategy": "instruction_conflict",
+      "rep": 1,
+      "row_index": 381
+    },
+    {
+      "run_id": "p3_instruction_conflict_r002",
+      "prompt_id": 3,
+      "strategy": "instruction_conflict",
+      "rep": 2,
+      "row_index": 382
+    },
+    {
+      "run_id": "p3_instruction_conflict_r003",
+      "prompt_id": 3,
+      "strategy": "instruction_conflict",
+      "rep": 3,
+      "row_index": 383
+    },
+    {
+      "run_id": "p3_instruction_conflict_r004",
+      "prompt_id": 3,
+      "strategy": "instruction_conflict",
+      "rep": 4,
+      "row_index": 384
     },
     {
       "run_id": "p3_role_neutral_r000",
       "prompt_id": 3,
       "strategy": "role_neutral",
       "rep": 0,
-      "row_index": 365
+      "row_index": 385
     },
     {
       "run_id": "p3_role_neutral_r001",
       "prompt_id": 3,
       "strategy": "role_neutral",
       "rep": 1,
-      "row_index": 366
+      "row_index": 386
     },
     {
       "run_id": "p3_role_neutral_r002",
       "prompt_id": 3,
       "strategy": "role_neutral",
       "rep": 2,
-      "row_index": 367
+      "row_index": 387
     },
     {
-      "run_id": "p3_role_obedient_r000",
+      "run_id": "p3_role_neutral_r003",
       "prompt_id": 3,
-      "strategy": "role_obedient",
+      "strategy": "role_neutral",
+      "rep": 3,
+      "row_index": 388
+    },
+    {
+      "run_id": "p3_role_neutral_r004",
+      "prompt_id": 3,
+      "strategy": "role_neutral",
+      "rep": 4,
+      "row_index": 389
+    },
+    {
+      "run_id": "p3_role_expert_r000",
+      "prompt_id": 3,
+      "strategy": "role_expert",
       "rep": 0,
-      "row_index": 368
+      "row_index": 390
     },
     {
-      "run_id": "p3_role_obedient_r001",
+      "run_id": "p3_role_expert_r001",
       "prompt_id": 3,
-      "strategy": "role_obedient",
+      "strategy": "role_expert",
       "rep": 1,
-      "row_index": 369
+      "row_index": 391
     },
     {
-      "run_id": "p3_role_obedient_r002",
+      "run_id": "p3_role_expert_r002",
       "prompt_id": 3,
-      "strategy": "role_obedient",
+      "strategy": "role_expert",
       "rep": 2,
-      "row_index": 370
+      "row_index": 392
+    },
+    {
+      "run_id": "p3_role_expert_r003",
+      "prompt_id": 3,
+      "strategy": "role_expert",
+      "rep": 3,
+      "row_index": 393
+    },
+    {
+      "run_id": "p3_role_expert_r004",
+      "prompt_id": 3,
+      "strategy": "role_expert",
+      "rep": 4,
+      "row_index": 394
     },
     {
       "run_id": "p3_role_skeptic_r000",
       "prompt_id": 3,
       "strategy": "role_skeptic",
       "rep": 0,
-      "row_index": 371
+      "row_index": 395
     },
     {
       "run_id": "p3_role_skeptic_r001",
       "prompt_id": 3,
       "strategy": "role_skeptic",
       "rep": 1,
-      "row_index": 372
+      "row_index": 396
     },
     {
       "run_id": "p3_role_skeptic_r002",
       "prompt_id": 3,
       "strategy": "role_skeptic",
       "rep": 2,
-      "row_index": 373
+      "row_index": 397
+    },
+    {
+      "run_id": "p3_role_skeptic_r003",
+      "prompt_id": 3,
+      "strategy": "role_skeptic",
+      "rep": 3,
+      "row_index": 398
+    },
+    {
+      "run_id": "p3_role_skeptic_r004",
+      "prompt_id": 3,
+      "strategy": "role_skeptic",
+      "rep": 4,
+      "row_index": 399
+    },
+    {
+      "run_id": "p3_role_adversarial_eval_r000",
+      "prompt_id": 3,
+      "strategy": "role_adversarial_eval",
+      "rep": 0,
+      "row_index": 400
+    },
+    {
+      "run_id": "p3_role_adversarial_eval_r001",
+      "prompt_id": 3,
+      "strategy": "role_adversarial_eval",
+      "rep": 1,
+      "row_index": 401
+    },
+    {
+      "run_id": "p3_role_adversarial_eval_r002",
+      "prompt_id": 3,
+      "strategy": "role_adversarial_eval",
+      "rep": 2,
+      "row_index": 402
+    },
+    {
+      "run_id": "p3_role_adversarial_eval_r003",
+      "prompt_id": 3,
+      "strategy": "role_adversarial_eval",
+      "rep": 3,
+      "row_index": 403
+    },
+    {
+      "run_id": "p3_role_adversarial_eval_r004",
+      "prompt_id": 3,
+      "strategy": "role_adversarial_eval",
+      "rep": 4,
+      "row_index": 404
+    },
+    {
+      "run_id": "p3_role_obedient_r000",
+      "prompt_id": 3,
+      "strategy": "role_obedient",
+      "rep": 0,
+      "row_index": 405
+    },
+    {
+      "run_id": "p3_role_obedient_r001",
+      "prompt_id": 3,
+      "strategy": "role_obedient",
+      "rep": 1,
+      "row_index": 406
+    },
+    {
+      "run_id": "p3_role_obedient_r002",
+      "prompt_id": 3,
+      "strategy": "role_obedient",
+      "rep": 2,
+      "row_index": 407
+    },
+    {
+      "run_id": "p3_role_obedient_r003",
+      "prompt_id": 3,
+      "strategy": "role_obedient",
+      "rep": 3,
+      "row_index": 408
+    },
+    {
+      "run_id": "p3_role_obedient_r004",
+      "prompt_id": 3,
+      "strategy": "role_obedient",
+      "rep": 4,
+      "row_index": 409
+    },
+    {
+      "run_id": "p3_format_paragraph_r000",
+      "prompt_id": 3,
+      "strategy": "format_paragraph",
+      "rep": 0,
+      "row_index": 410
+    },
+    {
+      "run_id": "p3_format_paragraph_r001",
+      "prompt_id": 3,
+      "strategy": "format_paragraph",
+      "rep": 1,
+      "row_index": 411
+    },
+    {
+      "run_id": "p3_format_paragraph_r002",
+      "prompt_id": 3,
+      "strategy": "format_paragraph",
+      "rep": 2,
+      "row_index": 412
+    },
+    {
+      "run_id": "p3_format_paragraph_r003",
+      "prompt_id": 3,
+      "strategy": "format_paragraph",
+      "rep": 3,
+      "row_index": 413
+    },
+    {
+      "run_id": "p3_format_paragraph_r004",
+      "prompt_id": 3,
+      "strategy": "format_paragraph",
+      "rep": 4,
+      "row_index": 414
+    },
+    {
+      "run_id": "p3_format_bullet_r000",
+      "prompt_id": 3,
+      "strategy": "format_bullet",
+      "rep": 0,
+      "row_index": 415
+    },
+    {
+      "run_id": "p3_format_bullet_r001",
+      "prompt_id": 3,
+      "strategy": "format_bullet",
+      "rep": 1,
+      "row_index": 416
+    },
+    {
+      "run_id": "p3_format_bullet_r002",
+      "prompt_id": 3,
+      "strategy": "format_bullet",
+      "rep": 2,
+      "row_index": 417
+    },
+    {
+      "run_id": "p3_format_bullet_r003",
+      "prompt_id": 3,
+      "strategy": "format_bullet",
+      "rep": 3,
+      "row_index": 418
+    },
+    {
+      "run_id": "p3_format_bullet_r004",
+      "prompt_id": 3,
+      "strategy": "format_bullet",
+      "rep": 4,
+      "row_index": 419
+    },
+    {
+      "run_id": "p3_format_json_r000",
+      "prompt_id": 3,
+      "strategy": "format_json",
+      "rep": 0,
+      "row_index": 420
+    },
+    {
+      "run_id": "p3_format_json_r001",
+      "prompt_id": 3,
+      "strategy": "format_json",
+      "rep": 1,
+      "row_index": 421
+    },
+    {
+      "run_id": "p3_format_json_r002",
+      "prompt_id": 3,
+      "strategy": "format_json",
+      "rep": 2,
+      "row_index": 422
+    },
+    {
+      "run_id": "p3_format_json_r003",
+      "prompt_id": 3,
+      "strategy": "format_json",
+      "rep": 3,
+      "row_index": 423
+    },
+    {
+      "run_id": "p3_format_json_r004",
+      "prompt_id": 3,
+      "strategy": "format_json",
+      "rep": 4,
+      "row_index": 424
+    },
+    {
+      "run_id": "p3_format_step_by_step_r000",
+      "prompt_id": 3,
+      "strategy": "format_step_by_step",
+      "rep": 0,
+      "row_index": 425
+    },
+    {
+      "run_id": "p3_format_step_by_step_r001",
+      "prompt_id": 3,
+      "strategy": "format_step_by_step",
+      "rep": 1,
+      "row_index": 426
+    },
+    {
+      "run_id": "p3_format_step_by_step_r002",
+      "prompt_id": 3,
+      "strategy": "format_step_by_step",
+      "rep": 2,
+      "row_index": 427
+    },
+    {
+      "run_id": "p3_format_step_by_step_r003",
+      "prompt_id": 3,
+      "strategy": "format_step_by_step",
+      "rep": 3,
+      "row_index": 428
+    },
+    {
+      "run_id": "p3_format_step_by_step_r004",
+      "prompt_id": 3,
+      "strategy": "format_step_by_step",
+      "rep": 4,
+      "row_index": 429
+    },
+    {
+      "run_id": "p3_format_compressed_r000",
+      "prompt_id": 3,
+      "strategy": "format_compressed",
+      "rep": 0,
+      "row_index": 430
+    },
+    {
+      "run_id": "p3_format_compressed_r001",
+      "prompt_id": 3,
+      "strategy": "format_compressed",
+      "rep": 1,
+      "row_index": 431
+    },
+    {
+      "run_id": "p3_format_compressed_r002",
+      "prompt_id": 3,
+      "strategy": "format_compressed",
+      "rep": 2,
+      "row_index": 432
+    },
+    {
+      "run_id": "p3_format_compressed_r003",
+      "prompt_id": 3,
+      "strategy": "format_compressed",
+      "rep": 3,
+      "row_index": 433
+    },
+    {
+      "run_id": "p3_format_compressed_r004",
+      "prompt_id": 3,
+      "strategy": "format_compressed",
+      "rep": 4,
+      "row_index": 434
+    },
+    {
+      "run_id": "p3_format_verbose_r000",
+      "prompt_id": 3,
+      "strategy": "format_verbose",
+      "rep": 0,
+      "row_index": 435
+    },
+    {
+      "run_id": "p3_format_verbose_r001",
+      "prompt_id": 3,
+      "strategy": "format_verbose",
+      "rep": 1,
+      "row_index": 436
+    },
+    {
+      "run_id": "p3_format_verbose_r002",
+      "prompt_id": 3,
+      "strategy": "format_verbose",
+      "rep": 2,
+      "row_index": 437
+    },
+    {
+      "run_id": "p3_format_verbose_r003",
+      "prompt_id": 3,
+      "strategy": "format_verbose",
+      "rep": 3,
+      "row_index": 438
+    },
+    {
+      "run_id": "p3_format_verbose_r004",
+      "prompt_id": 3,
+      "strategy": "format_verbose",
+      "rep": 4,
+      "row_index": 439
     },
     {
       "run_id": "p3_token_1sentence_r000",
       "prompt_id": 3,
       "strategy": "token_1sentence",
       "rep": 0,
-      "row_index": 374
+      "row_index": 440
     },
     {
       "run_id": "p3_token_1sentence_r001",
       "prompt_id": 3,
       "strategy": "token_1sentence",
       "rep": 1,
-      "row_index": 375
+      "row_index": 441
     },
     {
       "run_id": "p3_token_1sentence_r002",
       "prompt_id": 3,
       "strategy": "token_1sentence",
       "rep": 2,
-      "row_index": 376
+      "row_index": 442
+    },
+    {
+      "run_id": "p3_token_1sentence_r003",
+      "prompt_id": 3,
+      "strategy": "token_1sentence",
+      "rep": 3,
+      "row_index": 443
+    },
+    {
+      "run_id": "p3_token_1sentence_r004",
+      "prompt_id": 3,
+      "strategy": "token_1sentence",
+      "rep": 4,
+      "row_index": 444
     },
     {
       "run_id": "p3_token_5lines_r000",
       "prompt_id": 3,
       "strategy": "token_5lines",
       "rep": 0,
-      "row_index": 377
+      "row_index": 445
     },
     {
       "run_id": "p3_token_5lines_r001",
       "prompt_id": 3,
       "strategy": "token_5lines",
       "rep": 1,
-      "row_index": 378
+      "row_index": 446
     },
     {
       "run_id": "p3_token_5lines_r002",
       "prompt_id": 3,
       "strategy": "token_5lines",
       "rep": 2,
-      "row_index": 379
+      "row_index": 447
+    },
+    {
+      "run_id": "p3_token_5lines_r003",
+      "prompt_id": 3,
+      "strategy": "token_5lines",
+      "rep": 3,
+      "row_index": 448
+    },
+    {
+      "run_id": "p3_token_5lines_r004",
+      "prompt_id": 3,
+      "strategy": "token_5lines",
+      "rep": 4,
+      "row_index": 449
     },
     {
       "run_id": "p3_token_full_r000",
       "prompt_id": 3,
       "strategy": "token_full",
       "rep": 0,
-      "row_index": 380
+      "row_index": 450
     },
     {
       "run_id": "p3_token_full_r001",
       "prompt_id": 3,
       "strategy": "token_full",
       "rep": 1,
-      "row_index": 381
+      "row_index": 451
     },
     {
       "run_id": "p3_token_full_r002",
       "prompt_id": 3,
       "strategy": "token_full",
       "rep": 2,
-      "row_index": 382
+      "row_index": 452
     },
     {
-      "run_id": "p4_adversarial_r000",
-      "prompt_id": 4,
+      "run_id": "p3_token_full_r003",
+      "prompt_id": 3,
+      "strategy": "token_full",
+      "rep": 3,
+      "row_index": 453
+    },
+    {
+      "run_id": "p3_token_full_r004",
+      "prompt_id": 3,
+      "strategy": "token_full",
+      "rep": 4,
+      "row_index": 454
+    },
+    {
+      "run_id": "p3_adversarial_r000",
+      "prompt_id": 3,
       "strategy": "adversarial",
       "rep": 0,
-      "row_index": 383
+      "row_index": 455
     },
     {
-      "run_id": "p4_adversarial_r001",
-      "prompt_id": 4,
+      "run_id": "p3_adversarial_r001",
+      "prompt_id": 3,
       "strategy": "adversarial",
       "rep": 1,
-      "row_index": 384
+      "row_index": 456
     },
     {
-      "run_id": "p4_adversarial_r002",
-      "prompt_id": 4,
+      "run_id": "p3_adversarial_r002",
+      "prompt_id": 3,
       "strategy": "adversarial",
       "rep": 2,
-      "row_index": 385
+      "row_index": 457
     },
     {
-      "run_id": "p4_constraint_conflicting_r000",
-      "prompt_id": 4,
-      "strategy": "constraint_conflicting",
-      "rep": 0,
-      "row_index": 386
+      "run_id": "p3_adversarial_r003",
+      "prompt_id": 3,
+      "strategy": "adversarial",
+      "rep": 3,
+      "row_index": 458
     },
     {
-      "run_id": "p4_constraint_conflicting_r001",
-      "prompt_id": 4,
-      "strategy": "constraint_conflicting",
-      "rep": 1,
-      "row_index": 387
-    },
-    {
-      "run_id": "p4_constraint_conflicting_r002",
-      "prompt_id": 4,
-      "strategy": "constraint_conflicting",
-      "rep": 2,
-      "row_index": 388
-    },
-    {
-      "run_id": "p4_constraint_heavy_r000",
-      "prompt_id": 4,
-      "strategy": "constraint_heavy",
-      "rep": 0,
-      "row_index": 389
-    },
-    {
-      "run_id": "p4_constraint_heavy_r001",
-      "prompt_id": 4,
-      "strategy": "constraint_heavy",
-      "rep": 1,
-      "row_index": 390
-    },
-    {
-      "run_id": "p4_constraint_heavy_r002",
-      "prompt_id": 4,
-      "strategy": "constraint_heavy",
-      "rep": 2,
-      "row_index": 391
-    },
-    {
-      "run_id": "p4_constraint_light_r000",
-      "prompt_id": 4,
-      "strategy": "constraint_light",
-      "rep": 0,
-      "row_index": 392
-    },
-    {
-      "run_id": "p4_constraint_light_r001",
-      "prompt_id": 4,
-      "strategy": "constraint_light",
-      "rep": 1,
-      "row_index": 393
-    },
-    {
-      "run_id": "p4_constraint_light_r002",
-      "prompt_id": 4,
-      "strategy": "constraint_light",
-      "rep": 2,
-      "row_index": 394
-    },
-    {
-      "run_id": "p4_constraint_none_r000",
-      "prompt_id": 4,
-      "strategy": "constraint_none",
-      "rep": 0,
-      "row_index": 395
-    },
-    {
-      "run_id": "p4_constraint_none_r001",
-      "prompt_id": 4,
-      "strategy": "constraint_none",
-      "rep": 1,
-      "row_index": 396
-    },
-    {
-      "run_id": "p4_constraint_none_r002",
-      "prompt_id": 4,
-      "strategy": "constraint_none",
-      "rep": 2,
-      "row_index": 397
-    },
-    {
-      "run_id": "p4_format_bullet_r000",
-      "prompt_id": 4,
-      "strategy": "format_bullet",
-      "rep": 0,
-      "row_index": 398
-    },
-    {
-      "run_id": "p4_format_bullet_r001",
-      "prompt_id": 4,
-      "strategy": "format_bullet",
-      "rep": 1,
-      "row_index": 399
-    },
-    {
-      "run_id": "p4_format_bullet_r002",
-      "prompt_id": 4,
-      "strategy": "format_bullet",
-      "rep": 2,
-      "row_index": 400
-    },
-    {
-      "run_id": "p4_format_compressed_r000",
-      "prompt_id": 4,
-      "strategy": "format_compressed",
-      "rep": 0,
-      "row_index": 401
-    },
-    {
-      "run_id": "p4_format_compressed_r001",
-      "prompt_id": 4,
-      "strategy": "format_compressed",
-      "rep": 1,
-      "row_index": 402
-    },
-    {
-      "run_id": "p4_format_compressed_r002",
-      "prompt_id": 4,
-      "strategy": "format_compressed",
-      "rep": 2,
-      "row_index": 403
-    },
-    {
-      "run_id": "p4_format_json_r000",
-      "prompt_id": 4,
-      "strategy": "format_json",
-      "rep": 0,
-      "row_index": 404
-    },
-    {
-      "run_id": "p4_format_json_r001",
-      "prompt_id": 4,
-      "strategy": "format_json",
-      "rep": 1,
-      "row_index": 405
-    },
-    {
-      "run_id": "p4_format_json_r002",
-      "prompt_id": 4,
-      "strategy": "format_json",
-      "rep": 2,
-      "row_index": 406
-    },
-    {
-      "run_id": "p4_format_paragraph_r000",
-      "prompt_id": 4,
-      "strategy": "format_paragraph",
-      "rep": 0,
-      "row_index": 407
-    },
-    {
-      "run_id": "p4_format_paragraph_r001",
-      "prompt_id": 4,
-      "strategy": "format_paragraph",
-      "rep": 1,
-      "row_index": 408
-    },
-    {
-      "run_id": "p4_format_paragraph_r002",
-      "prompt_id": 4,
-      "strategy": "format_paragraph",
-      "rep": 2,
-      "row_index": 409
-    },
-    {
-      "run_id": "p4_format_step_by_step_r000",
-      "prompt_id": 4,
-      "strategy": "format_step_by_step",
-      "rep": 0,
-      "row_index": 410
-    },
-    {
-      "run_id": "p4_format_step_by_step_r001",
-      "prompt_id": 4,
-      "strategy": "format_step_by_step",
-      "rep": 1,
-      "row_index": 411
-    },
-    {
-      "run_id": "p4_format_step_by_step_r002",
-      "prompt_id": 4,
-      "strategy": "format_step_by_step",
-      "rep": 2,
-      "row_index": 412
-    },
-    {
-      "run_id": "p4_format_verbose_r000",
-      "prompt_id": 4,
-      "strategy": "format_verbose",
-      "rep": 0,
-      "row_index": 413
-    },
-    {
-      "run_id": "p4_format_verbose_r001",
-      "prompt_id": 4,
-      "strategy": "format_verbose",
-      "rep": 1,
-      "row_index": 414
-    },
-    {
-      "run_id": "p4_format_verbose_r002",
-      "prompt_id": 4,
-      "strategy": "format_verbose",
-      "rep": 2,
-      "row_index": 415
-    },
-    {
-      "run_id": "p4_instruction_conflict_r000",
-      "prompt_id": 4,
-      "strategy": "instruction_conflict",
-      "rep": 0,
-      "row_index": 416
-    },
-    {
-      "run_id": "p4_instruction_conflict_r001",
-      "prompt_id": 4,
-      "strategy": "instruction_conflict",
-      "rep": 1,
-      "row_index": 417
-    },
-    {
-      "run_id": "p4_instruction_conflict_r002",
-      "prompt_id": 4,
-      "strategy": "instruction_conflict",
-      "rep": 2,
-      "row_index": 418
-    },
-    {
-      "run_id": "p4_instruction_system_only_r000",
-      "prompt_id": 4,
-      "strategy": "instruction_system_only",
-      "rep": 0,
-      "row_index": 419
-    },
-    {
-      "run_id": "p4_instruction_system_only_r001",
-      "prompt_id": 4,
-      "strategy": "instruction_system_only",
-      "rep": 1,
-      "row_index": 420
-    },
-    {
-      "run_id": "p4_instruction_system_only_r002",
-      "prompt_id": 4,
-      "strategy": "instruction_system_only",
-      "rep": 2,
-      "row_index": 421
-    },
-    {
-      "run_id": "p4_instruction_user_only_r000",
-      "prompt_id": 4,
-      "strategy": "instruction_user_only",
-      "rep": 0,
-      "row_index": 422
-    },
-    {
-      "run_id": "p4_instruction_user_only_r001",
-      "prompt_id": 4,
-      "strategy": "instruction_user_only",
-      "rep": 1,
-      "row_index": 423
-    },
-    {
-      "run_id": "p4_instruction_user_only_r002",
-      "prompt_id": 4,
-      "strategy": "instruction_user_only",
-      "rep": 2,
-      "row_index": 424
+      "run_id": "p3_adversarial_r004",
+      "prompt_id": 3,
+      "strategy": "adversarial",
+      "rep": 4,
+      "row_index": 459
     },
     {
       "run_id": "p4_paraphrase_r000",
       "prompt_id": 4,
       "strategy": "paraphrase",
       "rep": 0,
-      "row_index": 425
+      "row_index": 460
     },
     {
       "run_id": "p4_paraphrase_r001",
       "prompt_id": 4,
       "strategy": "paraphrase",
       "rep": 1,
-      "row_index": 426
+      "row_index": 461
     },
     {
       "run_id": "p4_paraphrase_r002",
       "prompt_id": 4,
       "strategy": "paraphrase",
       "rep": 2,
-      "row_index": 427
+      "row_index": 462
     },
     {
-      "run_id": "p4_role_adversarial_eval_r000",
+      "run_id": "p4_paraphrase_r003",
       "prompt_id": 4,
-      "strategy": "role_adversarial_eval",
+      "strategy": "paraphrase",
+      "rep": 3,
+      "row_index": 463
+    },
+    {
+      "run_id": "p4_paraphrase_r004",
+      "prompt_id": 4,
+      "strategy": "paraphrase",
+      "rep": 4,
+      "row_index": 464
+    },
+    {
+      "run_id": "p4_constraint_none_r000",
+      "prompt_id": 4,
+      "strategy": "constraint_none",
       "rep": 0,
-      "row_index": 428
+      "row_index": 465
     },
     {
-      "run_id": "p4_role_adversarial_eval_r001",
+      "run_id": "p4_constraint_none_r001",
       "prompt_id": 4,
-      "strategy": "role_adversarial_eval",
+      "strategy": "constraint_none",
       "rep": 1,
-      "row_index": 429
+      "row_index": 466
     },
     {
-      "run_id": "p4_role_adversarial_eval_r002",
+      "run_id": "p4_constraint_none_r002",
       "prompt_id": 4,
-      "strategy": "role_adversarial_eval",
+      "strategy": "constraint_none",
       "rep": 2,
-      "row_index": 430
+      "row_index": 467
     },
     {
-      "run_id": "p4_role_expert_r000",
+      "run_id": "p4_constraint_none_r003",
       "prompt_id": 4,
-      "strategy": "role_expert",
+      "strategy": "constraint_none",
+      "rep": 3,
+      "row_index": 468
+    },
+    {
+      "run_id": "p4_constraint_none_r004",
+      "prompt_id": 4,
+      "strategy": "constraint_none",
+      "rep": 4,
+      "row_index": 469
+    },
+    {
+      "run_id": "p4_constraint_light_r000",
+      "prompt_id": 4,
+      "strategy": "constraint_light",
       "rep": 0,
-      "row_index": 431
+      "row_index": 470
     },
     {
-      "run_id": "p4_role_expert_r001",
+      "run_id": "p4_constraint_light_r001",
       "prompt_id": 4,
-      "strategy": "role_expert",
+      "strategy": "constraint_light",
       "rep": 1,
-      "row_index": 432
+      "row_index": 471
     },
     {
-      "run_id": "p4_role_expert_r002",
+      "run_id": "p4_constraint_light_r002",
       "prompt_id": 4,
-      "strategy": "role_expert",
+      "strategy": "constraint_light",
       "rep": 2,
-      "row_index": 433
+      "row_index": 472
+    },
+    {
+      "run_id": "p4_constraint_light_r003",
+      "prompt_id": 4,
+      "strategy": "constraint_light",
+      "rep": 3,
+      "row_index": 473
+    },
+    {
+      "run_id": "p4_constraint_light_r004",
+      "prompt_id": 4,
+      "strategy": "constraint_light",
+      "rep": 4,
+      "row_index": 474
+    },
+    {
+      "run_id": "p4_constraint_heavy_r000",
+      "prompt_id": 4,
+      "strategy": "constraint_heavy",
+      "rep": 0,
+      "row_index": 475
+    },
+    {
+      "run_id": "p4_constraint_heavy_r001",
+      "prompt_id": 4,
+      "strategy": "constraint_heavy",
+      "rep": 1,
+      "row_index": 476
+    },
+    {
+      "run_id": "p4_constraint_heavy_r002",
+      "prompt_id": 4,
+      "strategy": "constraint_heavy",
+      "rep": 2,
+      "row_index": 477
+    },
+    {
+      "run_id": "p4_constraint_heavy_r003",
+      "prompt_id": 4,
+      "strategy": "constraint_heavy",
+      "rep": 3,
+      "row_index": 478
+    },
+    {
+      "run_id": "p4_constraint_heavy_r004",
+      "prompt_id": 4,
+      "strategy": "constraint_heavy",
+      "rep": 4,
+      "row_index": 479
+    },
+    {
+      "run_id": "p4_constraint_conflicting_r000",
+      "prompt_id": 4,
+      "strategy": "constraint_conflicting",
+      "rep": 0,
+      "row_index": 480
+    },
+    {
+      "run_id": "p4_constraint_conflicting_r001",
+      "prompt_id": 4,
+      "strategy": "constraint_conflicting",
+      "rep": 1,
+      "row_index": 481
+    },
+    {
+      "run_id": "p4_constraint_conflicting_r002",
+      "prompt_id": 4,
+      "strategy": "constraint_conflicting",
+      "rep": 2,
+      "row_index": 482
+    },
+    {
+      "run_id": "p4_constraint_conflicting_r003",
+      "prompt_id": 4,
+      "strategy": "constraint_conflicting",
+      "rep": 3,
+      "row_index": 483
+    },
+    {
+      "run_id": "p4_constraint_conflicting_r004",
+      "prompt_id": 4,
+      "strategy": "constraint_conflicting",
+      "rep": 4,
+      "row_index": 484
+    },
+    {
+      "run_id": "p4_instruction_system_only_r000",
+      "prompt_id": 4,
+      "strategy": "instruction_system_only",
+      "rep": 0,
+      "row_index": 485
+    },
+    {
+      "run_id": "p4_instruction_system_only_r001",
+      "prompt_id": 4,
+      "strategy": "instruction_system_only",
+      "rep": 1,
+      "row_index": 486
+    },
+    {
+      "run_id": "p4_instruction_system_only_r002",
+      "prompt_id": 4,
+      "strategy": "instruction_system_only",
+      "rep": 2,
+      "row_index": 487
+    },
+    {
+      "run_id": "p4_instruction_system_only_r003",
+      "prompt_id": 4,
+      "strategy": "instruction_system_only",
+      "rep": 3,
+      "row_index": 488
+    },
+    {
+      "run_id": "p4_instruction_system_only_r004",
+      "prompt_id": 4,
+      "strategy": "instruction_system_only",
+      "rep": 4,
+      "row_index": 489
+    },
+    {
+      "run_id": "p4_instruction_user_only_r000",
+      "prompt_id": 4,
+      "strategy": "instruction_user_only",
+      "rep": 0,
+      "row_index": 490
+    },
+    {
+      "run_id": "p4_instruction_user_only_r001",
+      "prompt_id": 4,
+      "strategy": "instruction_user_only",
+      "rep": 1,
+      "row_index": 491
+    },
+    {
+      "run_id": "p4_instruction_user_only_r002",
+      "prompt_id": 4,
+      "strategy": "instruction_user_only",
+      "rep": 2,
+      "row_index": 492
+    },
+    {
+      "run_id": "p4_instruction_user_only_r003",
+      "prompt_id": 4,
+      "strategy": "instruction_user_only",
+      "rep": 3,
+      "row_index": 493
+    },
+    {
+      "run_id": "p4_instruction_user_only_r004",
+      "prompt_id": 4,
+      "strategy": "instruction_user_only",
+      "rep": 4,
+      "row_index": 494
+    },
+    {
+      "run_id": "p4_instruction_conflict_r000",
+      "prompt_id": 4,
+      "strategy": "instruction_conflict",
+      "rep": 0,
+      "row_index": 495
+    },
+    {
+      "run_id": "p4_instruction_conflict_r001",
+      "prompt_id": 4,
+      "strategy": "instruction_conflict",
+      "rep": 1,
+      "row_index": 496
+    },
+    {
+      "run_id": "p4_instruction_conflict_r002",
+      "prompt_id": 4,
+      "strategy": "instruction_conflict",
+      "rep": 2,
+      "row_index": 497
+    },
+    {
+      "run_id": "p4_instruction_conflict_r003",
+      "prompt_id": 4,
+      "strategy": "instruction_conflict",
+      "rep": 3,
+      "row_index": 498
+    },
+    {
+      "run_id": "p4_instruction_conflict_r004",
+      "prompt_id": 4,
+      "strategy": "instruction_conflict",
+      "rep": 4,
+      "row_index": 499
     },
     {
       "run_id": "p4_role_neutral_r000",
       "prompt_id": 4,
       "strategy": "role_neutral",
       "rep": 0,
-      "row_index": 434
+      "row_index": 500
     },
     {
       "run_id": "p4_role_neutral_r001",
       "prompt_id": 4,
       "strategy": "role_neutral",
       "rep": 1,
-      "row_index": 435
+      "row_index": 501
     },
     {
       "run_id": "p4_role_neutral_r002",
       "prompt_id": 4,
       "strategy": "role_neutral",
       "rep": 2,
-      "row_index": 436
+      "row_index": 502
     },
     {
-      "run_id": "p4_role_obedient_r000",
+      "run_id": "p4_role_neutral_r003",
       "prompt_id": 4,
-      "strategy": "role_obedient",
+      "strategy": "role_neutral",
+      "rep": 3,
+      "row_index": 503
+    },
+    {
+      "run_id": "p4_role_neutral_r004",
+      "prompt_id": 4,
+      "strategy": "role_neutral",
+      "rep": 4,
+      "row_index": 504
+    },
+    {
+      "run_id": "p4_role_expert_r000",
+      "prompt_id": 4,
+      "strategy": "role_expert",
       "rep": 0,
-      "row_index": 437
+      "row_index": 505
     },
     {
-      "run_id": "p4_role_obedient_r001",
+      "run_id": "p4_role_expert_r001",
       "prompt_id": 4,
-      "strategy": "role_obedient",
+      "strategy": "role_expert",
       "rep": 1,
-      "row_index": 438
+      "row_index": 506
     },
     {
-      "run_id": "p4_role_obedient_r002",
+      "run_id": "p4_role_expert_r002",
       "prompt_id": 4,
-      "strategy": "role_obedient",
+      "strategy": "role_expert",
       "rep": 2,
-      "row_index": 439
+      "row_index": 507
+    },
+    {
+      "run_id": "p4_role_expert_r003",
+      "prompt_id": 4,
+      "strategy": "role_expert",
+      "rep": 3,
+      "row_index": 508
+    },
+    {
+      "run_id": "p4_role_expert_r004",
+      "prompt_id": 4,
+      "strategy": "role_expert",
+      "rep": 4,
+      "row_index": 509
     },
     {
       "run_id": "p4_role_skeptic_r000",
       "prompt_id": 4,
       "strategy": "role_skeptic",
       "rep": 0,
-      "row_index": 440
+      "row_index": 510
     },
     {
       "run_id": "p4_role_skeptic_r001",
       "prompt_id": 4,
       "strategy": "role_skeptic",
       "rep": 1,
-      "row_index": 441
+      "row_index": 511
     },
     {
       "run_id": "p4_role_skeptic_r002",
       "prompt_id": 4,
       "strategy": "role_skeptic",
       "rep": 2,
-      "row_index": 442
+      "row_index": 512
+    },
+    {
+      "run_id": "p4_role_skeptic_r003",
+      "prompt_id": 4,
+      "strategy": "role_skeptic",
+      "rep": 3,
+      "row_index": 513
+    },
+    {
+      "run_id": "p4_role_skeptic_r004",
+      "prompt_id": 4,
+      "strategy": "role_skeptic",
+      "rep": 4,
+      "row_index": 514
+    },
+    {
+      "run_id": "p4_role_adversarial_eval_r000",
+      "prompt_id": 4,
+      "strategy": "role_adversarial_eval",
+      "rep": 0,
+      "row_index": 515
+    },
+    {
+      "run_id": "p4_role_adversarial_eval_r001",
+      "prompt_id": 4,
+      "strategy": "role_adversarial_eval",
+      "rep": 1,
+      "row_index": 516
+    },
+    {
+      "run_id": "p4_role_adversarial_eval_r002",
+      "prompt_id": 4,
+      "strategy": "role_adversarial_eval",
+      "rep": 2,
+      "row_index": 517
+    },
+    {
+      "run_id": "p4_role_adversarial_eval_r003",
+      "prompt_id": 4,
+      "strategy": "role_adversarial_eval",
+      "rep": 3,
+      "row_index": 518
+    },
+    {
+      "run_id": "p4_role_adversarial_eval_r004",
+      "prompt_id": 4,
+      "strategy": "role_adversarial_eval",
+      "rep": 4,
+      "row_index": 519
+    },
+    {
+      "run_id": "p4_role_obedient_r000",
+      "prompt_id": 4,
+      "strategy": "role_obedient",
+      "rep": 0,
+      "row_index": 520
+    },
+    {
+      "run_id": "p4_role_obedient_r001",
+      "prompt_id": 4,
+      "strategy": "role_obedient",
+      "rep": 1,
+      "row_index": 521
+    },
+    {
+      "run_id": "p4_role_obedient_r002",
+      "prompt_id": 4,
+      "strategy": "role_obedient",
+      "rep": 2,
+      "row_index": 522
+    },
+    {
+      "run_id": "p4_role_obedient_r003",
+      "prompt_id": 4,
+      "strategy": "role_obedient",
+      "rep": 3,
+      "row_index": 523
+    },
+    {
+      "run_id": "p4_role_obedient_r004",
+      "prompt_id": 4,
+      "strategy": "role_obedient",
+      "rep": 4,
+      "row_index": 524
+    },
+    {
+      "run_id": "p4_format_paragraph_r000",
+      "prompt_id": 4,
+      "strategy": "format_paragraph",
+      "rep": 0,
+      "row_index": 525
+    },
+    {
+      "run_id": "p4_format_paragraph_r001",
+      "prompt_id": 4,
+      "strategy": "format_paragraph",
+      "rep": 1,
+      "row_index": 526
+    },
+    {
+      "run_id": "p4_format_paragraph_r002",
+      "prompt_id": 4,
+      "strategy": "format_paragraph",
+      "rep": 2,
+      "row_index": 527
+    },
+    {
+      "run_id": "p4_format_paragraph_r003",
+      "prompt_id": 4,
+      "strategy": "format_paragraph",
+      "rep": 3,
+      "row_index": 528
+    },
+    {
+      "run_id": "p4_format_paragraph_r004",
+      "prompt_id": 4,
+      "strategy": "format_paragraph",
+      "rep": 4,
+      "row_index": 529
+    },
+    {
+      "run_id": "p4_format_bullet_r000",
+      "prompt_id": 4,
+      "strategy": "format_bullet",
+      "rep": 0,
+      "row_index": 530
+    },
+    {
+      "run_id": "p4_format_bullet_r001",
+      "prompt_id": 4,
+      "strategy": "format_bullet",
+      "rep": 1,
+      "row_index": 531
+    },
+    {
+      "run_id": "p4_format_bullet_r002",
+      "prompt_id": 4,
+      "strategy": "format_bullet",
+      "rep": 2,
+      "row_index": 532
+    },
+    {
+      "run_id": "p4_format_bullet_r003",
+      "prompt_id": 4,
+      "strategy": "format_bullet",
+      "rep": 3,
+      "row_index": 533
+    },
+    {
+      "run_id": "p4_format_bullet_r004",
+      "prompt_id": 4,
+      "strategy": "format_bullet",
+      "rep": 4,
+      "row_index": 534
+    },
+    {
+      "run_id": "p4_format_json_r000",
+      "prompt_id": 4,
+      "strategy": "format_json",
+      "rep": 0,
+      "row_index": 535
+    },
+    {
+      "run_id": "p4_format_json_r001",
+      "prompt_id": 4,
+      "strategy": "format_json",
+      "rep": 1,
+      "row_index": 536
+    },
+    {
+      "run_id": "p4_format_json_r002",
+      "prompt_id": 4,
+      "strategy": "format_json",
+      "rep": 2,
+      "row_index": 537
+    },
+    {
+      "run_id": "p4_format_json_r003",
+      "prompt_id": 4,
+      "strategy": "format_json",
+      "rep": 3,
+      "row_index": 538
+    },
+    {
+      "run_id": "p4_format_json_r004",
+      "prompt_id": 4,
+      "strategy": "format_json",
+      "rep": 4,
+      "row_index": 539
+    },
+    {
+      "run_id": "p4_format_step_by_step_r000",
+      "prompt_id": 4,
+      "strategy": "format_step_by_step",
+      "rep": 0,
+      "row_index": 540
+    },
+    {
+      "run_id": "p4_format_step_by_step_r001",
+      "prompt_id": 4,
+      "strategy": "format_step_by_step",
+      "rep": 1,
+      "row_index": 541
+    },
+    {
+      "run_id": "p4_format_step_by_step_r002",
+      "prompt_id": 4,
+      "strategy": "format_step_by_step",
+      "rep": 2,
+      "row_index": 542
+    },
+    {
+      "run_id": "p4_format_step_by_step_r003",
+      "prompt_id": 4,
+      "strategy": "format_step_by_step",
+      "rep": 3,
+      "row_index": 543
+    },
+    {
+      "run_id": "p4_format_step_by_step_r004",
+      "prompt_id": 4,
+      "strategy": "format_step_by_step",
+      "rep": 4,
+      "row_index": 544
+    },
+    {
+      "run_id": "p4_format_compressed_r000",
+      "prompt_id": 4,
+      "strategy": "format_compressed",
+      "rep": 0,
+      "row_index": 545
+    },
+    {
+      "run_id": "p4_format_compressed_r001",
+      "prompt_id": 4,
+      "strategy": "format_compressed",
+      "rep": 1,
+      "row_index": 546
+    },
+    {
+      "run_id": "p4_format_compressed_r002",
+      "prompt_id": 4,
+      "strategy": "format_compressed",
+      "rep": 2,
+      "row_index": 547
+    },
+    {
+      "run_id": "p4_format_compressed_r003",
+      "prompt_id": 4,
+      "strategy": "format_compressed",
+      "rep": 3,
+      "row_index": 548
+    },
+    {
+      "run_id": "p4_format_compressed_r004",
+      "prompt_id": 4,
+      "strategy": "format_compressed",
+      "rep": 4,
+      "row_index": 549
+    },
+    {
+      "run_id": "p4_format_verbose_r000",
+      "prompt_id": 4,
+      "strategy": "format_verbose",
+      "rep": 0,
+      "row_index": 550
+    },
+    {
+      "run_id": "p4_format_verbose_r001",
+      "prompt_id": 4,
+      "strategy": "format_verbose",
+      "rep": 1,
+      "row_index": 551
+    },
+    {
+      "run_id": "p4_format_verbose_r002",
+      "prompt_id": 4,
+      "strategy": "format_verbose",
+      "rep": 2,
+      "row_index": 552
+    },
+    {
+      "run_id": "p4_format_verbose_r003",
+      "prompt_id": 4,
+      "strategy": "format_verbose",
+      "rep": 3,
+      "row_index": 553
+    },
+    {
+      "run_id": "p4_format_verbose_r004",
+      "prompt_id": 4,
+      "strategy": "format_verbose",
+      "rep": 4,
+      "row_index": 554
     },
     {
       "run_id": "p4_token_1sentence_r000",
       "prompt_id": 4,
       "strategy": "token_1sentence",
       "rep": 0,
-      "row_index": 443
+      "row_index": 555
     },
     {
       "run_id": "p4_token_1sentence_r001",
       "prompt_id": 4,
       "strategy": "token_1sentence",
       "rep": 1,
-      "row_index": 444
+      "row_index": 556
     },
     {
       "run_id": "p4_token_1sentence_r002",
       "prompt_id": 4,
       "strategy": "token_1sentence",
       "rep": 2,
-      "row_index": 445
+      "row_index": 557
+    },
+    {
+      "run_id": "p4_token_1sentence_r003",
+      "prompt_id": 4,
+      "strategy": "token_1sentence",
+      "rep": 3,
+      "row_index": 558
+    },
+    {
+      "run_id": "p4_token_1sentence_r004",
+      "prompt_id": 4,
+      "strategy": "token_1sentence",
+      "rep": 4,
+      "row_index": 559
     },
     {
       "run_id": "p4_token_5lines_r000",
       "prompt_id": 4,
       "strategy": "token_5lines",
       "rep": 0,
-      "row_index": 446
+      "row_index": 560
     },
     {
       "run_id": "p4_token_5lines_r001",
       "prompt_id": 4,
       "strategy": "token_5lines",
       "rep": 1,
-      "row_index": 447
+      "row_index": 561
     },
     {
       "run_id": "p4_token_5lines_r002",
       "prompt_id": 4,
       "strategy": "token_5lines",
       "rep": 2,
-      "row_index": 448
+      "row_index": 562
+    },
+    {
+      "run_id": "p4_token_5lines_r003",
+      "prompt_id": 4,
+      "strategy": "token_5lines",
+      "rep": 3,
+      "row_index": 563
+    },
+    {
+      "run_id": "p4_token_5lines_r004",
+      "prompt_id": 4,
+      "strategy": "token_5lines",
+      "rep": 4,
+      "row_index": 564
     },
     {
       "run_id": "p4_token_full_r000",
       "prompt_id": 4,
       "strategy": "token_full",
       "rep": 0,
-      "row_index": 449
+      "row_index": 565
     },
     {
       "run_id": "p4_token_full_r001",
       "prompt_id": 4,
       "strategy": "token_full",
       "rep": 1,
-      "row_index": 450
+      "row_index": 566
     },
     {
       "run_id": "p4_token_full_r002",
       "prompt_id": 4,
       "strategy": "token_full",
       "rep": 2,
-      "row_index": 451
+      "row_index": 567
+    },
+    {
+      "run_id": "p4_token_full_r003",
+      "prompt_id": 4,
+      "strategy": "token_full",
+      "rep": 3,
+      "row_index": 568
+    },
+    {
+      "run_id": "p4_token_full_r004",
+      "prompt_id": 4,
+      "strategy": "token_full",
+      "rep": 4,
+      "row_index": 569
+    },
+    {
+      "run_id": "p4_adversarial_r000",
+      "prompt_id": 4,
+      "strategy": "adversarial",
+      "rep": 0,
+      "row_index": 570
+    },
+    {
+      "run_id": "p4_adversarial_r001",
+      "prompt_id": 4,
+      "strategy": "adversarial",
+      "rep": 1,
+      "row_index": 571
+    },
+    {
+      "run_id": "p4_adversarial_r002",
+      "prompt_id": 4,
+      "strategy": "adversarial",
+      "rep": 2,
+      "row_index": 572
+    },
+    {
+      "run_id": "p4_adversarial_r003",
+      "prompt_id": 4,
+      "strategy": "adversarial",
+      "rep": 3,
+      "row_index": 573
+    },
+    {
+      "run_id": "p4_adversarial_r004",
+      "prompt_id": 4,
+      "strategy": "adversarial",
+      "rep": 4,
+      "row_index": 574
     }
   ]
 }

@@ -75,3 +75,29 @@ Stage Summary:
 - NO classification artifacts anywhere
 - Ready for real LLM execution when API rate limit clears
 - Key remaining gap: cross-condition invariance test (cross-model, cross-temperature, cross-time)
+
+---
+Task ID: v14-1
+Agent: Main Agent
+Task: Generate real behavioral data using multi-provider routing lattice
+
+Work Log:
+- Read existing lattice code (frozen_prompts, variant_generator, run_lattice, vector_store, coordinate_solver)
+- Tested all provider endpoints: z-ai-web-dev-sdk (429), HuggingFace (401, requires auth now), Groq/OpenRouter/Gemini (no API keys)
+- Downloaded and extracted Ollama v0.20.7 binary (~1GB)
+- Found cached Qwen2.5-0.5B-Instruct GGUF from previous session
+- Built provider_router.py: multi-provider routing (Groq -> OpenRouter -> Gemini -> Ollama local)
+- Implemented preflight check + cached active provider list to skip unavailable providers
+- Built run_real_lattice.py: lattice executor with provider routing + resume support
+- Optimized max_tokens from 512 to 200 for throughput (44s/call to 2.7s/call)
+- Collected 575/575 records (5 prompts x 23 strategies x 5 reps)
+- Built solve_real_space.py: adapter + vector_store to coordinate_solver pipeline
+- Generated behavioral_space.json with 8 PCA components, cosine distance
+
+Stage Summary:
+- runs.jsonl: 575 records, 739 KB, 573/575 from ollama_local (Qwen2.5-0.5B-Instruct Q2_K CPU)
+- behavioral_space.json: 107 KB, 1024 TF-IDF features, 8 PCA components (28.5% cumulative variance)
+- HARD STOP CHECKS: all PASS (0 empty, 0 identical across reps, provider diversity present)
+- Key findings: adversarial_probe highest axis displacement (0.1098), PCA shows dispersed variance
+- Files created: provider_router.py, run_real_lattice.py, solve_real_space.py
+- Output: lattice/output/runs.jsonl + lattice/output/behavioral_space.json
