@@ -1,9 +1,9 @@
 """
-output_pipeline.py — Step 8: Output Pipeline (v1.1)
+output_pipeline.py — Step 8: Output Pipeline (v1.2)
 
 Produces the final instability classification report.
 
-STRICT output format (per spec):
+v1.2 STRICT output format:
 {
     "task": "...",
     "instability_map": [
@@ -11,10 +11,19 @@ STRICT output format (per spec):
             "family": "...",
             "instability_type": "...",
             "score": float,
-            "top_trigger": "prompt_variant_id"
+            "top_trigger": "POLICY_SHIFT | REASONING_SHIFT | KNOWLEDGE_SHIFT | FORMAT_SHIFT",
+            "component_breakdown": {
+                "policy": float,
+                "reasoning": float,
+                "knowledge": float,
+                "formatting": float
+            }
         }
     ],
-    "global_instability_score": float,
+    "global_instability_peak": float,
+    "global_instability_mean": float,
+    "normalized_peak": float,
+    "normalized_mean": float,
     "dominant_failure_mode": "..."
 }
 """
@@ -29,7 +38,7 @@ from .scoring_engine import ScoredInstability
 
 
 class InstabilityReport:
-    """The final output of the LCGE v1.1 engine."""
+    """The final output of the LCGE v1.2 engine."""
 
     def __init__(
         self,
@@ -37,7 +46,10 @@ class InstabilityReport:
         task: str,
         seed_prompt: str,
         instability_map: list[dict],
-        global_instability_score: float,
+        global_instability_peak: float,
+        global_instability_mean: float,
+        normalized_peak: float,
+        normalized_mean: float,
         dominant_failure_mode: str,
         graph: Optional[ConsistencyGraph] = None,
         scored_clusters: Optional[list[ScoredInstability]] = None,
@@ -49,7 +61,10 @@ class InstabilityReport:
         self.task = task
         self.seed_prompt = seed_prompt
         self.instability_map = instability_map
-        self.global_instability_score = global_instability_score
+        self.global_instability_peak = global_instability_peak
+        self.global_instability_mean = global_instability_mean
+        self.normalized_peak = normalized_peak
+        self.normalized_mean = normalized_mean
         self.dominant_failure_mode = dominant_failure_mode
         self.graph = graph
         self.scored_clusters = scored_clusters or []
@@ -59,11 +74,14 @@ class InstabilityReport:
         self.timestamp = datetime.now(timezone.utc).isoformat()
 
     def to_dict(self) -> dict:
-        """Serialize to the STRICT output format per spec."""
+        """Serialize to the STRICT output format per v1.2 spec."""
         result = {
             "task": self.task,
             "instability_map": self.instability_map,
-            "global_instability_score": self.global_instability_score,
+            "global_instability_peak": self.global_instability_peak,
+            "global_instability_mean": self.global_instability_mean,
+            "normalized_peak": self.normalized_peak,
+            "normalized_mean": self.normalized_mean,
             "dominant_failure_mode": self.dominant_failure_mode,
         }
 
@@ -76,6 +94,7 @@ class InstabilityReport:
         result["engine"] = {
             "name": "LLM Consistency Graph Engine",
             "version": self.engine_version,
+            "definition": "Prompt Transformation -> Behavioral State Mapping Engine",
             "timestamp": self.timestamp,
         }
 
@@ -143,7 +162,7 @@ def generate_report(
     """
     from . import __version__
 
-    # Build instability_map (strict format per spec)
+    # Build instability_map (strict format per v1.2 spec)
     instability_map = []
     for scored in scored_clusters:
         cluster = scored.cluster
@@ -152,6 +171,9 @@ def generate_report(
             "instability_type": cluster.instability_type,
             "score": round(cluster.total_score, 2),
             "top_trigger": cluster.evidence.get("top_trigger", ""),
+            "component_breakdown": {
+                k: round(v, 4) for k, v in cluster.component_scores.items()
+            },
         }
         instability_map.append(entry)
 
@@ -162,6 +184,7 @@ def generate_report(
             "instability_type": "stable",
             "score": 0.0,
             "top_trigger": "",
+            "component_breakdown": {"policy": 0.0, "reasoning": 0.0, "knowledge": 0.0, "formatting": 0.0},
         })
 
     report = InstabilityReport(
@@ -169,7 +192,10 @@ def generate_report(
         task=task,
         seed_prompt=seed_prompt,
         instability_map=instability_map,
-        global_instability_score=global_metrics["global_instability_score"],
+        global_instability_peak=global_metrics["global_instability_peak"],
+        global_instability_mean=global_metrics["global_instability_mean"],
+        normalized_peak=global_metrics["normalized_peak"],
+        normalized_mean=global_metrics["normalized_mean"],
         dominant_failure_mode=global_metrics["dominant_failure_mode"],
         graph=graph,
         scored_clusters=scored_clusters,

@@ -1,18 +1,19 @@
 """
-instability_classifier.py — Step 6: Instability Classifier (v1.1)
+instability_classifier.py — Step 6: Instability Classifier (v1.2)
 
-Replaces contradiction_detector.py. Classifies LLM behavioral instability
-into typed categories:
-
+Classifies LLM behavioral instability into typed categories:
     - policy_flip: refusal <-> answer transitions
     - reasoning_variance: different solution paths
     - knowledge_variance: factual disagreement
     - formatting_variance: structure changes affecting meaning
     - stable: no significant instability
 
-The classifier operates on the instability field — a gradient over prompt space.
-It clusters nodes by semantic_family_id, measures variance inside clusters,
-and measures flip frequency across the family.
+v1.2 changes:
+    - top_trigger now uses typed TriggerType (POLICY_SHIFT, REASONING_SHIFT,
+      KNOWLEDGE_SHIFT, FORMAT_SHIFT) instead of free-text node ID
+    - Reasoning dominance override: when reasoning_score > threshold AND
+      reasoning_score > knowledge_score, reasoning wins dominance
+    - _find_top_trigger() now classifies by signal source, not just edge weight
 """
 
 from typing import Optional
@@ -27,7 +28,46 @@ from .config import (
     POLICY_FLIP_SCORE_PER_PAIR,
     REASONING_DIVERGENCE_THRESHOLD,
     FORMAT_ENTROPY_THRESHOLD,
+    TRIGGER_TYPES,
+    REASONING_DOMINANCE_OVERRIDE_THRESHOLD,
 )
+
+
+# ============================================================
+# TriggerType — typed trigger classification (v1.2)
+# ============================================================
+
+TRIGGER_TYPE_ENUM = [
+    "POLICY_SHIFT",
+    "REASONING_SHIFT",
+    "KNOWLEDGE_SHIFT",
+    "FORMAT_SHIFT",
+]
+
+
+def classify_trigger_type(component_scores: dict[str, float]) -> str:
+    """
+    Classify the top instability trigger from component scores.
+
+    Returns one of: POLICY_SHIFT, REASONING_SHIFT, KNOWLEDGE_SHIFT, FORMAT_SHIFT.
+
+    Logic: find the component with the highest raw score (not weighted).
+    This identifies which SIGNAL SOURCE is driving the most instability,
+    regardless of the weight applied to it.
+    """
+    type_map = {
+        "policy": "POLICY_SHIFT",
+        "reasoning": "REASONING_SHIFT",
+        "knowledge": "KNOWLEDGE_SHIFT",
+        "formatting": "FORMAT_SHIFT",
+    }
+
+    if not component_scores:
+        return "FORMAT_SHIFT"
+
+    # Find raw max (pre-weight)
+    best_component = max(component_scores, key=component_scores.get)
+    return type_map.get(best_component, "FORMAT_SHIFT")
 
 
 class InstabilityCluster:
@@ -82,7 +122,7 @@ class InstabilityClassifier:
            b. reasoning_instability — embedding divergence of reasoning traces
            c. knowledge_instability — entity-level answer disagreement
            d. formatting_instability — format signature diversity
-        3. Classify dominant instability type
+        3. Classify dominant instability type (with reasoning override rule)
         4. If all components are below threshold, classify as "stable"
     """
 
@@ -109,7 +149,7 @@ class InstabilityClassifier:
 
             component_scores = self._compute_component_scores(graph, family_nodes)
 
-            # Step 3: Determine dominant type
+            # Step 3: Determine dominant type (v1.2: with reasoning override)
             instability_type = self._classify_type(component_scores)
 
             # Step 4: Compute total score (weighted sum, capped)
@@ -120,11 +160,8 @@ class InstabilityClassifier:
             )
             total = min(total, INSTABILITY_SCORE_CAP)
 
-            # Build evidence
+            # Build evidence (v1.2: includes typed top_trigger)
             evidence = self._build_evidence(graph, family_nodes, component_scores)
-
-            # Find top trigger — the variant most involved in instability
-            top_trigger = self._find_top_trigger(graph, family_nodes)
 
             cluster = InstabilityCluster(
                 cluster_id=f"IC-{cluster_counter:03d}",
@@ -240,6 +277,23 @@ class InstabilityClassifier:
 
         if len(answered_nodes) < 2:
             return 0.0
+
+        # v1.2: Coverage guard — if only a small fraction of nodes produce
+        # substantial reasoning, the divergence is likely format-driven noise,
+        # not genuine reasoning path instability. Require at least 40% of
+        # non-refused nodes to have substantial reasoning traces.
+        # This prevents factual questions from being classified as reasoning_variance
+        # just because format_change variants produce longer explanations.
+        total_answered = 0
+        for nid in family_nodes:
+            nd = graph.get_node_data(nid)
+            if nd and "normalized" in nd and not nd["normalized"].refusal_flag:
+                total_answered += 1
+
+        if total_answered > 0:
+            coverage_ratio = len(answered_nodes) / total_answered
+            if coverage_ratio < 0.4:
+                return 0.0
 
         # Build a fresh TF-IDF model over reasoning traces
         traces = [resp.reasoning_trace for _, resp in answered_nodes]
@@ -400,8 +454,13 @@ class InstabilityClassifier:
         return 0.0
 
     def _classify_type(self, scores: dict[str, float]) -> str:
-        """Classify the dominant instability type from component scores."""
-        # Check if stable
+        """
+        Classify the dominant instability type from component scores.
+
+        v1.2: Added reasoning dominance override.
+            if reasoning_score > 0.6 AND reasoning_score > knowledge_score:
+                allow reasoning to win dominance even if knowledge weighted higher
+        """
         from .config import INSTABILITY_WEIGHTS, INSTABILITY_SCORE_CAP
         total = sum(
             scores.get(k, 0.0) * INSTABILITY_WEIGHTS.get(k, 0.0)
@@ -410,9 +469,25 @@ class InstabilityClassifier:
         if total < 0.5:
             return "stable"
 
-        # Find dominant component
+        # Find dominant component by weighted score
         weighted = {k: scores.get(k, 0.0) * INSTABILITY_WEIGHTS.get(k, 0.0) for k in scores}
         dominant = max(weighted, key=weighted.get)
+
+        # v1.2: Reasoning dominance override
+        # Conditions (all must be true):
+        #   1. Reasoning raw score > threshold (substantial signal)
+        #   2. Reasoning raw score > knowledge raw score (reasoning is stronger)
+        #   3. Reasoning raw score is the maximum across ALL components
+        #      (don't override when formatting or policy is the real driver)
+        # This prevents the override from hijacking factual tasks where
+        # formatting dominates.
+        reasoning_raw = scores.get("reasoning", 0.0)
+        knowledge_raw = scores.get("knowledge", 0.0)
+
+        if (reasoning_raw > REASONING_DOMINANCE_OVERRIDE_THRESHOLD
+                and reasoning_raw > knowledge_raw
+                and reasoning_raw >= max(scores.values())):
+            dominant = "reasoning"
 
         type_map = {
             "policy": "policy_flip",
@@ -425,7 +500,11 @@ class InstabilityClassifier:
     def _build_evidence(
         self, graph: ConsistencyGraph, family_nodes: list[str], scores: dict
     ) -> dict:
-        """Build evidence dict for a cluster."""
+        """
+        Build evidence dict for a cluster.
+
+        v1.2: Now includes typed top_trigger using classify_trigger_type().
+        """
         node_details = []
         for node_id in family_nodes:
             nd = graph.get_node_data(node_id)
@@ -448,22 +527,13 @@ class InstabilityClassifier:
                     "answered": e.evidence.get("answered_node", "?"),
                 })
 
-        return {
+        # v1.2 FIX: Compute typed top_trigger from component scores
+        top_trigger = classify_trigger_type(scores)
+
+        evidence = {
             "node_count": len(family_nodes),
             "node_details": node_details,
             "policy_flip_edges": flip_edges,
+            "top_trigger": top_trigger,
         }
-
-    def _find_top_trigger(self, graph: ConsistencyGraph, family_nodes: list[str]) -> str:
-        """Find the variant most involved in instability edges."""
-        involvement = defaultdict(float)
-        for node_id in family_nodes:
-            edges = graph.get_edges_for_node(node_id)
-            for e in edges:
-                if e.weight > 0 and e.edge_type != "family_link":
-                    involvement[node_id] += e.weight * e.edge_confidence
-
-        if not involvement:
-            return family_nodes[0][:8] if family_nodes else ""
-
-        return max(involvement, key=involvement.get)[:8]
+        return evidence

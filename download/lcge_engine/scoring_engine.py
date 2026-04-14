@@ -1,20 +1,19 @@
 """
-scoring_engine.py — Step 7: Instability Scoring (v1.1)
+scoring_engine.py — Step 7: Instability Scoring (v1.2)
 
 Replaces binary contradiction scoring with 4-component instability scoring.
 
-instability_score = weighted_sum(all components)
-    = policy_score * 3.0
-    + reasoning_score * 2.0
-    + knowledge_score * 2.5
-    + formatting_score * 1.0
-    cap at 10.0
+v1.2 changes:
+    - Dual global score: peak (max) + mean (average) across families
+    - Lightweight normalization stub: score / NORMALIZATION_DIVISOR
+    - Normalized scores enable cross-task comparability (full calibration in v2)
 
-The scoring engine produces:
-    - Per-family instability scores
-    - Global instability score (max across families)
-    - Dominant failure mode
-    - Per-component breakdown
+Scoring:
+    instability_score = weighted_sum(all components), cap at 10.0
+        = policy_score * 3.5
+        + reasoning_score * 2.5  (raised in v1.2)
+        + knowledge_score * 2.0
+        + formatting_score * 1.5
 """
 
 from typing import Optional
@@ -28,6 +27,7 @@ from .config import (
     INSTABILITY_WEIGHTS,
     INSTABILITY_SCORE_CAP,
     INSTABILITY_TYPES,
+    NORMALIZATION_DIVISOR,
 )
 
 
@@ -59,10 +59,11 @@ class ScoringEngine:
     """
     Scores instability clusters and produces global metrics.
 
-    The scoring engine computes:
-        1. Per-family instability_score (weighted sum of components, capped)
-        2. global_instability_score (maximum across families)
-        3. dominant_failure_mode (most common instability type weighted by score)
+    v1.2:
+        - global_instability_peak = max score across significant clusters
+        - global_instability_mean = mean score across significant clusters
+        - normalized_peak = peak / NORMALIZATION_DIVISOR (0-1 scale)
+        - normalized_mean = mean / NORMALIZATION_DIVISOR (0-1 scale)
     """
 
     # Threshold for "significant" instability
@@ -108,16 +109,24 @@ class ScoringEngine:
         """
         Compute global instability metrics across all clusters.
 
+        v1.2: Returns both peak and mean global scores, plus normalized versions.
+
         Returns:
             dict with:
-                - global_instability_score: float (0-10)
+                - global_instability_peak: float (0-10) — max score
+                - global_instability_mean: float (0-10) — mean score
+                - normalized_peak: float (0-1) — peak / divisor
+                - normalized_mean: float (0-1) — mean / divisor
                 - dominant_failure_mode: str
                 - instability_type_counts: dict
                 - component_averages: dict
         """
         if not scored_clusters:
             return {
-                "global_instability_score": 0.0,
+                "global_instability_peak": 0.0,
+                "global_instability_mean": 0.0,
+                "normalized_peak": 0.0,
+                "normalized_mean": 0.0,
                 "dominant_failure_mode": "stable",
                 "instability_type_counts": {"stable": 1},
                 "component_averages": {},
@@ -127,14 +136,23 @@ class ScoringEngine:
 
         if not significant:
             return {
-                "global_instability_score": 0.0,
+                "global_instability_peak": 0.0,
+                "global_instability_mean": 0.0,
+                "normalized_peak": 0.0,
+                "normalized_mean": 0.0,
                 "dominant_failure_mode": "stable",
                 "instability_type_counts": {"stable": len(scored_clusters)},
                 "component_averages": {},
             }
 
-        # Global score = max across significant clusters
-        global_score = max(s.cluster.total_score for s in significant)
+        # v1.2: Dual global score — peak AND mean
+        scores = [s.cluster.total_score for s in significant]
+        global_peak = max(scores)
+        global_mean = sum(scores) / len(scores)
+
+        # v1.2: Lightweight normalization (full calibration layer in v2)
+        normalized_peak = global_peak / NORMALIZATION_DIVISOR
+        normalized_mean = global_mean / NORMALIZATION_DIVISOR
 
         # Dominant failure mode = weighted by score
         type_weighted = defaultdict(float)
@@ -157,11 +175,31 @@ class ScoringEngine:
                 component_avgs[key] = 0.0
 
         return {
-            "global_instability_score": round(global_score, 2),
+            "global_instability_peak": round(global_peak, 2),
+            "global_instability_mean": round(global_mean, 2),
+            "normalized_peak": round(normalized_peak, 4),
+            "normalized_mean": round(normalized_mean, 4),
             "dominant_failure_mode": dominant_type,
             "instability_type_counts": dict(type_counts),
             "component_averages": component_avgs,
         }
+
+
+def normalize_score(score: float, task_type_stats: Optional[dict] = None) -> float:
+    """
+    Normalize a raw instability score to 0-1 range.
+
+    v1.2: Simple stub — score / NORMALIZATION_DIVISOR.
+    v2 will use task_type_stats with mean/std for z-score normalization.
+
+    Args:
+        score: Raw instability score (0-10).
+        task_type_stats: Unused in v1.2 (reserved for v2 calibration).
+
+    Returns:
+        Normalized score in 0-1 range.
+    """
+    return score / NORMALIZATION_DIVISOR
 
 
 def compute_reproducibility(

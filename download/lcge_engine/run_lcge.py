@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-run_lcge.py — CLI entry point for LCGE v1.1
+run_lcge.py — CLI entry point for LCGE v1.2
 
 Usage:
     python run_lcge.py --task "..." --prompt "..."
@@ -25,7 +25,7 @@ from lcge_engine.engine import LCGEEngine
 
 def main():
     parser = argparse.ArgumentParser(
-        description="LCGE v1.1 — LLM Behavioral Instability Classifier",
+        description="LCGE v1.2 — Prompt Transformation -> Behavioral State Mapping Engine",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
@@ -87,7 +87,9 @@ Examples:
     print(f"\n{'='*40}", file=sys.stderr)
     print(f"  Task:     {task}", file=sys.stderr)
     print(f"  Type:     {report.dominant_failure_mode}", file=sys.stderr)
-    print(f"  Score:    {report.global_instability_score}/10", file=sys.stderr)
+    print(f"  Peak:     {report.global_instability_peak}/10", file=sys.stderr)
+    print(f"  Mean:     {report.global_instability_mean}/10", file=sys.stderr)
+    print(f"  Norm:     {report.normalized_peak:.2f} (peak), {report.normalized_mean:.2f} (mean)", file=sys.stderr)
     print(f"  Map size: {len(report.instability_map)}", file=sys.stderr)
     print(f"{'='*40}", file=sys.stderr)
 

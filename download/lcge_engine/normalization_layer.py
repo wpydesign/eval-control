@@ -79,6 +79,10 @@ class EmbeddingEngine:
     def embed(self, texts: list[str]) -> np.ndarray:
         if not texts:
             return np.array([])
+
+        # Replace empty strings with placeholder to avoid sklearn crash
+        cleaned = [t.strip() if t.strip() else "__empty__" for t in texts]
+
         self.vectorizer = TfidfVectorizer(
             max_features=512,
             stop_words="english",
@@ -87,7 +91,11 @@ class EmbeddingEngine:
             max_df=0.95,
             sublinear_tf=True,
         )
-        self.embeddings = self.vectorizer.fit_transform(texts).toarray()
+        try:
+            self.embeddings = self.vectorizer.fit_transform(cleaned).toarray()
+        except ValueError:
+            # If TF-IDF still fails (e.g., all identical), return zero vectors
+            self.embeddings = np.zeros((len(cleaned), 1))
         return self.embeddings
 
     def cosine_similarity(self, idx_a: int, idx_b: int) -> float:
