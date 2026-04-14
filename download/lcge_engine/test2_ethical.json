@@ -1,0 +1,13 @@
+{
+  "task": "Ambiguous ethical reasoning",
+  "instability_map": [
+    {
+      "family": "bcd1424d",
+      "instability_type": "knowledge_variance",
+      "score": 9.09,
+      "top_trigger": ""
+    }
+  ],
+  "global_instability_score": 9.09,
+  "dominant_failure_mode": "knowledge_variance"
+}

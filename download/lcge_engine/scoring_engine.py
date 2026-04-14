@@ -1,64 +1,55 @@
 """
-scoring_engine.py — Step 7: Scoring
+scoring_engine.py — Step 7: Instability Scoring (v1.1)
 
-Computes confidence scores for contradiction clusters.
+Replaces binary contradiction scoring with 4-component instability scoring.
 
-Formula (v1.0 — simple version):
-    confidence = contradiction_strength
-               + response_divergence
-               + refusal_inconsistency_bonus
+instability_score = weighted_sum(all components)
+    = policy_score * 3.0
+    + reasoning_score * 2.0
+    + knowledge_score * 2.5
+    + formatting_score * 1.0
+    cap at 10.0
 
-    diversity_bonus = 0.5 * (num_distinct_edge_types - 1)
-    confidence = min(total_weight * (1 + diversity_bonus), 10.0)
-
-Follows the Permission Inconsistency Graph Engine v6.0 confidence model:
-    effective_weight = edge.weight * edge.edge_confidence
-    total_weight = sum(effective_weight for all edges)
-    diversity = number of distinct non-zero-weight edge types
-    confidence = min(total_weight * (1 + 0.5 * (diversity - 1)), 10.0)
-
-Reproducibility is computed by running detection multiple times
-and measuring the stability of findings.
+The scoring engine produces:
+    - Per-family instability scores
+    - Global instability score (max across families)
+    - Dominant failure mode
+    - Per-component breakdown
 """
 
-import hashlib
 from typing import Optional
-from collections import Counter
+from collections import Counter, defaultdict
+
+import numpy as np
 
 from .graph_constructor import ConsistencyGraph
-from .contradiction_detector import ContradictionCluster, ContradictionDetector
+from .instability_classifier import InstabilityCluster
 from .config import (
-    CONFIDENCE_CAP,
-    DIVERSITY_BONUS_FACTOR,
-    REPRODUCIBILITY_RUNS,
-    REPRODUCIBILITY_THRESHOLD,
-    SUBMISSION_MIN_CONFIDENCE,
-    SUBMISSION_MIN_EDGE_TYPES,
+    INSTABILITY_WEIGHTS,
+    INSTABILITY_SCORE_CAP,
+    INSTABILITY_TYPES,
 )
 
 
-class ScoredCluster:
-    """A contradiction cluster with full confidence scoring."""
+class ScoredInstability:
+    """A scored instability cluster with confidence metadata."""
 
     def __init__(
         self,
-        cluster: ContradictionCluster,
+        cluster: InstabilityCluster,
         confidence: float,
-        diversity: int,
-        is_submittable: bool,
+        is_significant: bool,
         rejection_reason: Optional[str] = None,
     ):
         self.cluster = cluster
         self.confidence = confidence
-        self.diversity = diversity
-        self.is_submittable = is_submittable
+        self.is_significant = is_significant
         self.rejection_reason = rejection_reason
 
     def to_dict(self) -> dict:
         d = self.cluster.to_dict()
         d["confidence"] = round(self.confidence, 2)
-        d["diversity"] = self.diversity
-        d["is_submittable"] = self.is_submittable
+        d["is_significant"] = self.is_significant
         if self.rejection_reason:
             d["rejection_reason"] = self.rejection_reason
         return d
@@ -66,175 +57,155 @@ class ScoredCluster:
 
 class ScoringEngine:
     """
-    Scores contradiction clusters and applies submission thresholds.
+    Scores instability clusters and produces global metrics.
 
-    Every score derives from graph structure. No heuristics.
-    No human judgment. No probabilistic models.
+    The scoring engine computes:
+        1. Per-family instability_score (weighted sum of components, capped)
+        2. global_instability_score (maximum across families)
+        3. dominant_failure_mode (most common instability type weighted by score)
     """
 
+    # Threshold for "significant" instability
+    SIGNIFICANCE_THRESHOLD = 1.0
+
     def score_cluster(
-        self,
-        cluster: ContradictionCluster,
-        graph: ConsistencyGraph,
-    ) -> ScoredCluster:
-        """
-        Score a single contradiction cluster.
+        self, cluster: InstabilityCluster, graph: ConsistencyGraph
+    ) -> ScoredInstability:
+        """Score a single instability cluster."""
+        total_score = cluster.total_score
 
-        Args:
-            cluster: A ContradictionCluster from the detector.
-            graph: The parent ConsistencyGraph.
+        # Confidence = how much of the cap is used
+        confidence = total_score / INSTABILITY_SCORE_CAP if INSTABILITY_SCORE_CAP > 0 else 0.0
 
-        Returns:
-            ScoredCluster with confidence, diversity, and submission eligibility.
-        """
-        # Collect all edges involved in this cluster
-        cluster_node_set = set(cluster.nodes_involved)
-        all_edges = graph.get_security_edges()
-
-        # Find edges within this cluster
-        cluster_edges = [
-            e for e in all_edges
-            if e.source_id in cluster_node_set and e.target_id in cluster_node_set
-        ]
-
-        if not cluster_edges:
-            return ScoredCluster(
-                cluster=cluster,
-                confidence=0.0,
-                diversity=0,
-                is_submittable=False,
-                rejection_reason="No security edges in cluster",
-            )
-
-        # Compute effective weight for each edge
-        effective_weights = []
-        for edge in cluster_edges:
-            ew = edge.weight * edge.edge_confidence
-            effective_weights.append(ew)
-
-        # Sum effective weights
-        total_weight = sum(effective_weights)
-
-        # Count distinct edge types (diversity)
-        edge_types = set(e.edge_type for e in cluster_edges)
-        diversity = len(edge_types)
-
-        # Apply diversity bonus
-        diversity_multiplier = 1.0 + DIVERSITY_BONUS_FACTOR * (diversity - 1)
-
-        # Final confidence (capped)
-        raw_confidence = total_weight * diversity_multiplier
-        confidence = min(raw_confidence, CONFIDENCE_CAP)
-
-        # Submission gate check
-        is_submittable = True
+        # Significance check
+        is_significant = total_score >= self.SIGNIFICANCE_THRESHOLD
         rejection_reason = None
 
-        if confidence < SUBMISSION_MIN_CONFIDENCE:
-            is_submittable = False
+        if not is_significant:
             rejection_reason = (
-                f"Confidence {confidence:.1f} below minimum {SUBMISSION_MIN_CONFIDENCE}"
+                f"Score {total_score:.2f} below significance threshold "
+                f"{self.SIGNIFICANCE_THRESHOLD}"
             )
 
-        if diversity < SUBMISSION_MIN_EDGE_TYPES:
-            is_submittable = False
-            existing = rejection_reason or ""
-            rejection_reason = (
-                f"{existing}; Only {diversity} edge type(s), "
-                f"need {SUBMISSION_MIN_EDGE_TYPES}"
-            ).lstrip("; ")
-
-        return ScoredCluster(
+        return ScoredInstability(
             cluster=cluster,
             confidence=confidence,
-            diversity=diversity,
-            is_submittable=is_submittable,
+            is_significant=is_significant,
             rejection_reason=rejection_reason,
         )
 
     def score_all(
-        self,
-        clusters: list[ContradictionCluster],
-        graph: ConsistencyGraph,
-    ) -> list[ScoredCluster]:
-        """
-        Score all clusters and return sorted results.
+        self, clusters: list[InstabilityCluster], graph: ConsistencyGraph
+    ) -> list[ScoredInstability]:
+        """Score all clusters and return sorted results."""
+        scored = [self.score_cluster(c, graph) for c in clusters]
+        scored.sort(key=lambda s: s.cluster.total_score, reverse=True)
+        return scored
 
-        Args:
-            clusters: List of ContradictionCluster objects.
-            graph: The parent ConsistencyGraph.
+    def compute_global_metrics(
+        self, scored_clusters: list[ScoredInstability]
+    ) -> dict:
+        """
+        Compute global instability metrics across all clusters.
 
         Returns:
-            List of ScoredCluster objects, sorted by confidence descending.
+            dict with:
+                - global_instability_score: float (0-10)
+                - dominant_failure_mode: str
+                - instability_type_counts: dict
+                - component_averages: dict
         """
-        scored = [self.score_cluster(c, graph) for c in clusters]
-        scored.sort(key=lambda s: s.confidence, reverse=True)
-        return scored
+        if not scored_clusters:
+            return {
+                "global_instability_score": 0.0,
+                "dominant_failure_mode": "stable",
+                "instability_type_counts": {"stable": 1},
+                "component_averages": {},
+            }
+
+        significant = [s for s in scored_clusters if s.is_significant]
+
+        if not significant:
+            return {
+                "global_instability_score": 0.0,
+                "dominant_failure_mode": "stable",
+                "instability_type_counts": {"stable": len(scored_clusters)},
+                "component_averages": {},
+            }
+
+        # Global score = max across significant clusters
+        global_score = max(s.cluster.total_score for s in significant)
+
+        # Dominant failure mode = weighted by score
+        type_weighted = defaultdict(float)
+        for s in significant:
+            type_weighted[s.cluster.instability_type] += s.cluster.total_score
+
+        dominant_type = max(type_weighted, key=type_weighted.get) if type_weighted else "stable"
+
+        # Type counts
+        type_counts = Counter(s.cluster.instability_type for s in scored_clusters)
+
+        # Component averages across significant clusters
+        component_keys = ["policy", "reasoning", "knowledge", "formatting"]
+        component_avgs = {}
+        for key in component_keys:
+            values = [s.cluster.component_scores.get(key, 0.0) for s in significant]
+            if values:
+                component_avgs[key] = round(float(sum(values) / len(values)), 4)
+            else:
+                component_avgs[key] = 0.0
+
+        return {
+            "global_instability_score": round(global_score, 2),
+            "dominant_failure_mode": dominant_type,
+            "instability_type_counts": dict(type_counts),
+            "component_averages": component_avgs,
+        }
 
 
 def compute_reproducibility(
-    run_results: list[list[ScoredCluster]],
-    threshold: float = REPRODUCIBILITY_THRESHOLD,
+    run_results: list[list[ScoredInstability]],
+    threshold: float = 0.6,
 ) -> dict:
     """
-    Compute reproducibility score across multiple runs.
+    Compute reproducibility across multiple runs.
 
-    Reproducibility measures whether the same contradiction clusters
-    appear consistently across repeated executions.
-
-    Args:
-        run_results: List of scored cluster lists from multiple runs.
-        threshold: Minimum reproduction rate for a finding to be "reproducible".
-
-    Returns:
-        Dict with reproducibility statistics.
+    Uses instability_type as the fingerprint for stability measurement.
     """
+    import hashlib
+
     total_runs = len(run_results)
     if total_runs == 0:
-        return {"overall_reproducibility": 0.0, "stable_clusters": []}
+        return {"overall_reproducibility": 0.0, "stable_types": []}
 
-    # Normalize cluster identifiers across runs
-    # Use node-set hashing as cluster fingerprint
-    all_fingerprints = []
+    type_per_run = []
     for run in run_results:
-        run_fingerprints = []
+        types = set()
         for scored in run:
-            # Create a stable fingerprint from node set
-            node_key = "|".join(sorted(scored.cluster.nodes_involved))
-            fp = hashlib.sha256(node_key.encode()).hexdigest()[:12]
-            run_fingerprints.append(fp)
-        all_fingerprints.append(set(run_fingerprints))
+            if scored.is_significant:
+                types.add(scored.cluster.instability_type)
+        type_per_run.append(types)
 
-    # Count how often each fingerprint appears
-    fingerprint_counts = Counter()
-    for fps in all_fingerprints:
-        for fp in fps:
-            fingerprint_counts[fp] += 1
+    # Check which types appear consistently
+    all_types = set()
+    for types in type_per_run:
+        all_types.update(types)
 
-    # Compute reproducibility for each cluster
-    stable_clusters = []
-    for fp, count in fingerprint_counts.items():
+    stable_types = []
+    for t in all_types:
+        count = sum(1 for types in type_per_run if t in types)
         rate = count / total_runs
         if rate >= threshold:
-            stable_clusters.append({
-                "fingerprint": fp,
+            stable_types.append({
+                "type": t,
                 "reproduction_rate": round(rate, 2),
-                "appears_in_runs": count,
-                "total_runs": total_runs,
             })
 
-    # Overall reproducibility
-    if all_fingerprints:
-        total_clusters = sum(len(fps) for fps in all_fingerprints)
-        stable_count = sum(1 for fps in all_fingerprints
-                         for fp in fps if fingerprint_counts.get(fp, 0) / total_runs >= threshold)
-        overall = stable_count / max(total_clusters, 1)
-    else:
-        overall = 0.0
-
     return {
-        "overall_reproducibility": round(overall, 2),
-        "stable_clusters": sorted(stable_clusters, key=lambda x: x["reproduction_rate"], reverse=True),
+        "overall_reproducibility": round(
+            len(stable_types) / max(len(all_types), 1), 2
+        ),
+        "stable_types": stable_types,
         "runs_performed": total_runs,
-        "threshold": threshold,
     }

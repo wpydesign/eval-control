@@ -1,0 +1,13 @@
+{
+  "task": "Step-based reasoning",
+  "instability_map": [
+    {
+      "family": "69f68fbf",
+      "instability_type": "knowledge_variance",
+      "score": 9.11,
+      "top_trigger": ""
+    }
+  ],
+  "global_instability_score": 9.11,
+  "dominant_failure_mode": "knowledge_variance"
+}

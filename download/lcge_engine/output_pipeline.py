@@ -1,15 +1,22 @@
 """
-output_pipeline.py — Step 8: Output Pipeline
+output_pipeline.py — Step 8: Output Pipeline (v1.1)
 
-Produces the final output from the LCGE engine:
-    - Minimal prompt pair (the smallest pair that shows contradiction)
-    - Contradiction type
-    - Confidence score
-    - Reproducibility (across multiple runs)
-    - Full graph summary
+Produces the final instability classification report.
 
-Output is structured JSON — no dashboards, no UI.
-This is a measurement system.
+STRICT output format (per spec):
+{
+    "task": "...",
+    "instability_map": [
+        {
+            "family": "...",
+            "instability_type": "...",
+            "score": float,
+            "top_trigger": "prompt_variant_id"
+        }
+    ],
+    "global_instability_score": float,
+    "dominant_failure_mode": "..."
+}
 """
 
 import json
@@ -17,186 +24,158 @@ from datetime import datetime, timezone
 from typing import Optional
 
 from .graph_constructor import ConsistencyGraph
-from .contradiction_detector import ContradictionCluster
-from .scoring_engine import ScoredCluster
+from .instability_classifier import InstabilityCluster
+from .scoring_engine import ScoredInstability
 
 
-class OutputReport:
-    """The final output of the LCGE engine."""
+class InstabilityReport:
+    """The final output of the LCGE v1.1 engine."""
 
     def __init__(
         self,
         engine_version: str,
         task: str,
         seed_prompt: str,
-        graph: ConsistencyGraph,
-        scored_clusters: list[ScoredCluster],
+        instability_map: list[dict],
+        global_instability_score: float,
+        dominant_failure_mode: str,
+        graph: Optional[ConsistencyGraph] = None,
+        scored_clusters: Optional[list[ScoredInstability]] = None,
+        component_averages: Optional[dict] = None,
+        type_counts: Optional[dict] = None,
         reproducibility: Optional[dict] = None,
-        raw_clusters: Optional[list[ContradictionCluster]] = None,
     ):
         self.engine_version = engine_version
         self.task = task
         self.seed_prompt = seed_prompt
+        self.instability_map = instability_map
+        self.global_instability_score = global_instability_score
+        self.dominant_failure_mode = dominant_failure_mode
         self.graph = graph
-        self.scored_clusters = scored_clusters
+        self.scored_clusters = scored_clusters or []
+        self.component_averages = component_averages or {}
+        self.type_counts = type_counts or {}
         self.reproducibility = reproducibility
-        self.raw_clusters = raw_clusters or []
         self.timestamp = datetime.now(timezone.utc).isoformat()
 
     def to_dict(self) -> dict:
-        """Serialize the full report to a dictionary."""
-        # Extract submittable findings
-        submittable = [s.to_dict() for s in self.scored_clusters if s.is_submittable]
-        rejected = [s.to_dict() for s in self.scored_clusters if not s.is_submittable]
-
-        # Build minimal prompt pairs for submittable findings
-        prompt_pairs = []
-        for scored in self.scored_clusters:
-            if scored.is_submittable:
-                pair = self._extract_minimal_prompt_pair(scored)
-                if pair:
-                    prompt_pairs.append(pair)
-
-        # Overall assessment
-        has_contradictions = len(self.scored_clusters) > 0
-        has_submittable = len(submittable) > 0
-        highest_confidence = (
-            max(s.confidence for s in self.scored_clusters)
-            if self.scored_clusters
-            else 0.0
-        )
-
-        return {
-            "engine": {
-                "name": "LLM Consistency Graph Engine",
-                "version": self.engine_version,
-                "timestamp": self.timestamp,
-            },
-            "input": {
-                "task": self.task,
-                "seed_prompt": self.seed_prompt,
-            },
-            "graph_summary": self.graph.to_dict()["summary"],
-            "findings": {
-                "has_contradictions": has_contradictions,
-                "has_submittable_findings": has_submittable,
-                "highest_confidence": round(highest_confidence, 2),
-                "total_clusters": len(self.scored_clusters),
-                "submittable_count": len(submittable),
-                "rejected_count": len(rejected),
-            },
-            "submittable_findings": submittable,
-            "rejected_findings": rejected,
-            "minimal_prompt_pairs": prompt_pairs,
-            "reproducibility": self.reproducibility,
+        """Serialize to the STRICT output format per spec."""
+        result = {
+            "task": self.task,
+            "instability_map": self.instability_map,
+            "global_instability_score": self.global_instability_score,
+            "dominant_failure_mode": self.dominant_failure_mode,
         }
 
-    def to_json(self, indent: int = 2) -> str:
+        return result
+
+    def to_full_dict(self) -> dict:
+        """Serialize full report with all diagnostic data."""
+        result = self.to_dict()
+
+        result["engine"] = {
+            "name": "LLM Consistency Graph Engine",
+            "version": self.engine_version,
+            "timestamp": self.timestamp,
+        }
+
+        result["input"] = {
+            "task": self.task,
+            "seed_prompt": self.seed_prompt,
+        }
+
+        # Component breakdown
+        result["component_breakdown"] = self.component_averages
+
+        # Type distribution
+        result["type_distribution"] = self.type_counts
+
+        # Significant findings
+        significant = [s for s in self.scored_clusters if s.is_significant]
+        rejected = [s for s in self.scored_clusters if not s.is_significant]
+
+        result["findings"] = {
+            "has_instability": len(significant) > 0,
+            "significant_count": len(significant),
+            "stable_count": len(rejected),
+        }
+
+        # Detailed significant findings
+        if significant:
+            result["significant_clusters"] = [s.to_dict() for s in significant]
+
+        # Reproducibility
+        if self.reproducibility:
+            result["reproducibility"] = self.reproducibility
+
+        return result
+
+    def to_json(self, indent: int = 2, full: bool = False) -> str:
         """Serialize to JSON string."""
-        return json.dumps(self.to_dict(), indent=indent, default=str)
-
-    def _extract_minimal_prompt_pair(self, scored: ScoredCluster) -> Optional[dict]:
-        """
-        Extract the minimal prompt pair that demonstrates the contradiction.
-
-        Strategy: Find the two nodes with the strongest contradiction edge
-        between them within the cluster.
-        """
-        cluster_node_set = set(scored.cluster.nodes_involved)
-        security_edges = self.graph.get_security_edges()
-
-        # Find strongest edge in cluster
-        strongest_edge = None
-        max_weight = 0.0
-
-        for edge in security_edges:
-            if edge.source_id in cluster_node_set and edge.target_id in cluster_node_set:
-                effective_weight = edge.weight * edge.edge_confidence
-                if effective_weight > max_weight:
-                    max_weight = effective_weight
-                    strongest_edge = edge
-
-        if strongest_edge is None:
-            return None
-
-        # Get node data for both endpoints
-        node_a_data = self.graph.get_node_data(strongest_edge.source_id)
-        node_b_data = self.graph.get_node_data(strongest_edge.target_id)
-
-        if node_a_data is None or node_b_data is None:
-            return None
-
-        def _safe_get(data, path, default=""):
-            """Safely traverse nested dict for a value."""
-            obj = data
-            for key in path:
-                if isinstance(obj, dict):
-                    obj = obj.get(key, default)
-                else:
-                    return default
-            return obj if obj else default
-
-        # Extract refusal flags
-        resp_a = node_a_data.get("normalized", {})
-        resp_b = node_b_data.get("normalized", {})
-        refusal_a = resp_a.refusal_flag if resp_a else False
-        refusal_b = resp_b.refusal_flag if resp_b else False
-        answer_a = resp_a.final_answer if resp_a else ""
-        answer_b = resp_b.final_answer if resp_b else ""
-
-        return {
-            "cluster_id": scored.cluster.cluster_id,
-            "node_a": {
-                "node_id": strongest_edge.source_id[:8],
-                "strategy": node_a_data.get("strategy", "unknown"),
-                "prompt": node_a_data["variant"].prompt if "variant" in node_a_data else "",
-                "answer": answer_a[:200],
-                "refused": refusal_a,
-            },
-            "node_b": {
-                "node_id": strongest_edge.target_id[:8],
-                "strategy": node_b_data.get("strategy", "unknown"),
-                "prompt": node_b_data["variant"].prompt if "variant" in node_b_data else "",
-                "answer": answer_b[:200],
-                "refused": refusal_b,
-            },
-            "contradiction_type": scored.cluster.cluster_type,
-            "confidence": round(scored.confidence, 2),
-            "diversity": scored.diversity,
-            "edge_evidence": strongest_edge.evidence,
-        }
+        if full:
+            data = self.to_full_dict()
+        else:
+            data = self.to_dict()
+        return json.dumps(data, indent=indent, default=str)
 
 
 def generate_report(
     task: str,
     seed_prompt: str,
     graph: ConsistencyGraph,
-    scored_clusters: list[ScoredCluster],
+    scored_clusters: list[ScoredInstability],
+    global_metrics: dict,
     reproducibility: Optional[dict] = None,
-    raw_clusters: Optional[list[ContradictionCluster]] = None,
-) -> OutputReport:
+) -> InstabilityReport:
     """
-    Generate the final output report.
+    Generate the final instability classification report.
 
     Args:
         task: The task being tested.
         seed_prompt: The original seed prompt.
         graph: The constructed ConsistencyGraph.
-        scored_clusters: List of scored contradiction clusters.
+        scored_clusters: List of scored instability clusters.
+        global_metrics: Global metrics from ScoringEngine.
         reproducibility: Optional reproducibility data.
-        raw_clusters: Optional raw (unscored) clusters.
 
     Returns:
-        An OutputReport object with full serialization support.
+        An InstabilityReport with strict output format.
     """
     from . import __version__
 
-    return OutputReport(
+    # Build instability_map (strict format per spec)
+    instability_map = []
+    for scored in scored_clusters:
+        cluster = scored.cluster
+        entry = {
+            "family": cluster.family_id,
+            "instability_type": cluster.instability_type,
+            "score": round(cluster.total_score, 2),
+            "top_trigger": cluster.evidence.get("top_trigger", ""),
+        }
+        instability_map.append(entry)
+
+    # If no clusters found, add a stable entry
+    if not instability_map:
+        instability_map.append({
+            "family": "default",
+            "instability_type": "stable",
+            "score": 0.0,
+            "top_trigger": "",
+        })
+
+    report = InstabilityReport(
         engine_version=__version__,
         task=task,
         seed_prompt=seed_prompt,
+        instability_map=instability_map,
+        global_instability_score=global_metrics["global_instability_score"],
+        dominant_failure_mode=global_metrics["dominant_failure_mode"],
         graph=graph,
         scored_clusters=scored_clusters,
+        component_averages=global_metrics.get("component_averages", {}),
+        type_counts=global_metrics.get("instability_type_counts", {}),
         reproducibility=reproducibility,
-        raw_clusters=raw_clusters,
     )
+
+    return report

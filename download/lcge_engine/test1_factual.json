@@ -1,0 +1,13 @@
+{
+  "task": "Neutral factual question",
+  "instability_map": [
+    {
+      "family": "d1f3cf30",
+      "instability_type": "formatting_variance",
+      "score": 7.18,
+      "top_trigger": ""
+    }
+  ],
+  "global_instability_score": 7.18,
+  "dominant_failure_mode": "formatting_variance"
+}

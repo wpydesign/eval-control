@@ -1,20 +1,18 @@
 """
-LLM Consistency Graph Engine (LCGE) v1.0
+LLM Consistency Graph Engine (LCGE) v1.1
 
-A measurement system for detecting contradictions in LLM outputs
-across prompt variants. Not a chatbot. Not an agent. A controlled
-experimental system.
+LLM Behavioral Instability Classifier.
 
-Architecture:
-    PromptInputLayer  -> generates 10 prompt variants per seed
-    LLMExecutionLayer -> calls primary + baseline models
-    NormalizationLayer -> extracts answers, embeddings, refusal tags
-    EdgeBuilder       -> creates semantic/contradiction/variance edges
-    GraphConstructor  -> assembles queryable graph
-    ContradictionDetector -> finds contradiction clusters
-    ScoringEngine     -> computes confidence (cap 10)
-    OutputPipeline    -> produces minimal reproducible findings
+A measurement system for classifying behavioral instability
+in LLM outputs across prompt variants.
+
+v1.1 changes:
+    - Replaced binary contradiction detection with typed instability classification
+    - 4 instability components: policy_flip, reasoning_variance, knowledge_variance, formatting_variance
+    - New edge types: behavioral_shift, policy_flip, semantic_drift
+    - Strict output format: instability_map + global_instability_score + dominant_failure_mode
+    - Node schema: reasoning_trace, format_signature, semantic_family_id
 """
 
-__version__ = "1.0.0"
+__version__ = "1.1.0"
 __engine_name__ = "LLM Consistency Graph Engine"
