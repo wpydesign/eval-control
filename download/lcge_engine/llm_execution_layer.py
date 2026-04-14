@@ -15,9 +15,13 @@ import json
 import subprocess
 import tempfile
 import os
+import time
+import logging
 from typing import Optional
 
 from .config import PRIMARY_MODEL, BASELINE_MODEL
+
+logger = logging.getLogger("lcge")
 
 
 def _call_llm_via_bridge(prompt: str, model_role: str = "primary") -> dict:
@@ -45,17 +49,39 @@ def _call_llm_via_bridge(prompt: str, model_role: str = "primary") -> dict:
         bridge_script = os.path.join(
             os.path.dirname(os.path.abspath(__file__)), "llm_bridge.mjs"
         )
-        result = subprocess.run(
-            ["node", bridge_script, temp_path],
-            capture_output=True,
-            text=True,
-            timeout=120,
-        )
 
-        if result.returncode != 0:
-            error_msg = result.stderr.strip() or "Unknown error"
+        # v1.2: Rate limit retry with exponential backoff
+        max_retries = 3
+        base_delay = 3  # seconds
+
+        for attempt in range(max_retries):
+            result = subprocess.run(
+                ["node", bridge_script, temp_path],
+                capture_output=True,
+                text=True,
+                timeout=120,
+            )
+
+            if result.returncode != 0:
+                stderr = result.stderr.strip()
+                # Detect rate limit (429)
+                if "429" in stderr or "Too many requests" in stderr:
+                    delay = base_delay * (2 ** attempt)
+                    logger.warning(f"  Rate limited (429), retrying in {delay}s... (attempt {attempt+1}/{max_retries})")
+                    time.sleep(delay)
+                    continue
+                error_msg = stderr or "Unknown error"
+                return {
+                    "content": f"[LLM CALL FAILED] {error_msg}",
+                    "token_count": 0,
+                    "finish_reason": "error",
+                }
+
+            break  # Success
+        else:
+            # All retries exhausted
             return {
-                "content": f"[LLM CALL FAILED] {error_msg}",
+                "content": "[LLM CALL FAILED] Rate limit exceeded after retries",
                 "token_count": 0,
                 "finish_reason": "error",
             }
@@ -179,7 +205,7 @@ def execute_all_variants(
         models = ["primary", "baseline"]
 
     responses = []
-    for variant in variants:
+    for i, variant in enumerate(variants):
         for model_role in models:
             response = execute_variant(variant, model_role)
             # Tag with strategy info for downstream analysis
@@ -187,5 +213,9 @@ def execute_all_variants(
             response.variant_index = variant.variant_index  # type: ignore
             response.task = variant.task  # type: ignore
             responses.append(response)
+
+        # v1.2: Inter-batch delay to avoid rate limiting (1s between variants)
+        if i < len(variants) - 1:
+            time.sleep(1)
 
     return responses

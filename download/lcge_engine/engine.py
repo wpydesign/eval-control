@@ -1,7 +1,7 @@
 """
-engine.py — LCGE v1.1 Main Engine Orchestrator
+engine.py — LCGE v1.2 Main Engine Orchestrator
 
-LLM Behavioral Instability Classifier.
+Prompt Transformation → Behavioral State Mapping Engine.
 
 Pipeline:
     1. Prompt Input Layer      -> generate variants
@@ -9,12 +9,15 @@ Pipeline:
     3. Normalization Layer    -> extract answers, embeddings, reasoning, format
     4. Edge Builder           -> behavioral_shift, policy_flip, semantic_drift
     5. Graph Construction     -> assemble graph
-    6. Instability Classifier -> classify instability types
-    7. Scoring Engine         -> compute instability scores
+    6. Instability Classifier -> classify instability types (with reasoning override)
+    7. Scoring Engine         -> compute instability scores (peak + mean)
     8. Output Pipeline        -> produce instability report
 
 This is a MEASUREMENT SYSTEM, not an agent.
 No conversation history. No adaptive behavior. No heuristics.
+
+v1.2: Behavioral state mapping — measures how model behavior changes
+      under semantic perturbation of the prompt space.
 """
 
 import hashlib
@@ -35,7 +38,7 @@ logger = logging.getLogger("lcge")
 
 class LCGEEngine:
     """
-    LCGE v1.1 — LLM Behavioral Instability Classifier.
+    LCGE v1.2 — Prompt Transformation → Behavioral State Mapping Engine.
 
     Classifies LLM output instability across prompt variants into:
         - policy_flip
@@ -43,6 +46,12 @@ class LCGEEngine:
         - knowledge_variance
         - formatting_variance
         - stable
+
+    v1.2 capabilities:
+        - Typed top_trigger (POLICY_SHIFT, REASONING_SHIFT, KNOWLEDGE_SHIFT, FORMAT_SHIFT)
+        - Reasoning dominance override (reasoning can beat knowledge)
+        - Dual global scoring (peak + mean)
+        - Normalized scores for cross-task comparability
 
     Usage:
         engine = LCGEEngine()
@@ -78,13 +87,13 @@ class LCGEEngine:
         reproducibility_runs: int = 1,
     ) -> InstabilityReport:
         """
-        Execute the full LCGE v1.1 pipeline.
+        Execute the full LCGE v1.2 pipeline.
 
         Returns:
             InstabilityReport with strict output format.
         """
         logger.info("=" * 60)
-        logger.info("LCGE v1.1 — Behavioral Instability Classifier")
+        logger.info("LCGE v1.2 — Prompt Transformation -> Behavioral State Mapping")
         logger.info(f"Task: {task}")
         logger.info(f"Seed: {seed_prompt[:80]}...")
         logger.info("=" * 60)
@@ -162,7 +171,8 @@ class LCGEEngine:
         logger.info(f"  Found {len(clusters)} instability clusters")
         for c in clusters:
             logger.info(f"    {c.cluster_id} | {c.instability_type:25s} | "
-                        f"score={c.total_score:.2f} | nodes={len(c.nodes_involved)}")
+                        f"score={c.total_score:.2f} | nodes={len(c.nodes_involved)} | "
+                        f"trigger={c.evidence.get('top_trigger', 'N/A')}")
 
         # ---- Step 7: Scoring ----
         logger.info("[Step 7] Scoring instability...")
@@ -172,9 +182,12 @@ class LCGEEngine:
                      f"({len(significant)} significant)")
 
         global_metrics = self.scorer.compute_global_metrics(scored_clusters)
-        logger.info(f"  Global instability score: {global_metrics['global_instability_score']}")
-        logger.info(f"  Dominant failure mode:   {global_metrics['dominant_failure_mode']}")
-        logger.info(f"  Component averages: {global_metrics['component_averages']}")
+        logger.info(f"  Global peak:  {global_metrics['global_instability_peak']}")
+        logger.info(f"  Global mean:  {global_metrics['global_instability_mean']}")
+        logger.info(f"  Norm. peak:   {global_metrics['normalized_peak']}")
+        logger.info(f"  Norm. mean:   {global_metrics['normalized_mean']}")
+        logger.info(f"  Dominant:     {global_metrics['dominant_failure_mode']}")
+        logger.info(f"  Components:   {global_metrics['component_averages']}")
 
         # ---- Reproducibility ----
         reproducibility = None
@@ -203,7 +216,8 @@ class LCGEEngine:
         logger.info("=" * 60)
         logger.info(f"Pipeline complete.")
         logger.info(f"  Instability: {report.dominant_failure_mode}")
-        logger.info(f"  Global score: {report.global_instability_score}")
+        logger.info(f"  Peak score:  {report.global_instability_peak}")
+        logger.info(f"  Mean score:  {report.global_instability_mean}")
         logger.info("=" * 60)
 
         return report

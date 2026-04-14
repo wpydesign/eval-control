@@ -1,0 +1,22 @@
+{
+  "task": "Neutral factual question",
+  "instability_map": [
+    {
+      "family": "d1f3cf30",
+      "instability_type": "stable",
+      "score": 0.0,
+      "top_trigger": "POLICY_SHIFT",
+      "component_breakdown": {
+        "policy": 0.0,
+        "reasoning": 0.0,
+        "knowledge": 0.0,
+        "formatting": 0.0
+      }
+    }
+  ],
+  "global_instability_peak": 0.0,
+  "global_instability_mean": 0.0,
+  "normalized_peak": 0.0,
+  "normalized_mean": 0.0,
+  "dominant_failure_mode": "stable"
+}
