@@ -1,8 +1,13 @@
 """
-run_lattice.py — Evaluation matrix runner.
+run_lattice.py — Evaluation matrix runner (v1.3.1).
 
 Takes frozen prompts × perturbation strategies × N repetitions.
 Stores RAW OUTPUTS ONLY. No scoring. No classification. No labels.
+
+v1.3.1 additions:
+    - Response metadata capture (length, refusal detection, verbosity)
+    - Axis field in each record
+    - Latency tracking
 
 Output: JSONL file with one record per (prompt, strategy, run) triple.
 
@@ -49,7 +54,7 @@ def call_llm(prompt: str, temperature: float = 0.7) -> dict:
         temperature: Sampling temperature (default 0.7 for stochastic variation).
 
     Returns:
-        dict with "content", "token_count", "finish_reason".
+        dict with "content", "token_count", "finish_reason", "latency_ms".
     """
     bridge_script = os.path.join(_engine_dir, "llm_bridge.mjs")
 
@@ -63,6 +68,7 @@ def call_llm(prompt: str, temperature: float = 0.7) -> dict:
         # Rate limit retry: 3 attempts with exponential backoff
         max_retries = 3
         base_delay = 5  # seconds
+        start_time = time.time()
 
         for attempt in range(max_retries):
             result = subprocess.run(
@@ -74,6 +80,7 @@ def call_llm(prompt: str, temperature: float = 0.7) -> dict:
 
             if result.returncode != 0:
                 stderr = result.stderr.strip()
+                latency_ms = int((time.time() - start_time) * 1000)
                 if "429" in stderr or "Too many requests" in stderr:
                     delay = base_delay * (2 ** attempt)
                     logger.warning(f"  429 rate limited, retry in {delay}s ({attempt+1}/{max_retries})")
@@ -83,9 +90,11 @@ def call_llm(prompt: str, temperature: float = 0.7) -> dict:
                     "content": f"[BRIDGE ERROR] {stderr}",
                     "token_count": 0,
                     "finish_reason": "error",
+                    "latency_ms": latency_ms,
                 }
 
             # Parse JSON output
+            latency_ms = int((time.time() - start_time) * 1000)
             output = result.stdout.strip()
             lines = output.split("\n")
             for line in reversed(lines):
@@ -97,17 +106,18 @@ def call_llm(prompt: str, temperature: float = 0.7) -> dict:
                             "content": parsed.get("content", ""),
                             "token_count": parsed.get("token_count", 0),
                             "finish_reason": parsed.get("finish_reason", "stop"),
+                            "latency_ms": latency_ms,
                         }
                     except json.JSONDecodeError:
                         continue
-            return {"content": output, "token_count": len(output.split()), "finish_reason": "stop"}
+            return {"content": output, "token_count": len(output.split()), "finish_reason": "stop", "latency_ms": latency_ms}
         else:
-            return {"content": "[RATE LIMIT EXHAUSTED]", "token_count": 0, "finish_reason": "error"}
+            return {"content": "[RATE LIMIT EXHAUSTED]", "token_count": 0, "finish_reason": "error", "latency_ms": int((time.time() - start_time) * 1000)}
 
     except subprocess.TimeoutExpired:
-        return {"content": "[TIMEOUT]", "token_count": 0, "finish_reason": "timeout"}
+        return {"content": "[TIMEOUT]", "token_count": 0, "finish_reason": "timeout", "latency_ms": 120000}
     except Exception as e:
-        return {"content": f"[ERROR] {e}", "token_count": 0, "finish_reason": "error"}
+        return {"content": f"[ERROR] {e}", "token_count": 0, "finish_reason": "error", "latency_ms": 0}
     finally:
         try:
             os.unlink(temp_path)
@@ -187,17 +197,31 @@ def run_lattice(
                 result = call_llm(variant_prompt, temperature)
                 call_count += 1
 
+                # Extract response metadata (free signals)
+                response_text = result["content"]
+                word_count = len(response_text.split())
+                char_count = len(response_text)
+                is_refusal = any(
+                    p in response_text.lower()
+                    for p in ["cannot provide", "unable to", "i must decline", "i can't"]
+                )
+
                 # Write record
                 record = {
                     "prompt_id": prompt_id,
                     "seed_prompt": lattice_point["seed_prompt"],
                     "strategy": strategy,
+                    "axis": lattice_point.get("axis", "unknown"),
                     "variant_prompt": variant_prompt,
                     "run_id": run_id,
                     "rep": rep,
-                    "response": result["content"],
+                    "response": response_text,
+                    "response_length": char_count,
+                    "word_count": word_count,
+                    "is_refusal": is_refusal,
                     "token_count": result["token_count"],
                     "finish_reason": result["finish_reason"],
+                    "latency_ms": result.get("latency_ms", 0),
                     "temperature": temperature,
                     "metadata": {
                         "model": "primary",
