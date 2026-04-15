@@ -101,3 +101,26 @@ Stage Summary:
 - Key findings: adversarial_probe highest axis displacement (0.1098), PCA shows dispersed variance
 - Files created: provider_router.py, run_real_lattice.py, solve_real_space.py
 - Output: lattice/output/runs.jsonl + lattice/output/behavioral_space.json
+
+---
+Task ID: v14-2
+Agent: Main Agent
+Task: Stability verification — 3 tests
+
+Work Log:
+- TEST 1: Re-ran same config (Qwen2.5-0.5B, reps=5, temp=0.7) → runs_repeat.jsonl (575 records)
+- TEST 1 result: cosine_mean_diff=0.001792 (pass), strategy overlap=3/5 (pass), PCA ordering preserved (pass)
+- TEST 2: Recomputed geometry with euclidean, manhattan, centered_cosine, rank_distance on same data
+- TEST 2 result: mean axis correlation=0.1081, manhattan/centered_cosine/rank_distance collapsed (<0.1)
+- TEST 3: Downloaded TinyLlama-1.1B-Chat GGUF, ran full lattice → runs_model2.jsonl (575 records)
+- TEST 3 result: cosine mean high (0.9424), PCA low compression, but strategy overlap=1/5 (fail)
+- Generated stability_report.json with all comparisons
+
+Stage Summary:
+- TEST 1 (repeat run): PASS — geometry stable across stochastic runs (axis corr=0.5238)
+- TEST 2 (metric variation): FAIL — geometry collapses under manhattan/centered_cosine/rank_distance
+- TEST 3 (cross model): FAIL — strategy displacement ranking does not transfer across models
+- VERDICT: GEOMETRY IS ARTIFACT
+- Key finding: within-model structure is stable, but it is NOT a model-invariant property
+- The observed geometry is specific to the embedding method (TF-IDF) and distance metric choice
+- Strategy displacements are not preserved when the model changes — they reflect model-specific behavior, not universal perturbation axes

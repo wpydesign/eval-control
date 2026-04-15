@@ -1,0 +1,178 @@
+{
+  "test1_repeat_run": {
+    "cosine_mean_run1": 0.935327,
+    "cosine_mean_run2": 0.937119,
+    "cosine_mean_diff": 0.001792,
+    "cosine_mean_diff_threshold": 0.02,
+    "cosine_mean_diff_pass": true,
+    "pca_comparison": {
+      "pc_variance_diffs": [
+        0.000764,
+        0.000923,
+        0.002335,
+        0.003182,
+        0.000331,
+        0.000365,
+        0.000988,
+        0.001348
+      ],
+      "max_variance_diff": 0.003182,
+      "mean_variance_diff": 0.00128,
+      "pc_ordering_preserved": true
+    },
+    "strategy_overlap": {
+      "top_5_run1": [
+        "adversarial",
+        "constraint_heavy",
+        "format_json",
+        "role_adversarial_eval",
+        "token_5lines"
+      ],
+      "top_5_run2": [
+        "adversarial",
+        "format_json",
+        "format_step_by_step",
+        "role_expert",
+        "token_5lines"
+      ],
+      "top_5_overlap": [
+        "adversarial",
+        "format_json",
+        "token_5lines"
+      ],
+      "overlap_count": 3,
+      "overlap_ratio": 0.6
+    },
+    "axis_alignment": {
+      "axis_correlations": [
+        0.9817,
+        0.889,
+        0.8446,
+        0.9116,
+        0.8404,
+        -0.0324,
+        -0.2573,
+        0.0129
+      ],
+      "mean_correlation": 0.5238,
+      "n_common_ids": 575
+    },
+    "overall_pass": true
+  },
+  "test2_metric_stability": {
+    "metrics_tested": [
+      "euclidean",
+      "manhattan",
+      "centered_cosine",
+      "rank_distance"
+    ],
+    "per_metric": {
+      "euclidean": {
+        "distance_mean": 1.360411,
+        "pca_max_var_diff": 0.189054,
+        "pca_ordering_preserved": true,
+        "strategy_overlap_count": 5,
+        "strategy_overlap_ratio": 1.0,
+        "axis_mean_correlation": 0.2499,
+        "geometry_collapsed": false
+      },
+      "manhattan": {
+        "distance_mean": 11.255798,
+        "pca_max_var_diff": 0.333647,
+        "pca_ordering_preserved": true,
+        "strategy_overlap_count": 2,
+        "strategy_overlap_ratio": 0.4,
+        "axis_mean_correlation": 0.0571,
+        "geometry_collapsed": true
+      },
+      "centered_cosine": {
+        "distance_mean": 0.999991,
+        "pca_max_var_diff": 0.204684,
+        "pca_ordering_preserved": true,
+        "strategy_overlap_count": 3,
+        "strategy_overlap_ratio": 0.6,
+        "axis_mean_correlation": 0.0442,
+        "geometry_collapsed": true
+      },
+      "rank_distance": {
+        "distance_mean": 0.203068,
+        "pca_max_var_diff": 0.442067,
+        "pca_ordering_preserved": true,
+        "strategy_overlap_count": 2,
+        "strategy_overlap_ratio": 0.4,
+        "axis_mean_correlation": 0.0813,
+        "geometry_collapsed": true
+      }
+    },
+    "mean_axis_correlation_across_metrics": 0.1081,
+    "any_metric_collapse": true,
+    "overall_pass": false
+  },
+  "test3_cross_model": {
+    "model1": "Qwen2.5-0.5B-Instruct (Q2_K)",
+    "model2": "TinyLlama-1.1B-Chat (Q2_K)",
+    "cosine_mean_model1": 0.935327,
+    "cosine_mean_model2": 0.942424,
+    "cosine_mean_stays_high": true,
+    "pca_low_compression_model2": true,
+    "pca_comparison": {
+      "pc_variance_diffs": [
+        0.039394,
+        0.001609,
+        0.01052,
+        0.014207,
+        0.009363,
+        0.00846,
+        0.00931,
+        0.006495
+      ],
+      "max_variance_diff": 0.039394,
+      "mean_variance_diff": 0.01242,
+      "pc_ordering_preserved": true
+    },
+    "strategy_overlap": {
+      "top_5_run1": [
+        "adversarial",
+        "constraint_heavy",
+        "format_json",
+        "role_adversarial_eval",
+        "token_5lines"
+      ],
+      "top_5_run2": [
+        "adversarial",
+        "format_step_by_step",
+        "instruction_conflict",
+        "instruction_system_only",
+        "role_skeptic"
+      ],
+      "top_5_overlap": [
+        "adversarial"
+      ],
+      "overlap_count": 1,
+      "overlap_ratio": 0.2
+    },
+    "axis_alignment": {
+      "axis_correlations": [
+        -0.4096,
+        0.4209,
+        0.9086,
+        0.6667,
+        -0.0379,
+        -0.0223,
+        0.0133,
+        0.0621
+      ],
+      "mean_correlation": 0.2002,
+      "n_common_ids": 575
+    },
+    "partial_overlap": false,
+    "overall_pass": false
+  },
+  "verdict": {
+    "test1_stable_across_runs": true,
+    "test2_not_collapsing_across_metrics": false,
+    "test3_partially_consistent_across_models": false,
+    "geometry_is_real": false,
+    "geometry_is_artifact": true
+  }
+}
