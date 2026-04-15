@@ -1,0 +1,87 @@
+{
+  "system_identity": "Measurement Distortion Detector over LLM Outputs",
+  "input_report": "download/lcge_engine/lattice/output/stability_report_deepseek.json",
+  "msi": {
+    "msi": 0.166,
+    "classification": "DISTORTED",
+    "description": "Measurement system mainly reflects its own projection bias. Discovered geometry is metric-dependent and not model-invariant. Results are descriptive of the pipeline, not of model behavior.",
+    "components": {
+      "reproducibility": {
+        "distance_stability": 0.9964,
+        "axis_stability": 0.9471,
+        "structure_stability": 0.8,
+        "composite": 0.9128,
+        "raw": {
+          "cosine_mean_diff": 7.2e-05,
+          "cosine_threshold": 0.02,
+          "mean_axis_correlation": 0.825,
+          "strategy_overlap": 4,
+          "strategy_overlap_ratio": 0.8,
+          "top5_axis_correlations": [
+            0.9658,
+            0.9703,
+            0.9849,
+            0.9738,
+            0.8407
+          ]
+        }
+      },
+      "metric_sensitivity": {
+        "collapse_rate": 0.75,
+        "axis_drift_raw": 0.0806,
+        "structure_drift": 0.5,
+        "composite": 0.7468,
+        "raw": {
+          "metrics_tested": [
+            "euclidean",
+            "manhattan",
+            "centered_cosine",
+            "rank_distance"
+          ],
+          "n_collapsed": 3,
+          "n_total": 4,
+          "per_metric_correlations": {
+            "euclidean": 0.0,
+            "manhattan": -0.0883,
+            "centered_cosine": 0.1304,
+            "rank_distance": -0.1036
+          },
+          "per_metric_overlap": {
+            "euclidean": 5,
+            "manhattan": 1,
+            "centered_cosine": 3,
+            "rank_distance": 1
+          },
+          "mean_axis_correlation": -0.0154
+        }
+      },
+      "cross_model_loss": {
+        "axis_divergence": null,
+        "structure_divergence": null,
+        "composite": null,
+        "note": "cross_model_test_not_run"
+      }
+    },
+    "formula": "MSI = R - S - C  (clamped to [0, 1])",
+    "weights": {
+      "R": "0.20*distance + 0.50*axis + 0.30*structure",
+      "S": "0.40*collapse + 0.35*(1-axis_drift) + 0.25*(1-structure_drift)",
+      "C": "0.50*axis_divergence + 0.50*structure_divergence"
+    },
+    "thresholds": {
+      "reliable": "MSI >= 0.7",
+      "conditional": "0.4 <= MSI < 0.7",
+      "distorted": "MSI < 0.4"
+    },
+    "timestamp": "2026-04-15T09:49:11.711278+00:00"
+  },
+  "reliability_questions": {
+    "q1_is_evaluation_trustworthy": false,
+    "q1_detail": "No. MSI=0.166 (DISTORTED). Same-model reproducibility=0.91, metric sensitivity=0.75.",
+    "q2_does_metric_choice_fake_structure": true,
+    "q2_detail": "Yes. 75% of alternative metrics caused geometry collapse. Discovered PCA axes are not metric-invariant.",
+    "q3_is_cross_model_comparison_meaningful": false,
+    "q3_detail": "Cross-model test not run.",
+    "overall": "MSI = 0.166 \u2192 DISTORTED"
+  }
+}
