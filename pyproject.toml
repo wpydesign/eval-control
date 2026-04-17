@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.backends._legacy:_Backend"
+
+[project]
+name = "eval-control"
+version = "1.0.0"
+description = "Autonomous Evaluation Control Layer for LLM Benchmarking"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.8"
+authors = [{name = "eval-control"}]
+keywords = ["llm", "evaluation", "benchmark", "bssi", "safety"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+[project.optional-dependencies]
+collector = ["requests>=2.28"]
+
+[tool.setuptools.packages.find]
+include = ["eval_control*"]
