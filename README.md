@@ -201,7 +201,165 @@ python release_gate.py
 | `release_gate.py` | CI/CD deployment risk prevention gate (demo + integration) |
 | `boundary_probe_cases.jsonl` | 103 systematic boundary probe cases |
 | `stress_cases_synthetic.jsonl` | 34 synthetic stress cases |
+| `api.py` | FastAPI wrapper — POST /evaluate, POST /outcome, GET /audit, GET /health |
+| `demo.py` | Full pipeline demo script (decision → shadow → outcome → audit) |
 | `real_cases_phase1.jsonl` | 30 hand-built real cases (Phase 1 validation) |
+
+## API Server
+
+Start the server and hit all endpoints from the command line or any HTTP client.
+
+### Install & run
+
+```bash
+pip install fastapi uvicorn
+uvicorn api:app --reload --port 8000
+```
+
+The interactive docs are available at `http://localhost:8000/docs`.
+
+### POST /evaluate — Shadow evaluation
+
+```bash
+curl -s -X POST http://localhost:8000/evaluate \
+  -H "Content-Type: application/json" \
+  -d '{
+    "case_id": "PROD-042",
+    "context": "Upgrading customer support model from v1 to v2",
+    "eval_scores": {"v1": 0.82, "v2": 0.87},
+    "pi_E": "v2",
+    "metadata": {
+      "domain": "prod",
+      "estimated_cost_if_wrong": 500000,
+      "reversibility": "moderate",
+      "latency_to_detect": "days"
+    }
+  }' | python -m json.tool
+```
+
+### POST /outcome — Log a real-world outcome
+
+```bash
+curl -s -X POST http://localhost:8000/outcome \
+  -H "Content-Type: application/json" \
+  -d '{
+    "case_id": "PROD-042",
+    "realized": "failure",
+    "cost_actual": 320000,
+    "notes": "Rollback required after 3 days. Higher than estimated cost."
+  }' | python -m json.tool
+```
+
+### GET /audit — Retrieve the audit trail
+
+```bash
+curl -s http://localhost:8000/audit?limit=10 | python -m json.tool
+
+# Filter by fault probe
+curl -s "http://localhost:8000/audit?fault_probe=FP1&limit=10" | python -m json.tool
+```
+
+### GET /health — Health check
+
+```bash
+curl -s http://localhost:8000/health | python -m json.tool
+```
+
+### Python client (httpx)
+
+```python
+import httpx
+
+BASE = "http://localhost:8000"
+
+# Shadow evaluation
+eval_resp = httpx.post(f"{BASE}/evaluate", json={
+    "case_id": "PROD-042",
+    "context": "Upgrading customer support model from v1 to v2",
+    "eval_scores": {"v1": 0.82, "v2": 0.87},
+    "pi_E": "v2",
+    "metadata": {
+        "domain": "prod",
+        "estimated_cost_if_wrong": 500000,
+        "reversibility": "moderate",
+        "latency_to_detect": "days",
+    },
+}).json()
+print(eval_resp["pi_S"], eval_resp["divergence"])
+
+# Log outcome
+httpx.post(f"{BASE}/outcome", json={
+    "case_id": "PROD-042",
+    "realized": "failure",
+    "cost_actual": 320000,
+    "notes": "Rollback required after 3 days.",
+}).json()
+
+# Audit trail
+audit = httpx.get(f"{BASE}/audit", params={"limit": 20}).json()
+print(f"{audit['divergences']} divergences across {audit['shadow_entries']} evaluations")
+
+# Health
+print(httpx.get(f"{BASE}/health").json()["status"])
+```
+
+## Python SDK Usage
+
+Use the core functions directly from Python — no API server required.
+
+### Shadow evaluation
+
+```python
+from shadow_mode import run_pi_S
+
+case = {
+    "case_id": "PROD-042",
+    "context": "Upgrading customer support model from v1 to v2",
+    "eval_scores": {"v1": 0.82, "v2": 0.87},
+    "pi_E": "v2",
+    "metadata": {
+        "domain": "prod",
+        "estimated_cost_if_wrong": 500000,
+        "reversibility": "moderate",
+        "latency_to_detect": "days",
+    },
+}
+
+result = run_pi_S(case)
+print(result["pi_S"])           # "ALLOW" or "BLOCK"
+print(result["divergence"])     # True if pi_S disagrees with pi_E
+print(result["risk"]["effective_score"])
+print(result["risk"]["margin"])
+print(result["shadow"]["tension_type"])
+```
+
+### Outcome capture
+
+```python
+from outcome_capture import log_outcome, read_outcomes
+
+# Attach ground truth to a previous decision
+log_outcome("PROD-042", {
+    "realized": "failure",
+    "cost_actual": 320000,
+    "notes": "Rollback required after 3 days. Higher than estimated cost.",
+})
+
+# Read all outcomes
+outcomes = read_outcomes()
+
+# Read only fault probe outcomes
+from outcome_capture import read_fault_probes
+probes = read_fault_probes()  # {"FP1": [...], "FP2": [...], "FP3": [...]}
+```
+
+### Full pipeline demo
+
+```bash
+python demo.py
+```
+
+Runs the complete workflow: decision → shadow evaluation → outcome logging → audit trail query.
 
 ## License
 
