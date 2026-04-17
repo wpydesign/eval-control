@@ -1,0 +1,20 @@
+version: "3.9"
+
+services:
+  risk-audit:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - EVAL_CONTROL_LOG_DIR=/app/data
+      - EVAL_CONTROL_API_KEYS=${API_KEYS:-}     # comma-separated, e.g. "key1,key2"
+    volumes:
+      - audit-data:/app/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  audit-data:

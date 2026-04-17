@@ -2,14 +2,23 @@
 """
 api.py — FastAPI wrapper for Risk Audit Engine
 
-Three endpoints:
+Four endpoints:
     POST /evaluate    — Run shadow evaluation on a deployment decision
     POST /outcome     — Log a real-world outcome for a previous decision
     GET  /audit       — Retrieve audit trail (shadow log + outcomes)
+    GET  /health      — Health check (no auth required)
+
+Auth:
+    Set EVAL_CONTROL_API_KEYS env var to a comma-separated list of keys.
+    All endpoints except /health require X-API-Key header.
+    If EVAL_CONTROL_API_KEYS is empty/unset, auth is disabled (local dev mode).
 
 Run:
     pip install fastapi uvicorn
     uvicorn api:app --reload --port 8000
+
+Docker:
+    docker compose up --build
 """
 
 import json
@@ -19,11 +28,24 @@ from datetime import datetime, timezone
 from typing import Optional
 
 # FastAPI
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
+from starlette.middleware.base import BaseHTTPMiddleware
 
 DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, DIR)
+
+# Override log/data directory if env var is set
+LOG_DIR = os.environ.get("EVAL_CONTROL_LOG_DIR", DIR)
+os.makedirs(LOG_DIR, exist_ok=True)
+
+# Shadow/outcome logs go to LOG_DIR
+import shadow_mode
+import outcome_capture
+shadow_mode.LOG_FILE = os.path.join(LOG_DIR, "shadow_log.jsonl")
+outcome_capture.SHADOW_LOG = os.path.join(LOG_DIR, "shadow_log.jsonl")
+outcome_capture.OUTCOME_FILE = os.path.join(LOG_DIR, "outcomes.jsonl")
 
 from shadow_mode import run_pi_S, log_entry, read_log
 from outcome_capture import log_outcome as _log_outcome, read_outcomes, read_fault_probes
@@ -33,6 +55,32 @@ app = FastAPI(
     description="Shadow evaluation + outcome audit for AI deployment decisions.",
     version="4.3.0",
 )
+
+
+# ═══════════════════════════════════════════════════════════════
+# AUTH MIDDLEWARE
+# ═══════════════════════════════════════════════════════════════
+
+_API_KEYS_RAW = os.environ.get("EVAL_CONTROL_API_KEYS", "")
+_API_KEYS = set(k.strip() for k in _API_KEYS_RAW.split(",") if k.strip())
+_AUTH_ENABLED = len(_API_KEYS) > 0
+
+
+class _APIKeyMiddleware(BaseHTTPMiddleware):
+    """Enforce X-API-Key on all endpoints except /health."""
+    async def dispatch(self, request: Request, call_next):
+        if request.url.path == "/health" or not _AUTH_ENABLED:
+            return await call_next(request)
+        api_key = request.headers.get("X-API-Key", "")
+        if api_key not in _API_KEYS:
+            return JSONResponse(
+                status_code=401,
+                content={"detail": "Invalid or missing API key. Set X-API-Key header."},
+            )
+        return await call_next(request)
+
+
+app.add_middleware(_APIKeyMiddleware)
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -246,5 +294,7 @@ def health():
         "status": "ok",
         "version": "4.3.0",
         "engine": "frozen",
+        "auth_enabled": _AUTH_ENABLED,
+        "log_dir": LOG_DIR,
         "timestamp": datetime.now(timezone.utc).isoformat(),
     }

@@ -1,0 +1,16 @@
+__pycache__
+*.pyc
+*.pyo
+.git
+.gitignore
+shadow_log.jsonl
+outcomes.jsonl
+data/
+*.egg-info
+dist/
+build/
+.eggs/
+.DS_Store
+*.swp
+*.swo
+docker-compose*.yml
