@@ -228,8 +228,8 @@ python outcome_capture.py show
 ### Local install (no Docker)
 
 ```bash
-git clone https://github.com/wpydesign/eval-control-deepseek.git
-cd eval-control-deepseek
+git clone https://github.com/wpydesign/eval-control.git
+cd eval-control
 pip install fastapi uvicorn
 uvicorn api:app --reload --port 8000
 ```
