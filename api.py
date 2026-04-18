@@ -2,11 +2,13 @@
 """
 api.py — FastAPI wrapper for Risk Audit Engine
 
-Four endpoints:
-    POST /evaluate    — Run shadow evaluation on a deployment decision
-    POST /outcome     — Log a real-world outcome for a previous decision
-    GET  /audit       — Retrieve audit trail (shadow log + outcomes)
-    GET  /health      — Health check (no auth required)
+Endpoints:
+    POST /evaluate         — Run shadow evaluation on a deployment decision
+    POST /outcome          — Log a real-world outcome for a previous decision
+    GET  /audit            — Retrieve audit trail (shadow log + outcomes)
+    POST /survival-eval    — Run survival scalar evaluation on a prompt
+    GET  /survival-drift   — Get drift statistics from survival engine
+    GET  /health           — Health check (no auth required)
 
 Auth:
     Set EVAL_CONTROL_API_KEYS env var to a comma-separated list of keys.
@@ -49,6 +51,27 @@ outcome_capture.OUTCOME_FILE = os.path.join(LOG_DIR, "outcomes.jsonl")
 
 from shadow_mode import run_pi_S, log_entry, read_log
 from outcome_capture import log_outcome as _log_outcome, read_outcomes, read_fault_probes
+
+# Survival engine (lazy init — needs API key at runtime)
+_survival_engine = None
+
+
+def _get_survival_engine():
+    """Get or create survival engine singleton."""
+    global _survival_engine
+    if _survival_engine is None:
+        from survival import SurvivalEngine, SurvivalConfig
+        key = os.environ.get("DEEPSEEK_API_KEY", "")
+        if not key:
+            raise HTTPException(status_code=400,
+                detail="DEEPSEEK_API_KEY environment variable is required for survival evaluation")
+        cfg = SurvivalConfig(
+            deepseek_api_key=key,
+            survival_log_path=os.path.join(LOG_DIR, "survival_log.jsonl"),
+            drift_history_path=os.path.join(LOG_DIR, "drift_history.jsonl"),
+        )
+        _survival_engine = SurvivalEngine(cfg)
+    return _survival_engine
 
 app = FastAPI(
     title="Risk Audit Engine",
@@ -282,6 +305,85 @@ def audit(fault_probe: Optional[str] = None, limit: int = 50):
         fault_probes=fp_summary,
         entries=clean_outcomes,
     )
+
+
+# ═══════════════════════════════════════════════════════════════
+# ENDPOINT 4: Survival scalar evaluation
+# ═══════════════════════════════════════════════════════════════
+
+class SurvivalEvalRequest(BaseModel):
+    """Submit a prompt for survival scalar evaluation."""
+    prompt: str = Field(..., description="The prompt to evaluate")
+    query_id: Optional[str] = Field(None, description="Optional query identifier")
+
+
+class SurvivalEvalResponse(BaseModel):
+    """Survival scalar evaluation result."""
+    query_id: str
+    prompt: str
+    timestamp: str
+    kappa: float
+    delta_L: float
+    delta_G: float
+    S: float
+    A: float
+    decision: str
+    S_dot: Optional[float]
+    drift_warning: bool
+    n_api_calls: int
+
+
+@app.post("/survival-eval", response_model=SurvivalEvalResponse)
+def survival_eval(req: SurvivalEvalRequest):
+    """
+    Run survival scalar evaluation on a prompt.
+
+    Measures output robustness under perturbation and across contexts.
+    Returns S(x), A(x), and a three-tier decision (accept/review/reject).
+    """
+    try:
+        engine = _get_survival_engine()
+    except HTTPException:
+        raise
+
+    try:
+        result = engine.evaluate(req.prompt, query_id=req.query_id or "")
+    except Exception as e:
+        raise HTTPException(status_code=422, detail=f"Survival evaluation failed: {e}")
+
+    return SurvivalEvalResponse(
+        query_id=result.query_id,
+        prompt=result.prompt,
+        timestamp=result.timestamp,
+        kappa=result.kappa,
+        delta_L=result.delta_L,
+        delta_G=result.delta_G,
+        S=result.S,
+        A=result.A,
+        decision=result.decision,
+        S_dot=result.S_dot,
+        drift_warning=result.drift_warning,
+        n_api_calls=result.n_api_calls,
+    )
+
+
+# ═══════════════════════════════════════════════════════════════
+# ENDPOINT 5: Survival drift statistics
+# ═══════════════════════════════════════════════════════════════
+
+@app.get("/survival-drift")
+def survival_drift():
+    """
+    Get drift statistics from the survival engine.
+
+    Returns: count, mean, min, max, latest S, trend direction.
+    """
+    try:
+        engine = _get_survival_engine()
+    except HTTPException:
+        raise
+
+    return engine.get_drift_stats()
 
 
 # ═══════════════════════════════════════════════════════════════
