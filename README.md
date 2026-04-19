@@ -237,3 +237,10 @@ uvicorn api:app --reload --port 8000
 ## License
 
 MIT
+
+## Commercial Use
+
+If you are using eval-control in a production or commercial environment,
+I'd appreciate you reaching out.
+
+Contact: wpydesign@gmail.com
