@@ -27,3 +27,5 @@ credentials.json
 
 # Logs
 *.log
+model/
+logs/failure_dataset.jsonl

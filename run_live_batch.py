@@ -23,6 +23,7 @@ import os
 import sys
 import hashlib
 import time
+import numpy as np
 from datetime import datetime, timezone
 from concurrent.futures import ThreadPoolExecutor, TimeoutError as FuturesTimeoutError
 
@@ -226,6 +227,7 @@ def run_batch(raw_prompts: list[dict], engine, start_idx: int = 0,
 def main():
     from survival import SurvivalEngine, SurvivalConfig, _classify_failure_mode, set_monitor_action
     from scripts.batch_monitor import MonitorState, scan, log_alerts, print_status, TIGHTENED_TAU_H
+    from scripts.predict_failure import FailurePredictor
 
     # Config — use zhipu as primary provider
     cfg = SurvivalConfig(
@@ -249,6 +251,10 @@ def main():
 
     engine = SurvivalEngine(cfg)
     monitor = MonitorState()  # v2.1.4: loads monitor_stats.json on init
+    predictor = FailurePredictor()  # v2.2.0: failure probability predictor
+
+    # v2.2.0: print predictor status
+    predictor.print_status()
 
     # v2.1.4: print persistent stats on startup
     stats = monitor.persistent_stats
@@ -342,6 +348,19 @@ def main():
                 result["monitor_action"] = monitor_action
                 set_monitor_action("none")  # reset
 
+                # v2.2.0: compute risk_score from prediction model
+                risk = predictor.predict(result.get("v4", {}), result.get("v1", {}))
+                result["risk_score"] = risk["risk_score"]
+                result["risk_action"] = risk["action"]
+
+                # v2.2.0: risk-based routing escalation
+                if risk["action"] == "escalate" and not needs_review:
+                    needs_review = True
+                    safe_decision = "review"
+                elif risk["action"] == "shadow_review" and not needs_review:
+                    # shadow_review from predictor adds to review count but doesn't override decision
+                    needs_review = True
+
                 if needs_review:
                     shadow_reviews += 1
 
@@ -356,7 +375,9 @@ def main():
                 div = "DIVERGE" if result.get("divergence") else "ok"
                 review_flag = " ⚠ SHADOW_REVIEW" if needs_review else ""
                 action_flag = f" [MONITOR:{monitor_action}]" if monitor_action != "none" else ""
-                print(f"S_v4={s_v4:.3f} {dec_v4} v1={dec_v1} [{div}]{review_flag}{action_flag}")
+                risk_flag = f" risk={risk['risk_score']:.2f}" if risk['has_model'] else ""
+                risk_action_flag = f" →{risk['action']}" if risk['action'] != 'none' else ""
+                print(f"S_v4={s_v4:.3f} {dec_v4} v1={dec_v1} [{div}]{review_flag}{action_flag}{risk_flag}{risk_action_flag}")
                 batch_results.append(result)
                 # v2.1.3: feed sample signals for effectiveness tracking
                 is_dk = (fm == "domain_knowledge")
@@ -374,6 +395,13 @@ def main():
 
         # End-of-batch metrics
         metrics = compute_batch_metrics(batch_results)
+        # v2.2.0: add risk_score stats to batch metrics
+        risk_scores = [r.get("risk_score", 0) for r in batch_results if r.get("risk_score") is not None]
+        if risk_scores:
+            metrics["risk_score_mean"] = round(float(np.mean(risk_scores)), 4)
+            metrics["risk_score_max"] = round(float(np.max(risk_scores)), 4)
+            metrics["risk_escalate_count"] = sum(1 for r in batch_results if r.get("risk_action") == "escalate")
+            metrics["risk_review_count"] = sum(1 for r in batch_results if r.get("risk_action") == "shadow_review")
         metrics["batch_number"] = b + 1
         metrics["total_batches"] = n_batches
         metrics["pending_before_batch"] = len(pending) - start
@@ -417,9 +445,17 @@ def main():
 
         print(f"  (metrics appended to {METRICS_PATH})\n")
 
+        # v2.2.0: periodic retrain every 5 batches (close the loop)
+        if (b + 1) % 5 == 0 and predictor.is_loaded:
+            print("  [PREDICTOR] Periodic retrain check (every 5 batches)...")
+            try:
+                predictor.retrain()
+            except Exception as e:
+                print(f"  [PREDICTOR] Retrain skipped: {e}")
+
     # Summary
     print("=" * 55)
-    print("  v2.1 PIPELINE COMPLETE — v4 = π_E, v1 = π_S (audit)")
+    print("  v2.2 PIPELINE COMPLETE — v4 = π_E, v1 = π_S (audit) + predictor")
     print("=" * 55)
     final = compute_batch_metrics(all_results)
     total_live = sum(1 for _ in open(LIVE_LOG_PATH)) if os.path.exists(LIVE_LOG_PATH) else 0
@@ -431,9 +467,20 @@ def main():
         print(f"  shadow_reviews:       {final['shadow_review_count']}")
         print(f"  S_mean:               {final['s_mean']:.3f}")
         print(f"  S_range:              [{final['s_min']:.3f}, {final['s_max']:.3f}]")
+    # v2.2.0: risk_score summary
+    all_risk = [r.get("risk_score") for r in all_results if r.get("risk_score") is not None]
+    if all_risk:
+        print(f"  risk_score_mean:      {np.mean(all_risk):.3f}")
+        print(f"  risk_score_max:       {np.max(all_risk):.3f}")
+        esc = sum(1 for r in all_results if r.get("risk_action") == "escalate")
+        rev = sum(1 for r in all_results if r.get("risk_action") == "shadow_review")
+        print(f"  risk_escalated:       {esc}")
+        print(f"  risk_shadow_reviewed: {rev}")
     print(f"\n  Live log:      {LIVE_LOG_PATH}")
     print(f"  Metrics:       {METRICS_PATH}")
     print(f"  Disagreements: {os.path.join(DIR, 'logs', 'disagreement_cases.jsonl')}")
+    print(f"  Failure data:  {os.path.join(DIR, 'logs', 'failure_dataset.jsonl')}")
+    print(f"  Model:         {os.path.join(DIR, 'model', 'failure_predictor.pkl')}")
     print(f"  Raw source:    {RAW_PROMPTS_PATH}")
 
 
