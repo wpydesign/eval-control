@@ -38,3 +38,24 @@ Stage Summary:
 - weekly_report.py preserved but superseded by batch_monitor.py
 - Zero false positive alerts on dk_HI_rate, risk_spike, gap_mean
 - One real alert: FALSE_ACCEPT count=6 (matches known factuality_risk_flags)
+---
+Task ID: 4
+Agent: main (Zai)
+Task: Add alert-triggered routing actions (detection → controlled reaction)
+
+Work Log:
+- Added MonitorState class to batch_monitor.py (stateful action controller)
+- Action mapping: RISK_SPIKE→forced_review, FALSE_ACCEPT→tightened_threshold(0.80), DK_DRIFT/GAP_DRIFT→log-only
+- All actions: temporary (50-sample auto-expiry), scoped to domain_knowledge only
+- Staggered cascade: both alerts active → forced_review first (50 ticks), then tightened_threshold (next 50)
+- Added set_monitor_action() hook to survival.py for cross-module state passing
+- Added monitor_action field to log_disagreement() entry dict
+- Updated run_live_batch.py: pre-classify prompt, apply routing overrides, tick counters per sample
+- Non-domain_knowledge prompts: always get_action="none" — zero impact on other modes
+- Validated: expiry at 50 ticks, staggered cascade, log-only alerts, existing data scan
+
+Stage Summary:
+- Committed as 533e86c, tag v2.1.2-alert-actions
+- Zero model/scoring/gating changes
+- Detection now has controlled reaction at routing layer
+- Full audit trail: monitor_action field in disagreement_cases.jsonl + shadow_eval_live.jsonl
