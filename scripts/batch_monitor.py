@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-batch_monitor.py — Streaming rolling-window monitor [v2.1.3]
+batch_monitor.py — Streaming rolling-window monitor [v2.1.4]
 
 Replaces weekly reporting with event-driven monitoring.
 Runs after every batch append. No reports, just signals.
@@ -20,6 +20,12 @@ v2.1.2: alert → action hooks (routing layer only, no model change):
   GAP_DRIFT    → log leniency drift, no auto-change
   All actions: temporary, domain_knowledge-scoped, auto-expire after 50 samples.
 
+v2.1.4: persistent cross-run memory + suppression:
+  - monitor_stats.json tracks cumulative effective/ineffective counts per action
+  - if ineffective/total > 0.5, action is SUPPRESSED (not activated)
+  - suppression events logged with monitor_action="suppressed"
+  - enables experience-aware control across runs
+
 Usage:
   python scripts/batch_monitor.py              # scan full log, print alerts
   python scripts/batch_monitor.py --watch      # tail-follow mode (for live use)
@@ -36,6 +42,9 @@ BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DISAGREEMENT_PATH = os.path.join(BASE, "logs", "disagreement_cases.jsonl")
 ALERT_LOG_PATH = os.path.join(BASE, "logs", "monitor_alerts.jsonl")
 EFFECTIVENESS_PATH = os.path.join(BASE, "logs", "monitor_effectiveness.jsonl")
+MONITOR_STATS_PATH = os.path.join(BASE, "logs", "monitor_stats.json")
+SUPPRESSION_LOG_PATH = os.path.join(BASE, "logs", "monitor_suppressions.jsonl")
+SUPPRESSION_THRESHOLD = 0.5  # suppress if ineffective_rate > 50%
 
 WINDOW_50 = 50
 WINDOW_200 = 200
@@ -62,6 +71,7 @@ class MonitorState:
       - routing-layer only (no model/scoring/gating changes)
 
     v2.1.3: tracks per-action effectiveness (pre/post metrics + expiry evaluation).
+    v2.1.4: persistent cross-run memory (monitor_stats.json) + suppression.
 
     Usage in batch runner:
       monitor = MonitorState()
@@ -78,6 +88,9 @@ class MonitorState:
         self._active = {}       # action_name -> remaining_ticks
         self._tracking = {}     # action_name -> {false_accept: int, risk_spike: int, samples: int}
         self._consecutive_fail = {"forced_review": 0, "tightened_threshold": 0}
+        # v2.1.4: persistent cross-run stats
+        self._stats = self._load_stats()
+        self._suppressed_events = []  # log of suppressions this run
 
     @property
     def active_actions(self):
@@ -87,12 +100,100 @@ class MonitorState:
     def consecutive_failures(self):
         return dict(self._consecutive_fail)
 
+    @property
+    def persistent_stats(self):
+        """Return the current persistent stats dict (for inspection/logging)."""
+        return dict(self._stats)
+
+    @property
+    def suppressed_events(self):
+        """Return list of suppression events this run."""
+        return list(self._suppressed_events)
+
+    # ── v2.1.4: persistence layer ──
+
+    def _load_stats(self) -> dict:
+        """Load cumulative effectiveness stats from monitor_stats.json.
+
+        Returns:
+            {"forced_review": {"effective": N, "ineffective": M}, ...}
+        """
+        default = {
+            "forced_review": {"effective": 0, "ineffective": 0},
+            "tightened_threshold": {"effective": 0, "ineffective": 0},
+        }
+        if not os.path.exists(MONITOR_STATS_PATH):
+            return default
+        try:
+            with open(MONITOR_STATS_PATH) as f:
+                data = json.load(f)
+            # Merge with defaults (handles missing keys)
+            for action_name in default:
+                if action_name not in data:
+                    data[action_name] = {"effective": 0, "ineffective": 0}
+                for key in ("effective", "ineffective"):
+                    if key not in data[action_name]:
+                        data[action_name][key] = 0
+            return data
+        except (json.JSONDecodeError, OSError):
+            return default
+
+    def _save_stats(self):
+        """Write current cumulative stats to monitor_stats.json."""
+        try:
+            os.makedirs(os.path.dirname(MONITOR_STATS_PATH), exist_ok=True)
+            with open(MONITOR_STATS_PATH, "w") as f:
+                json.dump(self._stats, f, indent=2, ensure_ascii=False)
+        except OSError:
+            pass
+
+    def _is_suppressed(self, action_name: str) -> bool:
+        """Check if action should be suppressed due to historical ineffectiveness.
+
+        Suppress if ineffective_rate > SUPPRESSION_THRESHOLD (50%)
+        AND at least 2 total evaluations (avoid suppressing on first result).
+        """
+        s = self._stats.get(action_name, {})
+        effective = s.get("effective", 0)
+        ineffective = s.get("ineffective", 0)
+        total = effective + ineffective
+        if total < 2:
+            return False  # not enough data to suppress
+        if total == 0:
+            return False
+        return (ineffective / total) > SUPPRESSION_THRESHOLD
+
+    def _log_suppression(self, action_name: str, reason: str):
+        """Log a suppression event to monitor_suppressions.jsonl."""
+        entry = {
+            "action": action_name,
+            "reason": reason,
+            "stats_snapshot": dict(self._stats.get(action_name, {})),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+        }
+        self._suppressed_events.append(entry)
+        ts = datetime.now(timezone.utc).strftime("%H:%M:%S")
+        s = self._stats.get(action_name, {})
+        eff = s.get("effective", 0)
+        ineff = s.get("ineffective", 0)
+        total = eff + ineff
+        rate = ineff / total if total > 0 else 0
+        print(f"  [{ts}] [SUPPRESSED] {action_name}: {reason} "
+              f"(ineffective_rate={rate:.0%}, {eff}e/{ineff}i)")
+        try:
+            os.makedirs(os.path.dirname(SUPPRESSION_LOG_PATH), exist_ok=True)
+            with open(SUPPRESSION_LOG_PATH, "a") as f:
+                f.write(json.dumps(entry, ensure_ascii=False) + "\n")
+        except OSError:
+            pass
+
     def get_action(self, failure_mode: str) -> str:
         """Return the routing action for this failure mode.
 
         Returns:
           "forced_review"       — RISK_SPIKE active, dk -> override to shadow review
           "tightened_threshold" — FALSE_ACCEPT active, dk -> require S >= 0.80
+          "suppressed"          — action was suppressed due to historical ineffectiveness
           "none"                — no active intervention
         """
         if failure_mode != "domain_knowledge":
@@ -137,6 +238,9 @@ class MonitorState:
         When both RISK_SPIKE and FALSE_ACCEPT fire simultaneously,
         tightened_threshold is staggered to activate after forced_review expires.
 
+        v2.1.4: checks historical suppression before activating.
+        If action is suppressed, logs event and does NOT activate.
+
         Args:
             alerts: list of alert strings from scan()
             pre_false_accept: current false_accept count in window_200 (snapshot before action)
@@ -146,30 +250,40 @@ class MonitorState:
         has_fa = any("FALSE_ACCEPT" in a for a in alerts)
 
         if has_spike and "forced_review" not in self._active:
-            self._active["forced_review"] = ACTION_EXPIRY
-            self._tracking["forced_review"] = {
-                "pre_false_accept": pre_false_accept,
-                "pre_risk_spike": pre_risk_spike,
-                "false_accept": 0,
-                "risk_spike": 0,
-                "samples": 0,
-            }
+            # v2.1.4: check suppression before activating
+            if self._is_suppressed("forced_review"):
+                self._log_suppression("forced_review",
+                    "historical ineffective_rate > 50%")
+            else:
+                self._active["forced_review"] = ACTION_EXPIRY
+                self._tracking["forced_review"] = {
+                    "pre_false_accept": pre_false_accept,
+                    "pre_risk_spike": pre_risk_spike,
+                    "false_accept": 0,
+                    "risk_spike": 0,
+                    "samples": 0,
+                }
 
         if has_fa and "tightened_threshold" not in self._active:
-            if "forced_review" in self._active:
-                self._active["tightened_threshold"] = self._active["forced_review"] + ACTION_EXPIRY
+            # v2.1.4: check suppression before activating
+            if self._is_suppressed("tightened_threshold"):
+                self._log_suppression("tightened_threshold",
+                    "historical ineffective_rate > 50%")
             else:
-                self._active["tightened_threshold"] = ACTION_EXPIRY
-            self._tracking["tightened_threshold"] = {
-                "pre_false_accept": pre_false_accept,
-                "pre_risk_spike": pre_risk_spike,
-                "false_accept": 0,
-                "risk_spike": 0,
-                "samples": 0,
-            }
+                if "forced_review" in self._active:
+                    self._active["tightened_threshold"] = self._active["forced_review"] + ACTION_EXPIRY
+                else:
+                    self._active["tightened_threshold"] = ACTION_EXPIRY
+                self._tracking["tightened_threshold"] = {
+                    "pre_false_accept": pre_false_accept,
+                    "pre_risk_spike": pre_risk_spike,
+                    "false_accept": 0,
+                    "risk_spike": 0,
+                    "samples": 0,
+                }
 
     def _evaluate_action(self, action_name: str):
-        """Evaluate action effectiveness on expiry. Log to monitor_effectiveness.jsonl."""
+        """Evaluate action effectiveness on expiry. Log + update persistent stats."""
         t = self._tracking.pop(action_name, {})
         if not t or "pre_false_accept" not in t:
             return
@@ -217,10 +331,24 @@ class MonitorState:
         except OSError:
             pass
 
+        # v2.1.4: update persistent stats
+        if action_name not in self._stats:
+            self._stats[action_name] = {"effective": 0, "ineffective": 0}
+        if result == "effective":
+            self._stats[action_name]["effective"] += 1
+        elif result == "ineffective":
+            self._stats[action_name]["ineffective"] += 1
+        # neutral does not increment either counter
+        self._save_stats()
+
         # Print outcome
         ts = datetime.now(timezone.utc).strftime("%H:%M:%S")
         redesign_tag = " NEEDS_REDESIGN" if redesign_flag else ""
-        print(f"  [{ts}] [EFFECTIVENESS] {action_name}: {result} (delta={delta:+d}, samples={samples}){redesign_tag}")
+        s = self._stats[action_name]
+        total = s["effective"] + s["ineffective"]
+        rate = s["ineffective"] / total if total > 0 else 0
+        print(f"  [{ts}] [EFFECTIVENESS] {action_name}: {result} (delta={delta:+d}, samples={samples})"
+              f" [cumulative: {s['effective']}e/{s['ineffective']}i, rate={rate:.0%}]{redesign_tag}")
 
         return result
 

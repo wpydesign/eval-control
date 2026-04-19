@@ -248,7 +248,19 @@ def main():
                 sys.exit(1)
 
     engine = SurvivalEngine(cfg)
-    monitor = MonitorState()  # v2.1.2: alert-triggered routing state
+    monitor = MonitorState()  # v2.1.4: loads monitor_stats.json on init
+
+    # v2.1.4: print persistent stats on startup
+    stats = monitor.persistent_stats
+    for action_name, s in stats.items():
+        eff, ineff = s.get("effective", 0), s.get("ineffective", 0)
+        total = eff + ineff
+        rate = ineff / total if total > 0 else 0
+        suppressed = " [SUPPRESSED]" if monitor._is_suppressed(action_name) else ""
+        if total > 0:
+            print(f"  [MONITOR-STATS] {action_name}: {eff}e/{ineff}i (ineff_rate={rate:.0%}){suppressed}")
+        else:
+            print(f"  [MONITOR-STATS] {action_name}: no history yet")
 
     # Load prompts from the ONLY allowed source
     raw_prompts = load_raw_prompts(RAW_PROMPTS_PATH)
@@ -395,6 +407,11 @@ def main():
             )
             if monitor.active_actions:
                 print(f"  [MONITOR] active_actions={monitor.active_actions}")
+            if monitor.suppressed_events:
+                for sev in monitor.suppressed_events:
+                    # Already printed by _log_suppression, just note count
+                    pass
+                print(f"  [MONITOR] suppressions this run: {len(monitor.suppressed_events)}")
         except Exception as e:
             print(f"  (monitor skipped: {e})")
 
