@@ -1,0 +1,57 @@
+{
+  "frozen_at": "2026-04-20T02:33:43.520302+00:00",
+  "version": "v2.4.0",
+  "description": "Ground truth distribution snapshot — pre-manifold-decomposition",
+  "batch_labels": {
+    "total": 386,
+    "by_channel": {
+      "blind_spot": 12,
+      "ambiguous": 374
+    },
+    "by_failure_type": {
+      "overconfidence": 6,
+      "boundary": 367,
+      "contradiction": 13
+    }
+  },
+  "existing_dataset": {
+    "total": 1072,
+    "labeled": 700,
+    "wrong": 202,
+    "correct": 498
+  },
+  "manifold_segments": {
+    "overconfidence": {
+      "n": 6,
+      "n_wrong": 6,
+      "n_correct": 0,
+      "wrong_rate": 1.0,
+      "information_value": 0.0
+    },
+    "contradiction": {
+      "n": 13,
+      "n_wrong": 9,
+      "n_correct": 4,
+      "wrong_rate": 0.6923,
+      "information_value": 11.5764
+    },
+    "boundary": {
+      "n": 367,
+      "n_wrong": 46,
+      "n_correct": 321,
+      "wrong_rate": 0.1253,
+      "information_value": 199.8388
+    }
+  },
+  "unified_predictor_note": "AUC is no longer the primary metric — manifold separation is. The unified AUC collapsed because it averages over multiple failure geometries with fundamentally different feature-failure relationships.",
+  "blind_spot_channel": {
+    "n": 12,
+    "n_wrong": 12,
+    "wrong_rate": 1.0,
+    "failure_type_distribution": {
+      "overconfidence": 6,
+      "boundary": 4,
+      "contradiction": 2
+    }
+  }
+}

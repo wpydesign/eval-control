@@ -1,0 +1,172 @@
+{
+  "version": "v2.5.0",
+  "trained_at": "2026-04-20T02:33:43.637964+00:00",
+  "architecture": "decomposed_failure_manifold_map",
+  "description": "Three-manifold decomposition: each failure geometry has its own predictive surface. Replaces unified single-model predictor.",
+  "manifolds": {
+    "overconfidence": {
+      "head": {
+        "type": "rule_based",
+        "detection_rate": 1.0,
+        "n_samples": 19,
+        "n_wrong": 19,
+        "description": "100% wrong rate — P(is_wrong | overconfidence) = 1.0"
+      },
+      "n_samples": 19,
+      "wrong_rate": 1.0
+    },
+    "contradiction": {
+      "head": {
+        "type": "logistic_regression",
+        "features": [
+          "S_v4",
+          "S_v1",
+          "confidence_gap",
+          "kappa_v4"
+        ],
+        "n_samples": 34,
+        "n_wrong": 26,
+        "metrics": {
+          "accuracy": 0.8235,
+          "auc": 0.8798,
+          "brier_score": 0.1123,
+          "confusion_matrix": [
+            [
+              6,
+              2
+            ],
+            [
+              4,
+              22
+            ]
+          ]
+        },
+        "coefficients": {
+          "S_v4": -0.501202,
+          "S_v1": 0.063635,
+          "confidence_gap": -0.293358,
+          "kappa_v4": -0.483987
+        },
+        "base_rate": 0.7647,
+        "description": "Contradiction manifold: 34 samples, 76.5% wrong rate"
+      },
+      "n_samples": 34,
+      "wrong_rate": 0.7647
+    },
+    "boundary": {
+      "head": {
+        "type": "logistic_regression",
+        "features": [
+          "S_v4",
+          "S_v1",
+          "confidence_gap",
+          "kappa_v4"
+        ],
+        "n_samples": 1033,
+        "n_wrong": 218,
+        "metrics": {
+          "accuracy": 0.8325,
+          "auc": 0.7073,
+          "brier_score": 0.1362,
+          "confusion_matrix": [
+            [
+              807,
+              8
+            ],
+            [
+              165,
+              53
+            ]
+          ],
+          "cv_auc_mean": 0.6988,
+          "cv_auc_std": 0.033
+        },
+        "coefficients": {
+          "S_v4": -1.736382,
+          "S_v1": -2.28494,
+          "confidence_gap": 4.114074,
+          "kappa_v4": -1.398688
+        },
+        "intercept": 1.406517,
+        "optimal_threshold": 0.35,
+        "base_rate": 0.211,
+        "description": "Boundary manifold: 1033 samples, 21.1% wrong rate"
+      },
+      "n_samples": 1033,
+      "wrong_rate": 0.211
+    }
+  },
+  "router": {
+    "type": "multinomial_lr",
+    "features": [
+      "S_v4",
+      "S_v1",
+      "confidence_gap",
+      "kappa_v4"
+    ],
+    "class_names": {
+      "0": "overconfidence",
+      "1": "contradiction",
+      "2": "boundary"
+    },
+    "n_samples": 1086,
+    "accuracy": 0.7468,
+    "class_distribution": {
+      "0": 19,
+      "1": 34,
+      "2": 1033
+    }
+  },
+  "separation": {
+    "centroid_distances": {
+      "overconfidence": {
+        "overconfidence": 0.0,
+        "contradiction": 0.1788,
+        "boundary": 0.2971
+      },
+      "contradiction": {
+        "overconfidence": 0.1788,
+        "contradiction": 0.0,
+        "boundary": 0.1196
+      },
+      "boundary": {
+        "overconfidence": 0.2971,
+        "contradiction": 0.1196,
+        "boundary": 0.0
+      }
+    },
+    "total_samples": 1086,
+    "manifold_sizes": {
+      "overconfidence": 19,
+      "contradiction": 34,
+      "boundary": 1033
+    },
+    "manifold_wrong_rates": {
+      "overconfidence": 1.0,
+      "contradiction": 0.7647,
+      "boundary": 0.211
+    }
+  },
+  "baseline_reference": "2026-04-20T02:33:43.520302+00:00",
+  "training_summary": {
+    "total_samples": 1086,
+    "manifold_distribution": {
+      "overconfidence": {
+        "n": 19,
+        "n_wrong": 19,
+        "wrong_rate": 1.0
+      },
+      "contradiction": {
+        "n": 34,
+        "n_wrong": 26,
+        "wrong_rate": 0.7647
+      },
+      "boundary": {
+        "n": 1033,
+        "n_wrong": 218,
+        "wrong_rate": 0.211
+      }
+    },
+    "key_insight": "AUC is no longer the primary metric. The system now produces per-manifold predictive surfaces, each capturing a distinct failure geometry. Manifold separation quality is the new evaluation axis."
+  }
+}
