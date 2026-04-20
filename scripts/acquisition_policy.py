@@ -68,6 +68,12 @@ MINING_QUEUE_PATH = os.path.join(BASE, "logs", "failure_mining_queue.jsonl")
 ACQUISITION_QUEUE_PATH = os.path.join(BASE, "logs", "acquisition_queue.jsonl")
 ACQUISITION_BUDGET_PATH = os.path.join(BASE, "logs", "acquisition_budget.json")
 CHANNEL_PERF_PATH = os.path.join(BASE, "logs", "channel_performance.jsonl")
+REWARD_BUFFER_PATH = os.path.join(BASE, "logs", "reward_buffer.jsonl")
+
+# Lag compensation: weight updates use performance from t-1, not t.
+# This prevents oscillation when the retrain loop runs at high throughput.
+# On first cycle (no t-1 data), weights stay at defaults.
+ATTRIBUTION_LAG = 1
 
 # Default policy weights
 DEFAULT_WEIGHTS = {
@@ -344,8 +350,11 @@ def allocate_forced_channels(score_map, budget, weights):
     }
 
 
-def adapt_weights(weights, channel_performance):
-    """Adapt policy weights based on realized per-channel label efficiency.
+def adapt_weights(weights, channel_performance, lag=ATTRIBUTION_LAG):
+    """Adapt policy weights using LAG-COMPENSATED reward attribution.
+
+    Weight updates use performance from cycle t-lag, not cycle t.
+    This prevents feedback oscillation when the loop runs at high throughput.
 
     For each channel, compute:
         efficiency = (n_wrong_found / n_labeled_from_channel) * weight
@@ -360,8 +369,12 @@ def adapt_weights(weights, channel_performance):
     if not channel_performance:
         return weights
 
-    # Aggregate recent performance (last 5 cycles or all if fewer)
-    recent = channel_performance[-5:]
+    # Lag compensation: use performance from t-lag, exclude the last `lag` entries
+    # which are from the current cycle (not yet reflected in AUC)
+    if len(channel_performance) <= lag:
+        # Not enough history for lagged attribution — keep current weights
+        return weights
+    recent = channel_performance[-(5 + lag):-lag] if len(channel_performance) > 5 + lag else channel_performance[:-lag]
 
     # Compute per-channel efficiency: fraction of labels that were wrong
     efficiencies = {}
@@ -473,8 +486,16 @@ def record_channel_outcomes(acquisition_queue, failure_dataset_path):
 
 
 def update_weights_cli():
-    """CLI entry point for --update-weights."""
+    """CLI entry point for --update-weights.
+
+    Implements lag-compensated reward attribution:
+      1. Record current cycle's outcomes (time t) to reward buffer
+      2. Load performance history
+      3. Adapt weights using outcomes from time t-1 (not t)
+      4. This one-cycle delay prevents oscillation at high throughput
+    """
     perf = load_channel_performance()
+    pre_update_len = len(perf)
 
     # Load current weights
     weights = dict(DEFAULT_WEIGHTS)
@@ -490,19 +511,21 @@ def update_weights_cli():
     print(f"  Current weights: unc={weights['uncertainty']:.3f}, "
           f"bs={weights['blind_spot']:.3f}, cost={weights['cost']:.3f}")
 
-    # Record outcomes
+    # Step 1: Record current outcomes to reward buffer (time t)
     outcomes = record_channel_outcomes(
         ACQUISITION_QUEUE_PATH, DATASET_PATH
     )
+    buffered = False
     if outcomes:
-        print(f"\n  Channel outcomes since last update:")
+        print(f"\n  [t={pre_update_len}] Channel outcomes (stored for next cycle):")
         for ch, stats in outcomes.items():
             print(f"    {ch:>20s}: {stats['n_labeled']} labeled, "
                   f"{stats['n_wrong']} wrong ({stats['efficiency']:.1%} efficiency)")
 
-        # Append to performance log
+        # Append to performance log (reward buffer)
         perf_entry = {
             "timestamp": datetime.now(timezone.utc).isoformat(),
+            "cycle": pre_update_len,
             "channels": outcomes,
             "prev_weights": weights,
         }
@@ -510,11 +533,30 @@ def update_weights_cli():
         with open(CHANNEL_PERF_PATH, "a") as f:
             f.write(json.dumps(perf_entry, ensure_ascii=False) + "\n")
         perf.append(perf_entry)
+
+        # Also write to explicit reward buffer for traceability
+        os.makedirs(os.path.dirname(REWARD_BUFFER_PATH), exist_ok=True)
+        with open(REWARD_BUFFER_PATH, "a") as f:
+            f.write(json.dumps(perf_entry, ensure_ascii=False) + "\n")
+        buffered = True
     else:
         print("  No new labeled outcomes found since last update.")
 
-    # Adapt
-    new_weights = adapt_weights(weights, perf)
+    # Step 2: Adapt weights using PREVIOUS cycle's outcomes (time t-1)
+    # This is the lag compensation: we stored t, now we use t-1 for the update.
+    new_weights = adapt_weights(weights, perf, lag=ATTRIBUTION_LAG)
+
+    # Check if lag prevented the update
+    if len(perf) <= ATTRIBUTION_LAG:
+        print(f"\n  [LAG] Insufficient history ({len(perf)} cycles, need >{ATTRIBUTION_LAG}) "
+              f"— weights unchanged (first-cycle guard)")
+        return weights
+
+    # Show what was used for attribution
+    used_entry = perf[-(ATTRIBUTION_LAG + 1)]
+    used_cycle = used_entry.get("cycle", "?")
+    print(f"\n  [LAG] Weight update based on cycle t-{ATTRIBUTION_LAG} (cycle {used_cycle}), "
+          f"not current cycle (t={pre_update_len})")
 
     print(f"\n  Adapted weights:  unc={new_weights['uncertainty']:.3f}, "
           f"bs={new_weights['blind_spot']:.3f}, cost={new_weights['cost']:.3f}")
@@ -530,7 +572,10 @@ def update_weights_cli():
         "weights": new_weights,
         "prev_weights": weights,
         "weight_delta": delta,
-        "adaptation_mode": "efficiency_based",
+        "adaptation_mode": "lag_compensated_efficiency",
+        "attribution_lag": ATTRIBUTION_LAG,
+        "attribution_cycle": used_cycle,
+        "current_cycle": pre_update_len,
         "n_performance_cycles": len(perf),
     }
     with open(ACQUISITION_BUDGET_PATH, "w") as f:
