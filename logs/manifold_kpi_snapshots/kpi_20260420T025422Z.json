@@ -1,0 +1,43 @@
+{
+  "overconfidence": {
+    "n": 19,
+    "n_wrong": 19,
+    "capture_rate": 1.0,
+    "target": 1.0,
+    "status": "PASS",
+    "description": "Should be ~100% — if lower, detection is failing"
+  },
+  "contradiction": {
+    "n": 34,
+    "n_wrong": 26,
+    "n_correct": 8,
+    "wrong_rate": 0.7647,
+    "precision": 0.7647,
+    "recall_target": 0.8,
+    "status": "HIGH_VALUE",
+    "description": "PRIMARY KPI — if this improves, system improves"
+  },
+  "boundary": {
+    "n": 1033,
+    "n_wrong": 218,
+    "n_correct": 815,
+    "accept_rate": 0.789,
+    "wrong_rate": 0.211,
+    "status": "STABLE",
+    "description": "STABILITY CHECK — mostly correct, do not optimize"
+  },
+  "global": {
+    "n_labeled": 1086,
+    "n_wrong": 263,
+    "n_correct": 823,
+    "overall_wrong_rate": 0.2422,
+    "note": "Global metrics are NOT decision drivers — see manifold-specific KPIs above"
+  },
+  "distribution": {
+    "overconfidence_pct": 0.0175,
+    "contradiction_pct": 0.0313,
+    "boundary_pct": 0.9512
+  },
+  "computed_at": "2026-04-20T02:54:22.769388+00:00",
+  "version": "v2.5.1"
+}

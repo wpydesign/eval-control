@@ -1,17 +1,21 @@
 #!/usr/bin/env python3
 """
-refresh_acquisition.py — Full acquisition cycle: retrain → adapt → refresh [v2.3.0]
+refresh_acquisition.py — Manifold-level acquisition refresh cycle [v2.5.1]
 
-This is the single entry point that closes the data flywheel loop:
+v2.5.1: Updated to operate at the manifold level, not global level.
 
-    1. Retrain failure predictor with new labels
-    2. Adapt channel weights based on per-channel efficiency
-    3. Refresh uncertainty queue + blind-spot queue
-    4. Rebuild acquisition policy with new weights
-    5. Report new AUC, weight changes, and next-priority samples
+Cycle:
+    1. Retrain contradiction head ONLY (not unified model)
+    2. Adapt manifold weights (contradiction-primary KPI)
+    3. Refresh queues (uncertainty + blind-spot)
+    4. Rebuild acquisition with manifold-aware allocation
+    5. Report manifold KPIs (not global AUC)
+
+Key change: retraining now targets the contradiction manifold specifically,
+not the unified predictor. The contradiction head is the only learnable surface.
 
 Usage:
-    python scripts/refresh_acquisition.py                # full cycle
+    python scripts/refresh_acquisition.py                # full manifold cycle
     python scripts/refresh_acquisition.py --skip-retrain  # only adapt + refresh
     python scripts/refresh_acquisition.py --budget 50     # custom budget
 """
@@ -52,35 +56,25 @@ def main():
     print("  ACQUISITION FLYWHEEL — FULL REFRESH CYCLE")
     print("=" * 65)
 
-    # Step 1: Retrain (if not skipped)
+    # Step 1: Retrain contradiction head (v2.5.1: manifold-level)
     if not skip_retrain:
-        print("\n--- Step 1: Retrain failure predictor ---")
-        from predict_failure import FailurePredictor
-        predictor = FailurePredictor()
-        if predictor.is_loaded:
-            # Record pre-retrain AUC
-            pre_auc = predictor.metadata.get("metrics", {}).get("auc", "N/A")
-            print(f"  Pre-retrain AUC: {pre_auc}")
-
-            print("  Retraining...")
-            ok = predictor.retrain()
-            if ok:
-                post_auc = predictor.metadata.get("metrics", {}).get("auc", "N/A")
-                print(f"  Post-retrain AUC: {post_auc}")
-                delta = "IMPROVED" if (isinstance(pre_auc, (int, float)) and
-                                       isinstance(post_auc, (int, float)) and
-                                       post_auc > pre_auc) else "stable"
-                print(f"  Status: {delta}")
-            else:
-                print("  Retrain failed — continuing with existing model")
-        else:
-            print("  No model loaded — skipping retrain")
+        print("\n--- Step 1: Retrain contradiction head (manifold-level) ---")
+        try:
+            sys.path.insert(0, SCRIPTS)
+            from manifold_classifier import main as classify_main
+            old_argv = sys.argv
+            sys.argv = ["manifold_classifier.py", "--retrain"]
+            classify_main()
+            sys.argv = old_argv
+            print("  Contradiction head retrained")
+        except Exception as e:
+            print(f"  Retrain failed: {e}")
     else:
         print("\n--- Step 1: Retrain SKIPPED ---")
 
-    # Step 2: Adapt weights
-    print("\n--- Step 2: Adapt channel weights ---")
-    from acquisition_policy import update_weights_cli, load_channel_performance
+    # Step 2: Adapt manifold weights
+    print("\n--- Step 2: Adapt manifold weights ---")
+    from acquisition_policy import update_weights_cli
     weights = update_weights_cli()
 
     # Step 3: Refresh uncertainty queue
@@ -95,22 +89,31 @@ def main():
     if ok_bs:
         print("  Blind-spot queue refreshed")
 
-    # Step 5: Rebuild acquisition policy
-    print("\n--- Step 5: Rebuild acquisition policy ---")
+    # Step 5: Rebuild acquisition policy (manifold-aware)
+    print("\n--- Step 5: Rebuild manifold-aware acquisition ---")
     sys.argv = ["acquisition_policy.py", "--budget", str(budget), "--show", "15"]
     ok_acq = run_step("acquisition", "acquisition_policy", "main")
-    sys.argv = [sys.argv[0]]  # reset
+    sys.argv = [sys.argv[0]]
+
+    # Step 6: Report manifold KPIs
+    print("\n--- Step 6: Manifold KPI check ---")
+    try:
+        from manifold_kpi import compute_manifold_kpis, print_kpis
+        kpis = compute_manifold_kpis()
+        print_kpis(kpis)
+    except Exception as e:
+        print(f"  KPI check failed: {e}")
 
     # Summary
     print(f"\n{'='*65}")
-    print("  FLYWHEEL CYCLE COMPLETE")
+    print("  MANIFOLD-LEVEL FLYWHEEL CYCLE COMPLETE")
     print(f"{'='*65}")
-    print(f"  Retrain:           {'skipped' if skip_retrain else 'executed'}")
-    print(f"  Weight adaptation:  done")
+    print(f"  Retrain:           {'skipped' if skip_retrain else 'contradiction head only'}")
+    print(f"  Weight adaptation:  manifold-aware (cd-primary)")
     print(f"  Uncertainty queue:  {'refreshed' if ok_unc else 'failed'}")
     print(f"  Blind-spot queue:   {'refreshed' if ok_bs else 'failed'}")
-    print(f"  Acquisition policy: {'rebuilt' if ok_acq else 'failed'}")
-    print(f"\n  Loop: label from acquisition_queue → retrain → refresh → repeat")
+    print(f"  Acquisition policy: {'rebuilt (manifold-aware)' if ok_acq else 'failed'}")
+    print(f"\n  Loop: label contradiction -> retrain cd head -> check KPIs -> repeat")
 
 
 if __name__ == "__main__":

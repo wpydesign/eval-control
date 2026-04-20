@@ -1,58 +1,52 @@
 #!/usr/bin/env python3
 """
-acquisition_policy.py — Adaptive data acquisition controller [v2.3.0]
+acquisition_policy.py — Manifold-aware data acquisition controller [v2.5.1]
 
-This is the control system that decides WHAT REALITY TO ASK FOR NEXT.
+v2.5.1: REWRITTEN from channel-based to manifold-based allocation.
 
-It is NOT a data merger. It is an epistemic budget optimizer that allocates
-finite labeling resources across three ORTHOGONAL failure manifolds:
+The old system allocated by channel (uncertainty/blind_spot/cost).
+That is now outdated. The new system allocates by FAILURE MANIFOLD:
 
-  1. UNCERTAINTY POLICY (boundary exploration)
-     - Selects: high entropy / boundary samples
-     - Fixes: decision boundary fuzziness
-     - Signal: 1 - uncertainty_score (rank-normalized)
-     - Proven: ~3-10x label efficiency vs random
+  1. CONTRADICTION MANIFOLD (primary target — the gold vein)
+     - Budget: 60-70% of all labels
+     - Why: AUC=0.88, 76.5% wrong rate — only true predictive surface
+     - Goal: compress this manifold by filling in the learned surface
+     - Source: disagreement cases, v4-v1 divergent samples
 
-  2. BLIND-SPOT POLICY (overconfidence exposure)
-     - Selects: high kappa x gap_norm (structurally unstable confidence)
-     - Fixes: calibration tail failures, confident false negatives
-     - Signal: kappa_v4 x |S_v4 - S_v1| / max(S_v4, eps)
-     - Proven: orthogonal to risk_score (rho=+0.23), AUC=0.57
+  2. BLIND-SPOT MANIFOLD (monitoring, not learning)
+     - Budget: 20-30% of all labels
+     - Why: 100% wrong rate — detection problem, already locked down
+     - Goal: discover new blind spots, NOT retrain on known ones
+     - Source: high kappa x gap_norm proxy, overconfidence signals
 
-  3. COST POLICY (impact prioritization)
-     - Selects: high-impact / high-consequence domains
-     - Fixes: real-world relevance weighting
-     - Signal: failure_mode severity x is_high_impact
+  3. BOUNDARY MANIFOLD (minimal — do NOT waste signal here)
+     - Budget: 10-20% of all labels (HARD CAP)
+     - Why: 21.1% wrong rate — mostly correct, irreducible uncertainty
+     - Goal: stability check only, NOT optimization
+     - Source: high-entropy samples in uncertainty zone
 
-Architecture (v2.3.0):
-  - Channel-forced allocation: each policy gets guaranteed slots
-  - Adaptive weighting: alpha/beta/gamma evolve based on realized outcomes
-  - Closed loop: label -> retrain -> measure per-channel efficiency -> rebalance
+Design principle:
+  - Shift from uncertainty sampling -> failure-manifold targeting
+  - Contradiction gets the most resources because that is where gains exist
+  - Boundary is explicitly capped to prevent wasting labels on noise
+  - Blind-spot is discovery-oriented (monitor only, no learning)
 
-Combined acquisition function:
-    score = alpha * uncertainty_norm + beta * blind_spot_norm + gamma * cost_norm
-
-Adaptive weight update:
-    After each retrain cycle, measure per-channel label efficiency:
-        efficiency(channel) = (fraction of labels that were is_wrong=1) / (budget allocated)
-    Then: weight_new(channel) = weight_old * (1 + efficiency_gain)
-    Normalized to sum to 1.0.
-
-This ensures:
-    - Channels that find more real failures get more budget next cycle
-    - No channel can be reduced below MIN_WEIGHT (exploration floor)
-    - System self-corrects if one channel becomes saturated
+Adaptive weight update (v2.5.1):
+  - Measures per-MANIFOLD label efficiency (not per-channel)
+  - Contradiction recall is the PRIMARY KPI for weight adaptation
+  - Overconfidence capture rate is a STABILITY CHECK (should be ~100%)
+  - Boundary accept rate is IGNORED for weight purposes
 
 Outputs:
-    logs/acquisition_queue.jsonl       - definitive "label this next" list
-    logs/acquisition_budget.json       - budget allocation + adaptive weights
-    logs/channel_performance.jsonl     - per-channel outcome tracking
+    logs/acquisition_queue.jsonl       - manifold-tagged "label this next" list
+    logs/acquisition_budget.json       - manifold allocation + adaptive weights
+    logs/channel_performance.jsonl     - per-manifold outcome tracking
 
 Usage:
     python scripts/acquisition_policy.py                # compute full queue
     python scripts/acquisition_policy.py --budget 50     # allocate 50 labels
     python scripts/acquisition_policy.py --show 20       # show top 20
-    python scripts/acquisition_policy.py --update-weights # adaptive reweight
+    python scripts/acquisition_policy.py --update-weights # manifold-aware reweight
 """
 
 import json
@@ -75,18 +69,38 @@ REWARD_BUFFER_PATH = os.path.join(BASE, "logs", "reward_buffer.jsonl")
 # On first cycle (no t-1 data), weights stay at defaults.
 ATTRIBUTION_LAG = 1
 
-# Default policy weights
+# Manifold-based allocation (v2.5.1)
+# Replaces channel-based weights with manifold-targeted allocation
+DEFAULT_MANIFOLD_WEIGHTS = {
+    "contradiction": 0.65,   # primary target — the gold vein
+    "blind_spot": 0.25,       # discovery (monitor only, not learning)
+    "boundary": 0.10,         # minimal — capped, do not optimize
+}
+
+# Legacy channel weights (kept for backward compatibility)
 DEFAULT_WEIGHTS = {
     "uncertainty": 0.50,
     "blind_spot": 0.35,
     "cost": 0.15,
 }
 
+# Manifold-specific allocation constraints
+MIN_MANIFOLD_WEIGHT = {
+    "contradiction": 0.50,   # never below 50%
+    "blind_spot": 0.15,       # keep discovery alive
+    "boundary": 0.05,         # floor, but effectively capped
+}
+MAX_MANIFOLD_WEIGHT = {
+    "contradiction": 0.75,   # can go up to 75%
+    "blind_spot": 0.35,       # discovery cap
+    "boundary": 0.20,         # HARD CAP — never more than 20%
+}
+
 # Adaptive constraints
-MIN_WEIGHT = 0.10       # no channel below 10% (exploration floor)
-MAX_WEIGHT = 0.60       # no channel above 60% (diversity cap)
-LEARNING_RATE = 0.3     # how fast weights adapt (0=static, 1=fully reactive)
-SMOOTHING = 0.7         # exponential smoothing for weight updates
+MIN_WEIGHT = 0.10
+MAX_WEIGHT = 0.60
+LEARNING_RATE = 0.3
+SMOOTHING = 0.7
 
 # Cost severity mapping
 COST_SEVERITY = {
@@ -224,128 +238,135 @@ def compute_acquisition_scores(uncertainty_queue, mining_queue, acquired_ids):
     return results
 
 
-def allocate_forced_channels(score_map, budget, weights):
-    """Channel-forced allocation: each policy gets guaranteed slots.
+def assign_manifold_estimate(score_entry):
+    """Estimate which manifold a candidate belongs to based on available signals.
 
-    This is the critical design choice:
-    - Each channel independently selects its top-N samples
-    - Budget is split: n_ch = int(budget * weight_ch)
-    - De-duplicate: if a sample appears in multiple channels, keep it in the
-      channel where it ranks highest (most unique value)
-    - Remaining budget goes to unified-score ranking
-
-    This guarantees no single channel can dominate the acquisition queue.
+    Uses observable features at acquisition time:
+    - disagreement/divergence signal → contradiction
+    - high blind_spot proxy + moderate confidence → blind_spot
+    - everything else → boundary (default)
     """
-    # Sort each channel independently
-    by_uncertainty = sorted(
-        score_map.values(), key=lambda x: x["uncertainty_norm"], reverse=True
+    bs_raw = score_entry.get("blind_spot_raw", 0.0)
+    unc_raw = score_entry.get("uncertainty_raw", 0.0)
+    cost_raw = score_entry.get("cost_raw", 0.0)
+    risk = score_entry.get("risk_score", 0.0)
+
+    # Proxy for disagreement: high uncertainty + moderate risk + high blind_spot
+    if bs_raw > 0.3 and risk > 0.1:
+        return "blind_spot"
+    if unc_raw > 0.5 and risk < 0.3:
+        return "boundary"
+    if unc_raw > 0.3 and risk > 0.15:
+        return "contradiction"
+    # Default: boundary (most samples live here)
+    return "boundary"
+
+
+def allocate_manifold_targets(score_map, budget, manifold_weights):
+    """Manifold-targeted allocation (v2.5.1).
+
+    Replaces channel-based allocation with manifold-based targeting:
+    - contradiction gets 60-70% of budget (primary target)
+    - blind_spot gets 20-30% (discovery only)
+    - boundary gets 10-20% HARD CAP (minimal)
+
+    Each manifold independently selects its top-N candidates based on
+    manifold-relevant features, then de-duplicates.
+    """
+    # Assign manifold estimates to all candidates
+    for qid, s in score_map.items():
+        s["estimated_manifold"] = assign_manifold_estimate(s)
+
+    # Split candidates by estimated manifold
+    by_manifold = {"contradiction": [], "blind_spot": [], "boundary": []}
+    for qid, s in score_map.items():
+        m = s["estimated_manifold"]
+        by_manifold[m].append(s)
+
+    # Calculate slot allocations per manifold
+    n_cd = max(1, int(budget * manifold_weights["contradiction"]))
+    n_bs = max(1, int(budget * manifold_weights["blind_spot"]))
+    n_bd = max(1, int(budget * manifold_weights["boundary"]))
+
+    # HARD CAP: boundary never exceeds 20% of budget
+    max_bd = max(1, int(budget * MAX_MANIFOLD_WEIGHT["boundary"]))
+    n_bd = min(n_bd, max_bd)
+
+    # Phase 1: fill each manifold's quota from its own ranking
+    # Sort by manifold-relevant signals
+    # Contradiction: prioritize high-risk + high-uncertainty (disagreement signal)
+    by_manifold["contradiction"].sort(
+        key=lambda x: x.get("risk_score", 0) * 0.5 + x.get("uncertainty_norm", 0) * 0.5,
+        reverse=True
     )
-    by_blind_spot = sorted(
-        score_map.values(), key=lambda x: x["blind_spot_norm"], reverse=True
+    # Blind spot: prioritize high proxy score (kappa x gap_norm)
+    by_manifold["blind_spot"].sort(
+        key=lambda x: x.get("blind_spot_norm", 0), reverse=True
     )
-    by_cost = sorted(
-        score_map.values(), key=lambda x: x["cost_norm"], reverse=True
+    # Boundary: sort by uncertainty (highest first for stability check)
+    by_manifold["boundary"].sort(
+        key=lambda x: x.get("uncertainty_norm", 0), reverse=True
     )
 
-    # Calculate slot allocations
-    n_unc = max(1, int(budget * weights["uncertainty"]))
-    n_bs = max(1, int(budget * weights["blind_spot"]))
-    n_cost = max(1, int(budget * weights["cost"]))
-
-    # Phase 1: fill each channel's quota from its own ranking
-    # Track which channel "owns" each sample
-    channel_slots = {"uncertainty": {}, "blind_spot": {}, "cost": {}}
-
-    # Uncertainty channel
     assigned = set()
-    for s in by_uncertainty:
-        if len(channel_slots["uncertainty"]) >= n_unc:
-            break
-        qid = s["query_id"]
-        if qid not in assigned:
-            channel_slots["uncertainty"][qid] = s
-            assigned.add(qid)
+    manifold_slots = {"contradiction": {}, "blind_spot": {}, "boundary": {}}
 
-    # Blind-spot channel
-    for s in by_blind_spot:
-        if len(channel_slots["blind_spot"]) >= n_bs:
-            break
-        qid = s["query_id"]
-        if qid not in assigned:
-            channel_slots["blind_spot"][qid] = s
-            assigned.add(qid)
+    for manifold_name, quota in [("contradiction", n_cd), ("blind_spot", n_bs), ("boundary", n_bd)]:
+        for s in by_manifold[manifold_name]:
+            if len(manifold_slots[manifold_name]) >= quota:
+                break
+            qid = s["query_id"]
+            if qid not in assigned:
+                manifold_slots[manifold_name][qid] = s
+                assigned.add(qid)
 
-    # Cost channel
-    for s in by_cost:
-        if len(channel_slots["cost"]) >= n_cost:
-            break
-        qid = s["query_id"]
-        if qid not in assigned:
-            channel_slots["cost"][qid] = s
-            assigned.add(qid)
-
-    # Phase 2: compute unified score for ALL remaining samples
+    # Phase 2: fill remaining from unified ranking (manifold-weighted score)
     remaining = []
     for qid, s in score_map.items():
         if qid not in assigned:
-            unified = (weights["uncertainty"] * s["uncertainty_norm"]
-                       + weights["blind_spot"] * s["blind_spot_norm"]
-                       + weights["cost"] * s["cost_norm"])
-            s["acquisition_score"] = round(unified, 6)
-            # Dominant policy for remaining
-            contributions = {
-                "uncertainty": weights["uncertainty"] * s["uncertainty_norm"],
-                "blind_spot": weights["blind_spot"] * s["blind_spot_norm"],
-                "cost": weights["cost"] * s["cost_norm"],
-            }
-            s["dominant_policy"] = max(contributions, key=contributions.get)
+            m = s["estimated_manifold"]
+            w = manifold_weights.get(m, 0.1)
+            s["acquisition_score"] = round(w, 6)
             remaining.append(s)
 
-    remaining.sort(key=lambda x: x["acquisition_score"], reverse=True)
-
-    # Fill remaining budget from unified score
+    remaining.sort(key=lambda x: manifold_weights.get(x["estimated_manifold"], 0.1), reverse=True)
     leftover = budget - len(assigned)
     for s in remaining[:max(0, leftover)]:
         assigned.add(s["query_id"])
 
-    # Build final allocation: channel slots + remaining
+    # Build final allocation
     final = []
-    for channel_name, slots in channel_slots.items():
+    for manifold_name, slots in manifold_slots.items():
         for qid, s in slots.items():
             s_copy = dict(s)
-            s_copy["assigned_channel"] = channel_name
-            s_copy["dominant_policy"] = channel_name
-            # Unified score for ranking within final list
-            unified = (weights["uncertainty"] * s["uncertainty_norm"]
-                       + weights["blind_spot"] * s["blind_spot_norm"]
-                       + weights["cost"] * s["cost_norm"])
-            s_copy["acquisition_score"] = round(unified, 6)
+            s_copy["assigned_manifold"] = manifold_name
+            s_copy["assigned_channel"] = f"manifold_{manifold_name}"
+            s_copy["dominant_policy"] = manifold_name
+            s_copy["acquisition_score"] = round(manifold_weights.get(manifold_name, 0.1), 6)
             final.append(s_copy)
 
-    # Add remaining (unified-score) samples
     for s in remaining[:max(0, leftover)]:
         s_copy = dict(s)
-        s_copy["assigned_channel"] = "unified_fallback"
+        s_copy["assigned_manifold"] = s_copy.get("estimated_manifold", "boundary")
+        s_copy["assigned_channel"] = f"manifold_{s_copy.get('estimated_manifold', 'boundary')}"
         final.append(s_copy)
 
-    # Sort by acquisition_score for final presentation
     final.sort(key=lambda x: x["acquisition_score"], reverse=True)
 
-    # Compute stats
-    channel_counts = {"uncertainty": 0, "blind_spot": 0, "cost": 0,
-                      "unified_fallback": 0}
+    manifold_counts = {"contradiction": 0, "blind_spot": 0, "boundary": 0}
     for s in final:
-        ch = s["assigned_channel"]
-        channel_counts[ch] = channel_counts.get(ch, 0) + 1
+        m = s.get("assigned_manifold", "boundary")
+        manifold_counts[m] = manifold_counts.get(m, 0) + 1
 
     return {
         "total_budget": budget,
         "allocation": {
-            "uncertainty": n_unc,
+            "contradiction": n_cd,
             "blind_spot": n_bs,
-            "cost": n_cost,
+            "boundary": n_bd,
         },
-        "channel_counts": channel_counts,
+        "manifold_counts": manifold_counts,
+        "channel_counts": manifold_counts,  # backward compat
         "samples": final,
     }
 
@@ -632,16 +653,20 @@ def main():
         print("\nERROR: No queues found. Run active_learning.py and failure_mining.py first.")
         sys.exit(1)
 
-    # Load weights
+    # Load manifold weights (v2.5.1: primary) with legacy fallback
+    manifold_weights = dict(DEFAULT_MANIFOLD_WEIGHTS)
     weights = dict(DEFAULT_WEIGHTS)
     if os.path.exists(ACQUISITION_BUDGET_PATH):
         try:
             with open(ACQUISITION_BUDGET_PATH) as f:
                 saved = json.load(f)
+            # Prefer manifold weights if available
+            if "manifold_weights" in saved:
+                manifold_weights = saved["manifold_weights"]
             if "weights" in saved:
                 weights = saved["weights"]
-                print(f"  Weights (adaptive):  unc={weights['uncertainty']:.3f}, "
-                      f"bs={weights['blind_spot']:.3f}, cost={weights['cost']:.3f}")
+            print(f"  Manifold weights:  cd={manifold_weights['contradiction']:.0%}, "
+                  f"bs={manifold_weights['blind_spot']:.0%}, bd={manifold_weights['boundary']:.0%}")
         except (json.JSONDecodeError, OSError):
             pass
 
@@ -656,40 +681,40 @@ def main():
         print("  No candidates remaining (all labeled or no queues).")
         return
 
-    # Step 3: channel-forced allocation
+    # Step 3: manifold-targeted allocation (v2.5.1)
     print(f"\nAllocating epistemic budget ({budget} labels)...")
-    alloc = allocate_forced_channels(score_map, budget, weights)
+    alloc = allocate_manifold_targets(score_map, budget, manifold_weights)
     samples = alloc["samples"]
 
     # Report
-    cc = alloc["channel_counts"]
+    mc = alloc["manifold_counts"]
     print(f"\n{'='*65}")
-    print(f"  ADAPTIVE DATA ACQUISITION POLICY")
+    print(f"  MANIFOLD-AWARE DATA ACQUISITION [v2.5.1]")
     print(f"{'='*65}")
     print(f"  Candidate pool:       {len(score_map)} unlabeled samples")
     print(f"  Epistemic budget:     {alloc['total_budget']} labels")
-    print(f"  Policy weights:       unc={weights['uncertainty']:.0%}  "
-          f"bs={weights['blind_spot']:.0%}  cost={weights['cost']:.0%}")
-    print(f"  Forced allocation:    unc={alloc['allocation']['uncertainty']}  "
-          f"bs={alloc['allocation']['blind_spot']}  "
-          f"cost={alloc['allocation']['cost']}")
-    print(f"  Channel fill:         {cc}")
+    print(f"  Manifold weights:     cd={manifold_weights['contradiction']:.0%}  "
+          f"bs={manifold_weights['blind_spot']:.0%}  bd={manifold_weights['boundary']:.0%}")
+    print(f"  Manifold allocation:  cd={alloc['allocation']['contradiction']}  "
+          f"bs={alloc['allocation']['blind_spot']}  bd={alloc['allocation']['boundary']}")
+    print(f"  Manifold fill:        {mc}")
+    print(f"  Boundary cap:        {MAX_MANIFOLD_WEIGHT['boundary']:.0%} (hard)")
 
-    # Show top-N with channel tags
+    # Show top-N with manifold tags
     top_n = min(show_n, len(samples))
     print(f"\n  TOP {top_n} SAMPLES TO LABEL NEXT:")
-    print(f"  {'#':>3s} {'score':>7s} {'channel':>10s} {'risk':>6s} "
+    print(f"  {'#':>3s} {'score':>7s} {'manifold':>14s} {'risk':>6s} "
           f"{'unc':>5s} {'bs':>5s} {'cost':>5s} {'prompt':>35s}")
     print(f"  {'-'*85}")
     for i, s in enumerate(samples[:top_n]):
         prompt_preview = s["prompt"][:35].replace("\n", " ")
-        ch = s["assigned_channel"][:8]
-        print(f"  {i+1:>3d} {s['acquisition_score']:>7.4f} {ch:>10s} "
+        m = s.get("assigned_manifold", s.get("assigned_channel", "?"))[:12]
+        print(f"  {i+1:>3d} {s['acquisition_score']:>7.4f} {m:>14s} "
               f"{s['risk_score']:>6.3f} {s['uncertainty_norm']:>5.2f} "
               f"{s['blind_spot_norm']:>5.2f} {s['cost_norm']:>5.2f} "
               f"{prompt_preview:>35s}")
 
-    # Write acquisition queue
+    # Write acquisition queue (with manifold tags)
     os.makedirs(os.path.dirname(ACQUISITION_QUEUE_PATH), exist_ok=True)
     with open(ACQUISITION_QUEUE_PATH, "w") as f:
         for i, s in enumerate(samples):
@@ -698,6 +723,8 @@ def main():
                 "prompt": s["prompt"],
                 "priority": i + 1,
                 "acquisition_score": s["acquisition_score"],
+                "assigned_manifold": s.get("assigned_manifold", "boundary"),
+                "estimated_manifold": s.get("estimated_manifold", "boundary"),
                 "assigned_channel": s["assigned_channel"],
                 "uncertainty_norm": s["uncertainty_norm"],
                 "blind_spot_norm": s["blind_spot_norm"],
@@ -713,10 +740,13 @@ def main():
     # Save budget state
     budget_state = {
         "timestamp": datetime.now(timezone.utc).isoformat(),
-        "weights": weights,
+        "version": "v2.5.1",
+        "allocation_mode": "manifold_aware",
+        "manifold_weights": manifold_weights,
+        "legacy_channel_weights": weights,  # kept for compat
         "budget": budget,
         "allocation": alloc["allocation"],
-        "channel_counts": cc,
+        "manifold_counts": mc,
         "n_candidates": len(score_map),
         "n_labeled": len(acquired_ids),
     }
@@ -725,7 +755,7 @@ def main():
 
     print(f"\n  Queue ({len(samples)} samples) -> {ACQUISITION_QUEUE_PATH}")
     print(f"  Budget state -> {ACQUISITION_BUDGET_PATH}")
-    print(f"\n  Loop: label these -> add to dataset -> retrain -> --update-weights")
+    print(f"\n  Loop: label contradiction -> retrain cd head -> check recall -> repeat")
 
 
 if __name__ == "__main__":

@@ -1,17 +1,30 @@
 #!/usr/bin/env python3
 """
-manifold_predict.py — Runtime decomposed failure manifold predictor [v2.5.0]
+manifold_predict.py — Manifold-level control and intervention [v2.5.1]
 
-Replaces the unified FailurePredictor with a three-manifold decomposition:
-  Input features → ManifoldRouter → Per-manifold head → P(is_wrong)
+Decomposed failure manifold predictor with manifold-specific control policies.
+Each failure manifold has its own predictive surface AND its own action policy.
 
-Each failure manifold has its own predictive surface:
-  1. Overconfidence (blind spot): P(wrong | overconfidence) = 1.0 (detection)
-  2. Contradiction: LR classifier, AUC=0.88 (structural disagreement)
-  3. Boundary: LR classifier, AUC=0.71 (standard uncertainty)
+Three manifolds, three control regimes:
+  1. Overconfidence (blind spot): DETERMINISTIC FAILURE
+     - P(wrong | overconfidence) = 1.0 (proven 100% wrong rate)
+     - Action: always force_reject_or_escalate, risk_score = 1.0
+     - No model. No thresholds. No discussion.
 
-The routing uses both the learned multinomial LR router and rule-based
-fallbacks for signals that the router may miss (e.g., explicit disagreement).
+  2. Contradiction: LEARNABLE SURFACE (the gold vein)
+     - AUC=0.88, 76.5% wrong rate — the only true predictive surface
+     - Action: escalate if P(wrong) > 0.6, shadow_review if > 0.3
+     - Pushed harder than global system — this is where mistakes concentrate
+
+  3. Boundary: IRREDUCIBLE UNCERTAINTY
+     - AUC=0.71, 21.1% wrong rate — mostly correct ambiguity
+     - Action: allow_with_light_review only
+     - Do NOT optimize here — optimizing boundary is noise
+
+Key design principle (v2.5.1):
+  - Overconfidence → ELIMINATED (rule)
+  - Contradiction → COMPRESSED (learned surface)
+  - Boundary → ACCEPTED (irreducible)
 
 Usage:
   from scripts.manifold_predict import ManifoldPredictor
@@ -22,19 +35,10 @@ Usage:
   #     "risk_score": 0.23,
   #     "manifold": "boundary",
   #     "manifold_confidence": 0.85,
-  #     "per_manifold_scores": {
-  #         "overconfidence": 0.02,
-  #         "contradiction": 0.05,
-  #         "boundary": 0.93,
-  #     },
-  #     "action": "shadow_review",
+  #     "per_manifold_scores": {...},
+  #     "action": "allow_with_light_review",
   #     "has_model": True,
   # }
-
-Thresholds:
-  - overconfidence manifold → always escalate (100% wrong rate)
-  - contradiction manifold → escalate if P(wrong) > 0.5
-  - boundary manifold → standard cost-optimized threshold (0.35)
 """
 
 import json
@@ -48,12 +52,15 @@ BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MANIFOLD_MODEL_PATH = os.path.join(BASE, "model", "manifold_models.pkl")
 MANIFOLD_REPORT_PATH = os.path.join(BASE, "model", "manifold_report.json")
 
-# Per-manifold decision thresholds (reflecting failure geometry)
-OVERCONFIDENCE_THRESHOLD = 0.01  # anything routed here is almost certainly wrong
-CONTRADICTION_THRESHOLD = 0.50   # 69% base rate — moderate threshold
-BOUNDARY_THRESHOLD = 0.35        # cost-optimized from training
+# Per-manifold decision thresholds (v2.5.1: manifold-specific control)
+# Overconfidence: LOCKED DOWN — deterministic failure, no thresholds
+# Contradiction: AGGRESSIVE — pushed harder, this is the gold vein
+CONTRADICTION_ESCALATE = 0.60    # escalate if P(wrong) > 0.6
+CONTRADICTION_REVIEW = 0.30      # shadow_review if P(wrong) > 0.3
+# Boundary: DOWNGRADED — light review only, do not waste signal here
+BOUNDARY_LIGHT_REVIEW = 0.50    # light review if P(wrong) > 0.5
 
-# Global risk thresholds for backward compatibility
+# Global thresholds (deprecated — manifold-specific thresholds are primary)
 RISK_REVIEW_THRESHOLD = 0.20
 RISK_ESCALATE_THRESHOLD = 0.40
 
@@ -314,29 +321,30 @@ class ManifoldPredictor:
             }
 
     def _determine_action(self, risk_score: float, manifold: str) -> str:
-        """Determine action based on risk score and manifold geometry.
+        """Determine action based on manifold-specific control policy.
 
-        Each manifold has its own decision threshold reflecting its failure rate.
+        v2.5.1: Each manifold has its OWN action regime.
+        No global thresholds. No discussion.
         """
         if manifold == "overconfidence":
-            # 100% wrong rate — always escalate
-            return "escalate"
+            # HARD-ROUTED: deterministic failure
+            # 100% wrong rate → always force reject or escalate
+            # No model, no thresholds, no probability needed
+            return "force_reject_or_escalate"
         elif manifold == "contradiction":
-            # 69% wrong rate — escalate if P(wrong) > contradiction threshold
-            if risk_score >= CONTRADICTION_THRESHOLD:
+            # EXPLOIT: the gold vein — pushed harder than global system
+            # 76.5% base wrong rate, AUC=0.88
+            if risk_score >= CONTRADICTION_ESCALATE:
                 return "escalate"
-            elif risk_score >= CONTRADICTION_THRESHOLD * 0.6:
+            elif risk_score >= CONTRADICTION_REVIEW:
                 return "shadow_review"
-            return "none"
+            return "allow"
         else:
-            # Boundary: standard cost-optimized threshold
-            if risk_score >= RISK_ESCALATE_THRESHOLD:
-                return "escalate"
-            elif risk_score >= BOUNDARY_THRESHOLD:
-                return "shadow_review"
-            elif risk_score >= RISK_REVIEW_THRESHOLD:
-                return "shadow_review"
-            return "none"
+            # DOWNGRADED: irreducible uncertainty — mostly correct
+            # Do NOT waste signal on boundary optimization
+            if risk_score >= BOUNDARY_LIGHT_REVIEW:
+                return "allow_with_light_review"
+            return "allow"
 
     def predict_batch(self, results: list) -> list:
         """Predict risk for a batch of evaluation results."""
@@ -383,10 +391,11 @@ class ManifoldPredictor:
                     if n1 != n2:
                         print(f"    {n1} <-> {n2}: {d:.4f}")
 
-        print(f"\n  [MANIFOLD] Decision thresholds:")
-        print(f"    Overconfidence: always escalate (100% wrong)")
-        print(f"    Contradiction:  escalate if P(wrong) >= {CONTRADICTION_THRESHOLD}")
-        print(f"    Boundary:       escalate if P(wrong) >= {RISK_ESCALATE_THRESHOLD}, review >= {BOUNDARY_THRESHOLD}")
+        print(f"\n  [MANIFOLD] Control policies (v2.5.1):")
+        print(f"    Overconfidence: ALWAYS force_reject_or_escalate (locked down)")
+        print(f"    Contradiction:  escalate >= {CONTRADICTION_ESCALATE}, review >= {CONTRADICTION_REVIEW}")
+        print(f"    Boundary:       light_review >= {BOUNDARY_LIGHT_REVIEW} (downgraded, minimal)")
+        print(f"    Design: oc=ELIMINATED, cd=COMPRESSED, bd=ACCEPTED")
 
 
 def main():
