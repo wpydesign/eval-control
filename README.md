@@ -1,147 +1,130 @@
-# Shadow Evaluation + Outcome Audit for AI Decisions
+# Eval Control
 
-Every decision becomes:
+A self-correcting risk evaluation system for AI outputs.
 
-* what your system chose (π_E)
-* what a risk-aware policy would have chosen (π_S)
-* where they diverge
-* what actually happened later (outcome)
+It assigns every output a risk score and an action:
 
-This is a **decision accountability layer** that runs alongside any model, system, or evaluation pipeline.
+- **allow** — output is safe
+- **review** — output needs human attention
+- **escalate** — output is likely wrong, block or investigate
 
-It does not replace your model.
-It makes its decisions measurable.
+It learns from its mistakes. As you label more data, it gets better at catching failures without changing its core logic.
 
 ---
 
-## What this is
+## What problem does it solve?
 
-A lightweight system that turns AI or human decisions into a **closed feedback loop**:
+AI systems produce outputs that look correct but aren't. Traditional evaluation uses a single score (accuracy, F1, AUC) which hides three very different failure modes:
 
-```
-input decision
-   ↓
-π_E (existing system output)
-   ↓
-π_S (shadow risk policy: CVaR + irreversibility model)
-   ↓
-divergence detection
-   ↓
-real-world outcome logging
-```
+1. **Confidently wrong** — the system is certain, and it's wrong. Always.
+2. **Internally conflicted** — the system gives contradictory answers when asked differently. Most real failures live here.
+3. **Genuinely ambiguous** — even humans would disagree. Not much we can do.
 
-Over time, you get:
-
-* where your system is too risky
-* where it is too conservative
-* where evaluation scores fail to predict real cost
-* where "correct-looking" decisions fail in reality
+Eval Control separates these three modes and handles each differently. It does not try to optimize all of them equally — it targets the failures that actually matter.
 
 ---
 
-## Why it exists
+## Input / Output
 
-Most systems only do one thing:
+**Input**: an AI output (text) and its context
 
-> optimize a score
+**Output**: a risk assessment
 
-This system asks a different question:
+```json
+{
+  "input": "Explain quantum computing in one sentence.",
+  "output": {
+    "risk_score": 0.83,
+    "action": "escalate",
+    "manifold": "contradiction",
+    "manifold_confidence": 0.91,
+    "reason": "v4 accept, v1 reject — high confidence gap"
+  }
+}
+```
 
-> what happens if that decision is wrong?
-
-It exposes:
-
-* hidden tail risk
-* irreversibility blind spots
-* cost underestimation
-* evaluation-function overconfidence
+| Field | Meaning |
+|-------|---------|
+| `risk_score` | 0 = safe, 1 = likely wrong. Probability the output is incorrect. |
+| `action` | `allow`, `review`, or `escalate`. What should happen next. |
+| `manifold` | Which failure mode this falls into: `overconfidence`, `contradiction`, or `boundary`. |
+| `manifold_confidence` | How sure the system is about the manifold assignment. |
+| `reason` | Human-readable explanation of why this assessment was made. |
 
 ---
 
-## Core components
-
-### 1. π_S Risk Engine (frozen)
-
-* CVaR-based downside estimation
-* irreversibility weighting
-* cost-aware thresholding
-* deterministic decision boundary
-
-### 2. Shadow Mode
-
-Runs alongside any system:
-
-* compares π_E vs π_S
-* logs divergence
-* does not interfere with execution
-
-### 3. Outcome Capture
-
-When reality happens:
-
-* logs actual cost
-* compares predicted vs realized impact
-* preserves full decision context (immutable)
-
-### 4. Audit Trail
-
-Every case becomes:
+## How it works (simplified)
 
 ```
-decision → shadow evaluation → outcome → calibration error
+AI output comes in
+        |
+        v
+  Survival Engine (S = robustness score)
+  - Perturb the input in 5 ways
+  - Ask in 4 different contexts
+  - Measure how consistent the answers are
+        |
+        v
+  Manifold Router (which failure mode?)
+  - Overconfidence: always escalate (100% wrong rate)
+  - Contradiction: learn when to escalate (76.5% wrong rate)
+  - Boundary: allow (79% correct rate)
+        |
+        v
+  Risk Score + Action
+  - Per-manifold thresholds (not global)
+  - Contradiction pushed harder than boundary
+        |
+        v
+  Reference Router (stability check)
+  - Compare current decisions to frozen baseline
+  - Detect if the system is drifting
+  - Trigger controlled refresh if needed
 ```
-
-No aggregation required to be useful.
 
 ---
 
-## Minimal example
+## Where it can be used
 
-```python
-from sdk import RiskAuditClient
-
-client = RiskAuditClient(
-    base_url="http://localhost:8000",
-    api_key="your-key"
-)
-
-# your system's decision
-result = client.evaluate(
-    case_id="deploy-model-v3",
-    context="production model upgrade",
-    eval_scores={"v2": 0.81, "v3": 0.84}
-)
-
-print(result)
-```
-
-Later:
-
-```python
-client.log_outcome(
-    case_id="deploy-model-v3",
-    realized="failure",
-    cost_actual=2500000
-)
-```
-
-Now you can measure:
-
-> what was chosen vs what should have been chosen under risk
+| Use Case | How |
+|----------|-----|
+| **Production deployment gate** | Run before deploying a model. Block high-risk outputs. |
+| **Quality monitoring** | Sample production outputs, track risk scores over time. |
+| **Data acquisition** | Tell it which outputs to label next. It targets the most informative ones. |
+| **Model comparison** | Run both models through it. See which one fails more on contradiction cases. |
+| **Audit trail** | Every evaluation is logged. Full traceability from decision to outcome. |
 
 ---
 
-## What you get
+## Quick start
 
-* Decision traceability
-* Risk boundary visibility
-* Real-world calibration error
-* Divergence signals (π_E vs π_S)
-* Fault probes for failure classes
+### API server
 
----
+```bash
+pip install fastapi uvicorn
+uvicorn api:app --reload --port 8000
+```
 
-## Deployment
+### Evaluate an output
+
+```bash
+curl -X POST http://localhost:8000/survival-eval \
+  -H "Content-Type: application/json" \
+  -d '{"prompt": "What is the speed of light?"}'
+```
+
+Response:
+
+```json
+{
+  "query_id": "abc123",
+  "kappa": 0.92,
+  "S": 0.85,
+  "A": 1.09,
+  "decision": "accept",
+  "drift_warning": false
+}
+```
 
 ### Docker
 
@@ -149,98 +132,63 @@ Now you can measure:
 docker compose up --build
 ```
 
-### API
+---
 
-* POST `/evaluate`
-* POST `/outcome`
-* GET `/audit`
+## Architecture
 
-### SDK
+```
+core/                   <- frozen engine (this is stable)
+  api.py                <- HTTP interface
+  core.py               <- evaluation control layer (BSSI)
+  survival.py           <- survival scalar engine
+  shadow_mode.py        <- shadow evaluation
+  outcome_capture.py    <- outcome logging
+  sdk.py                <- client library
+  scripts/
+    manifold_predict.py     <- manifold decomposition
+    reference_router.py     <- drift + staleness tracking
+    acquisition_policy.py   <- data acquisition controller
+    manifold_kpi.py         <- KPI dashboard
+    ...
 
-Single-file client (`sdk.py`) — no dependencies.
+adapters/               <- domain-specific connectors (future)
+  README.md
+  (e.g., adapters/openai_eval.py, adapters/custom_llm.py)
+
+apps/                   <- user-facing products (future)
+  README.md
+  (e.g., apps/deployment_gate/, apps/quality_dashboard/)
+```
+
+**Core is frozen.** Adapters and apps depend on it but never modify it.
+
+---
+
+## Interface contract
+
+The system has ONE canonical JSON interface. See [INTERFACE.md](./INTERFACE.md) for the full spec.
+
+From now on:
+
+- Adapters must use this interface
+- Core does not change shape
+- New functionality goes in adapters or apps
 
 ---
 
 ## What this is NOT
 
-* not a scoring model
-* not an eval benchmark
-* not a fine-tuning tool
-* not a replacement for your system
+- Not a scoring model
+- Not an eval benchmark
+- Not a fine-tuning tool
+- Not a replacement for your AI system
 
 ---
-
-## What this actually is
-
-> A measurement layer for decision systems that finally connects prediction to consequence.
-
----
-
-## If you only understand one thing:
-
-This system does not try to be correct.
-
-It tries to make **incorrectness visible before it becomes expensive.**
-
----
-
-## Quick reference
-
-### Authentication
-
-```bash
-# Enable API keys (comma-separated)
-EVAL_CONTROL_API_KEYS="key1,key2" docker compose up --build
-
-# curl with auth
-curl -X POST http://localhost:8000/evaluate \
-  -H "Content-Type: application/json" \
-  -H "X-API-Key: key1" \
-  -d '{"case_id":"X","eval_scores":{"a":0.8,"b":0.9},"pi_E":"b"}'
-```
-
-Empty/unset `EVAL_CONTROL_API_KEYS` = auth disabled (local dev).
-
-### Configuration
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `EVAL_CONTROL_API_KEYS` | `""` | Comma-separated API keys. Empty = no auth. |
-| `EVAL_CONTROL_LOG_DIR` | `.` | Directory for shadow_log.jsonl and outcomes.jsonl. |
-| `EVAL_CONTROL_PORT` | `8000` | Server port. |
-
-### Full pipeline demo
-
-```bash
-python demo.py
-```
-
-### CLI
-
-```bash
-python shadow_mode.py                    # Interactive REPL
-python shadow_mode.py --dry-run           # Replay 20 regression cases
-python shadow_mode.py --file cases.jsonl  # Batch mode
-python outcome_capture.py log <id> --realized <success|failure> --notes "..."
-python outcome_capture.py show
-```
-
-### Local install (no Docker)
-
-```bash
-git clone https://github.com/wpydesign/eval-control.git
-cd eval-control
-pip install fastapi uvicorn
-uvicorn api:app --reload --port 8000
-```
 
 ## License
 
 MIT
 
-## Commercial Use
+## Contact
 
-If you are using eval-control in a production or commercial environment,
-I'd appreciate you reaching out.
-
-Contact: wpydesign@gmail.com
+wpydesign@gmail.com
