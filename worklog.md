@@ -49,3 +49,29 @@ Stage Summary:
 - **Only remaining leverage**: data selection (labeling strategy > calibration > model design)
 - **Next conceptual step**: adversarial label acquisition policy (force model to expose blind spots faster)
 - **Improvement hierarchy**: data > labeling strategy > calibration > model design
+
+---
+Task ID: 3
+Agent: main
+Task: v2.3.0 — adversarial data acquisition + adaptive channel weighting
+
+Work Log:
+- Searched 14 blind-spot proxy formulations to find one orthogonal to risk_score
+- Validated kappa × gap_norm (AUC=0.569, rho_risk=+0.226) as only truly orthogonal signal
+- Built scripts/failure_mining.py — blind-spot proxy scorer with validation
+- Built scripts/acquisition_policy.py — adaptive 3-channel optimizer with forced allocation
+- Built scripts/refresh_acquisition.py — full flywheel cycle (retrain → adapt → refresh → rebuild)
+- Integrated adaptive weight update into run_live_batch.py periodic retrain (every 5 batches)
+- Verified channel separation: uncertainty/blind_spot/cost all represented in output
+- Committed as eb8a6bc, tag v2.3.0-adversarial-acquisition
+
+Stage Summary:
+- **New files**: scripts/failure_mining.py, scripts/acquisition_policy.py, scripts/refresh_acquisition.py
+- **Modified files**: run_live_batch.py (+adaptive weight update in retrain cycle)
+- **New artifacts**: logs/failure_mining_queue.jsonl, logs/acquisition_queue.jsonl, logs/acquisition_budget.json
+- **Blind-spot proxy**: kappa × |S_v4 - S_v1| / max(S_v4, eps) — orthogonal to risk_score
+- **3-channel allocation**: uncertainty(50%) + blind_spot(35%) + cost(15%), forced slots
+- **Adaptive weights**: MIN_WEIGHT=0.10, MAX_WEIGHT=0.60, SMOOTHING=0.7, LR=0.3
+- **Complementary coverage**: proxy found 7 wrong cases risk_score missed
+- **System status**: complete in representation, incomplete in allocation optimization
+- **No changes to**: v4 scoring, predictor model, calibration, thresholds, survival.py
