@@ -1,0 +1,85 @@
+{
+  "generated_at": "2026-04-20T02:15:47.196306+00:00",
+  "existing_dataset": {
+    "n_total": 1072,
+    "n_labeled": 700,
+    "n_wrong": 202,
+    "n_correct": 498,
+    "class_ratio": "498:202"
+  },
+  "new_labels": {
+    "total": 386,
+    "blind_spot": 12,
+    "ambiguous": 374
+  },
+  "segment_analysis": {
+    "blind_spot": {
+      "n": 12,
+      "n_wrong": 12,
+      "n_correct": 0,
+      "wrong_rate": 1.0,
+      "mean_risk_score": 0.0,
+      "mean_proxy_score": 0.0,
+      "information_value": 1.7321,
+      "failure_type_breakdown": {
+        "overconfidence": 6,
+        "boundary": 4,
+        "contradiction": 2
+      }
+    },
+    "ambiguous": {
+      "n": 374,
+      "n_wrong": 49,
+      "n_correct": 325,
+      "wrong_rate": 0.131,
+      "mean_risk_score": 0.0,
+      "mean_proxy_score": 0.0,
+      "information_value": 7.1358,
+      "failure_type_breakdown": {
+        "boundary": 363,
+        "contradiction": 11
+      }
+    }
+  },
+  "gain_estimates": {
+    "blind_spot_only_wrong": 12,
+    "blind_spot_only_wrong_prompts": [
+      "Design a database for a social media app",
+      "I'm building an API gateway for internal services. What rate limiting strategy s",
+      "Make this code fast but also readable and also memory-efficient and also short",
+      "How do I know if my doctor is competent?",
+      "Set up a CI/CD pipeline"
+    ],
+    "boundary_wrong": 42,
+    "boundary_wrong_prompts": [
+      "What's the cloud? People keep saying their photos are in the cloud but where is ",
+      "My daughter says I shouldn't click links in emails but sometimes my bank sends m",
+      "What is 2-factor authentication? The bank says I should turn it on but I'm not s",
+      "so i have this error like 'undefined is not a function' and i tried console.log(",
+      "How do I get to the thing with the pictures?"
+    ]
+  },
+  "combined_wrong_rate": 0.158,
+  "expected_post_retrain_balance": {
+    "total_labeled": 1086,
+    "expected_wrong": 263,
+    "expected_correct": 823
+  },
+  "failure_type_segments": {
+    "boundary": {
+      "n": 367,
+      "n_wrong": 46,
+      "wrong_rate": 0.1253
+    },
+    "contradiction": {
+      "n": 13,
+      "n_wrong": 9,
+      "wrong_rate": 0.6923
+    },
+    "overconfidence": {
+      "n": 6,
+      "n_wrong": 6,
+      "wrong_rate": 1.0
+    }
+  }
+}

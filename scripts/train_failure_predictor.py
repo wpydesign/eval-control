@@ -252,9 +252,15 @@ def main():
     print(f"  Expected cost per sample:   {thresholds['cost_per_sample']:.4f}")
     print(f"  Cost model: FA={FALSE_ACCEPT_COST}, FR={FALSE_REJECT_COST}, Esc={ESCALATION_COST}")
 
-    # Feature coefficients (from base model)
+    # Feature coefficients (from fitted base model)
     coef_dict = {}
-    base_model = model.estimator if hasattr(model, "estimator") else model
+    # CalibratedClassifierCV with cv>0 stores fitted estimators in calibrated_classifiers_
+    if hasattr(model, "calibrated_classifiers_") and len(model.calibrated_classifiers_) > 0:
+        base_model = model.calibrated_classifiers_[0].estimator
+    elif hasattr(model, "estimator") and hasattr(model.estimator, "coef_"):
+        base_model = model.estimator
+    else:
+        base_model = model
     if hasattr(base_model, "coef_"):
         for fname, coef in zip(NUMERIC_FEATURES, base_model.coef_[0]):
             coef_dict[fname] = round(float(coef), 6)

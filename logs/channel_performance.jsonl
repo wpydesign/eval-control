@@ -1,0 +1,1 @@
+{"timestamp": "2026-04-20T02:16:13.957509+00:00", "cycle": 0, "channels": {"uncertainty": {"n_labeled": 374, "n_wrong": 49}, "blind_spot": {"n_labeled": 12, "n_wrong": 12}, "cost": {"n_labeled": 0, "n_wrong": 0}}, "prev_weights": {"uncertainty": 0.5, "blind_spot": 0.35, "cost": 0.15}, "source": "batch_label_v2.4.0"}
