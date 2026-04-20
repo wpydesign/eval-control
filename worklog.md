@@ -242,3 +242,41 @@ Stage Summary:
   - guardrails stabilize
   - refresh updates anchor (rarely, with cooldown)
 - **No changes to**: scoring, thresholds, manifold heads, control actions, acquisition policy
+
+---
+Task ID: 8
+Agent: main
+Task: v3.0.0-core-stable — freeze core engine, lock interface, separate concerns
+
+Work Log:
+- Audited full repo state: 13 core scripts, API layer, survival engine, SDK
+- Rewrote README.md from scratch: non-technical, plain language
+  - Input/output example with full field descriptions
+  - "What problem it solves" section (three failure modes in plain English)
+  - "Where it can be used" section (deployment gate, monitoring, acquisition, comparison, audit)
+  - Simplified architecture diagram
+  - Quick start (API, Docker, curl)
+- Created INTERFACE.md: canonical JSON contract
+  - Request format: prompt + context + metadata
+  - Response format: risk_score + action + manifold + scores + routing + drift
+  - Complete field table with types, required status, descriptions
+  - Action semantics (allow/review/escalate/force_reject_or_escalate)
+  - Manifold semantics (wrong rates, descriptions)
+  - Drift semantics (STABLE/WARNING/CRITICAL + VALID/AGING/STALE)
+  - Stability guarantees (5 rules: shape, actions, manifolds, ranges, breaking changes)
+  - Integration pattern template
+- Created adapters/ directory with README (template + rules)
+- Created apps/ directory with README (structure + rules)
+- Tagged v3.0.0-core-stable with full freeze annotation
+- Pushed to GitHub
+
+Stage Summary:
+- **New files**: INTERFACE.md, adapters/README.md, apps/README.md
+- **Modified files**: README.md (full rewrite)
+- **Tag**: v3.0.0-core-stable
+- **Commit**: 4f01c08
+- **Core is frozen**: no structural changes, no new logic, only bug fixes
+- **Interface is locked**: response shape, action values, manifold names, score ranges
+- **Separation**: core (frozen) / adapters (domain connectors) / apps (user products)
+- **Stability guarantee**: breaking changes require major version bump (v4.0.0)
+- **From this point**: build on top, never modify within
